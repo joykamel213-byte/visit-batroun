@@ -1,0 +1,1295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='2' width='20' height='20' rx='10' fill='%237b2a5e'/%3E%3Crect x='11.3' y='6' width='1.4' height='12' rx='.7' fill='white'/%3E%3C/svg%3E">
+<title>Uncover Batroun</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Scan, listen and explore Batroun's landmarks in English, Arabic and French.">
+<meta name="theme-color" content="#f1f1ee">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Newsreader:ital,opsz,wght@0,6..72,400..500;1,6..72,400&family=Noto+Kufi+Arabic:wght@500..800&family=Noto+Naskh+Arabic:wght@400..600&display=swap">
+<style>
+/* Layout: one-screen "pill window" hero (name split around a photo that opens from a hairline),
+   then a reading column for the story, a photo strip, and a "next stop" compass + list. */
+:root{
+  /* single deliberate look: night cinema, sandstone light, murex (Tyrian purple) accent */
+  --bg:#0a0a0b; --paper:#111113; --ink:#f3efe8; --ink-2:#cdc7bd; --muted:#8f8a83;
+  --rule:rgba(243,239,232,.13); --line:rgba(255,255,255,.07);
+  --murex:#d97db6; --murex-ink:#16090f; --murex-tint:rgba(217,125,182,.16);
+  --card:#141416; --pill-fill:#1b1b1e;
+  --f-display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --f-read:"Newsreader", Georgia, "Times New Roman", serif;
+  --f-ar-display:"Noto Kufi Arabic", "Segoe UI", Tahoma, sans-serif;
+  --f-ar-read:"Noto Naskh Arabic", "Traditional Arabic", Tahoma, serif;
+  --gut:max(20px, env(safe-area-inset-left, 0px));
+  --gut-r:max(20px, env(safe-area-inset-right, 0px));
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--ink)}
+body{margin:0;font-family:var(--f-display);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+[dir="rtl"] body, body[dir="rtl"]{font-family:var(--f-ar-display)}
+::selection{background:var(--murex);color:var(--murex-ink)}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--murex);outline-offset:3px;border-radius:6px}
+img{display:block;max-width:100%}
+.wrap{padding-left:var(--gut);padding-right:var(--gut-r);max-width:1180px;margin-inline:auto}
+
+/* ---------- top bar ---------- */
+.top{position:absolute;inset:0 0 auto;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px var(--gut-r) 0 var(--gut);font-size:13px;font-weight:500}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
+.brand svg{width:20px;height:20px;flex:none}
+.brand b{font-weight:700}
+.brand span{color:var(--muted)}
+.langs{display:flex;gap:2px;padding:3px;border-radius:999px;background:color-mix(in srgb,var(--card) 70%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--rule)}
+.langs button{border:0;background:none;padding:7px 12px;min-width:44px;min-height:34px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-2)}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.langs button[lang="ar"]{font-family:var(--f-ar-display);font-size:13px}
+
+/* ---------- hero: sticky stage, the photo window widens to full screen as you scroll ---------- */
+.hero-track{position:relative;height:230svh}
+.hero{position:sticky;top:0;height:100svh;min-height:560px;display:grid;grid-template-rows:1fr auto;overflow:hidden;isolation:isolate;background:#060607}
+.amb{position:absolute;inset:-8%;z-index:0;pointer-events:none}
+.amb img{width:100%;height:100%;object-fit:cover;filter:blur(46px) saturate(1.25) brightness(.42);transform:scale(1.15);animation:breathe 22s ease-in-out infinite alternate}
+@keyframes breathe{from{transform:scale(1.15) translate3d(-1.5%,0,0)}to{transform:scale(1.25) translate3d(1.5%,-1%,0)}}
+.vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 40%,rgba(0,0,0,.7) 100%)}
+.frame{position:absolute;inset:0;z-index:2;overflow:hidden;clip-path:inset(30% 20% 30% 20% round 48px);will-change:clip-path;background:#000}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.14);will-change:transform}
+.frame .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 22%,transparent 55%,rgba(0,0,0,.72) 100%);opacity:0}
+.cap{position:absolute;z-index:3;left:var(--gut);right:var(--gut-r);bottom:calc(32px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:14px 24px;color:#fff;opacity:0;pointer-events:none}
+.cap strong{display:block;font-size:clamp(30px,5vw,68px);line-height:.95;letter-spacing:-.035em;font-weight:700;max-width:14ch;text-wrap:balance}
+[dir="rtl"] .cap strong{letter-spacing:0;line-height:1.35}
+.cap .coord{display:block;unicode-bidi:isolate;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.8;font-variant-numeric:tabular-nums;direction:ltr}
+.cap .cue{display:flex;align-items:center;gap:10px;font-size:13px;opacity:.85}
+.cap .cue i{display:block;width:1px;height:38px;background:linear-gradient(#fff,transparent);animation:cue 1.8s var(--ease-out) infinite}
+@keyframes cue{from{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}to{transform:scaleY(0);transform-origin:bottom}}
+.bars::before,.bars::after{content:"";position:absolute;left:0;right:0;height:12vh;background:#000;z-index:30;pointer-events:none;animation:bar 1.3s cubic-bezier(.7,0,.2,1) .15s both}
+.bars::before{top:0;transform-origin:top}.bars::after{bottom:0;transform-origin:bottom}
+@keyframes bar{from{transform:scaleY(1)}to{transform:scaleY(0)}}
+.stage{position:relative;z-index:4;display:flex;align-items:center;justify-content:center;padding:76px 0 20px;color:#fff}
+.word-row{--fs:min(12vw,16vh);font-size:var(--fs);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1em;width:var(--pw,calc(100vw - 40px));margin:0;
+  font-weight:800;letter-spacing:-.045em;line-height:.8;text-transform:uppercase;white-space:nowrap}
+.word-row .w{display:block;padding-block:.08em;overflow:hidden;will-change:transform,opacity}
+.word-row .ch{display:inline-block;transform:translateY(110%)}
+.word-row.go .ch{animation:rise 1s var(--ease-out) forwards;animation-delay:calc(var(--i) * 32ms + var(--d, .9s))}
+@keyframes rise{to{transform:none}}
+[dir="rtl"] .word-row{letter-spacing:0;text-transform:none;line-height:1.3;font-weight:800}
+[dir="rtl"] .word-row .w{padding-block:0}
+.word-row .w[data-a="w1"]{align-self:flex-start}
+.word-row .w[data-a="w2"]{align-self:flex-end}
+.pill{position:relative;flex:none;height:var(--ph,52svh);width:100%;visibility:hidden}
+.hero .top,.hero-foot{position:relative;z-index:5}
+.hero .top{position:absolute;color:#fff}
+.hero .brand span{color:rgba(255,255,255,.6)}
+.hero .langs{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16)}
+.hero .langs button{color:rgba(255,255,255,.8)}
+.hero .langs button[aria-pressed="true"]{background:#fff;color:#000}
+.hero-foot{color:#fff;will-change:opacity}
+.hero .lede{color:rgba(255,255,255,.82)}
+.hero .lede .meta{color:rgba(255,255,255,.55)}
+.hero .hero-rule{background:rgba(255,255,255,.22)}
+.hero .btn{background:#fff;color:#0a0a0b}
+.grain{position:fixed;inset:-50%;z-index:60;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .9s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+/* reveal-on-scroll (only armed by JS; content is visible without it) */
+.anim [data-reveal]{opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease-out),transform 1.1s var(--ease-out);transition-delay:var(--d,0s)}
+.anim [data-reveal].in{opacity:1;transform:none}
+.anim figure[data-reveal]{transform:none;clip-path:inset(18% 0 0 0 round 22px);transition:clip-path 1.2s var(--ease-out),opacity .8s;transition-delay:var(--d,0s)}
+.anim figure[data-reveal].in{clip-path:inset(0 0 0 0 round 22px)}
+.anim figure[data-reveal] img{transform:scale(1.18);transition:transform 1.6s var(--ease-out);transition-delay:var(--d,0s)}
+.anim figure[data-reveal].in img{transform:scale(1)}
+.hero-foot{display:flex;align-items:flex-end;gap:24px;padding:0 var(--gut-r) 28px var(--gut)}
+.lede{max-width:30rem;margin:0;font-family:var(--f-read);font-size:17px;line-height:1.5;color:var(--ink-2);text-wrap:pretty}
+[dir="rtl"] .lede{font-family:var(--f-ar-read);font-size:18px;line-height:1.8}
+.lede .meta{display:block;font-family:var(--f-display);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+[dir="rtl"] .lede .meta{font-family:var(--f-ar-display);letter-spacing:0;font-size:12px}
+.hero-rule{flex:1;height:1px;background:var(--rule);margin-bottom:22px;transform-origin:center}
+.btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:8px 22px 8px 8px;min-height:52px;
+  background:var(--ink);color:var(--bg);font-weight:600;font-size:15px;cursor:pointer;text-decoration:none;white-space:nowrap;
+  transition:transform .2s var(--ease-out),background .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:scale(.97)}
+.btn .disc{width:38px;height:38px;border-radius:50%;background:var(--murex);color:var(--murex-ink);display:grid;place-items:center;flex:none}
+.btn .disc svg{width:16px;height:16px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule);padding:8px 18px}
+[dir="rtl"] .btn{padding:8px 8px 8px 22px}
+[dir="rtl"] .btn.ghost{padding:8px 18px}
+[dir="rtl"] .flip{transform:scaleX(-1)}
+
+/* ---------- section scaffolding ---------- */
+section.block{padding-block:clamp(56px,9vw,112px)}
+.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 14px}
+[dir="rtl"] .eyebrow{letter-spacing:0;font-size:13px}
+h2.title{font-size:clamp(34px,5.4vw,64px);line-height:.95;letter-spacing:-.035em;font-weight:700;margin:0;text-wrap:balance}
+[dir="rtl"] h2.title{letter-spacing:0;line-height:1.3}
+
+/* ---------- story ---------- */
+.story-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+@media (min-width:900px){.story-grid{grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:64px}}
+.story-side{display:flex;flex-direction:column;gap:22px;align-self:start}
+@media (min-width:900px){.story-side{position:sticky;top:32px}}
+.player{display:flex;align-items:center;gap:14px;padding:10px;border-radius:999px;background:var(--card);border:1px solid var(--rule)}
+.play{width:52px;height:52px;border-radius:50%;border:0;background:var(--murex);color:var(--murex-ink);display:grid;place-items:center;cursor:pointer;flex:none;transition:transform .2s var(--ease-out)}
+.play:active{transform:scale(.94)}
+.play svg{width:18px;height:18px}
+.player-info{min-width:0;flex:1;padding-inline-end:12px}
+.player-info strong{display:block;font-size:15px;font-weight:600}
+.player-info small{display:block;color:var(--muted);font-size:12.5px}
+.bar{height:3px;border-radius:3px;background:var(--rule);margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--murex);transition:width .4s var(--ease-out)}
+.note{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
+.note[hidden]{display:none}
+.facts{display:grid;gap:0;margin:0;border-top:1px solid var(--rule)}
+.facts div{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.facts dt{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+[dir="rtl"] .facts dt{letter-spacing:0;font-size:13px;padding-top:0}
+.facts dd{margin:0;font-size:15px;font-weight:500}
+.story{font-family:var(--f-read);font-size:clamp(20px,2.1vw,25px);line-height:1.55;color:var(--ink-2);max-width:36em}
+[dir="rtl"] .story{font-family:var(--f-ar-read);font-size:clamp(21px,2.2vw,26px);line-height:1.95}
+.story p{margin:0 0 1em}
+.story p:first-child::first-letter{float:inline-start;font-family:var(--f-display);font-weight:800;font-size:3.3em;line-height:.82;
+  padding-inline-end:.08em;margin-top:.06em;color:var(--ink)}
+[dir="rtl"] .story p:first-child::first-letter{float:none;font-size:inherit;font-weight:inherit;padding:0;margin:0;color:inherit;font-family:inherit}
+.s{cursor:pointer;border-radius:4px;transition:background .35s,color .35s;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.s:hover{background:var(--murex-tint)}
+.story.live .s{color:color-mix(in srgb,var(--ink-2) 45%,transparent)}
+.story.live .s.done{color:var(--ink-2)}
+.story.live .s.on{color:var(--ink);background:var(--murex-tint)}
+
+/* ---------- gallery ---------- */
+.strip{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;margin-top:28px;scrollbar-width:thin;overscroll-behavior-x:contain}
+.strip figure{margin:0;flex:0 0 auto;scroll-snap-align:start;width:min(78vw,520px)}
+.strip figure.tall{width:min(58vw,340px)}
+.strip img{width:100%;height:clamp(300px,52vw,460px);object-fit:cover;border-radius:22px;background:var(--pill-fill)}
+.strip figcaption{font-size:12px;color:var(--muted);margin-top:8px}
+.strip figcaption a{text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- next stop ---------- */
+.next-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:28px}
+.next-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+@media (min-width:900px){.next-grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px}}
+.compass{position:relative;border-radius:28px;background:var(--paper);border:1px solid var(--rule);aspect-ratio:1/1;max-width:100%;overflow:hidden}
+.compass svg{width:100%;height:100%;display:block}
+.compass .ring{fill:none;stroke:var(--rule)}
+.compass .ring-l{fill:var(--muted);font-size:10px;font-family:var(--f-display)}
+.compass .ray{stroke:var(--murex);stroke-width:1.2;stroke-dasharray:3 4;opacity:.55}
+.compass .dot{fill:var(--ink);transition:fill .2s}
+.compass a:hover .dot,.compass a:focus .dot{fill:var(--murex)}
+.compass .dn{fill:var(--bg);font-size:12px;font-weight:700;font-family:var(--f-display);pointer-events:none}
+.compass .here{fill:var(--murex)}
+.compass .lbl{fill:var(--ink);font-size:12px;font-weight:600;font-family:var(--f-display)}
+[dir="rtl"] .compass .lbl{font-family:var(--f-ar-display)}
+.compass .n{fill:var(--muted);font-size:11px;font-weight:700;font-family:var(--f-display)}
+.compass-cap{font-size:12px;color:var(--muted);margin-top:10px}
+.stops{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.stop{display:grid;grid-template-columns:88px minmax(0,1fr);gap:16px;align-items:center;padding:10px;border-radius:22px;background:var(--card);border:1px solid var(--rule)}
+.stop .thumb{position:relative}
+.stop img{width:88px;height:88px;border-radius:16px;object-fit:cover}
+.stop .num{position:absolute;top:-6px;inset-inline-start:-6px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;display:grid;place-items:center;border:2px solid var(--card)}
+.stop h3{margin:0;font-size:18px;letter-spacing:-.015em;line-height:1.15;font-weight:700}
+[dir="rtl"] .stop h3{letter-spacing:0;line-height:1.5}
+.stop .km{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin:6px 0 10px;font-variant-numeric:tabular-nums}
+.stop .km b{color:var(--ink);font-weight:600}
+.stop .acts{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--rule);background:transparent;cursor:pointer}
+.chip.go{background:var(--ink);color:var(--bg);border-color:transparent}
+.chip svg{width:14px;height:14px}
+.badge{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--murex);margin-bottom:4px}
+[dir="rtl"] .badge{letter-spacing:0;font-size:12px}
+.locate{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.locate .note{max-width:28rem}
+
+/* ---------- home ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px;margin-top:32px}
+.card{position:relative;display:block;border-radius:24px;isolation:isolate;overflow:hidden;text-decoration:none;color:#fff;aspect-ratio:4/5;background:var(--pill-fill)}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease-out)}
+.card:hover img{transform:scale(1.04)}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.72))}
+.card div{position:absolute;inset:auto 0 0;padding:20px;z-index:1}
+.card h3{margin:0;font-size:24px;letter-spacing:-.025em;line-height:1.05;font-weight:700}
+[dir="rtl"] .card h3{letter-spacing:0;line-height:1.4}
+.card p{margin:6px 0 0;font-size:14px;opacity:.85;line-height:1.4}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:28px;margin-top:32px;counter-reset:st}
+.steps div{border-top:1px solid var(--rule);padding-top:16px}
+.steps b{display:block;font-size:13px;color:var(--murex);font-variant-numeric:tabular-nums;margin-bottom:6px}
+.steps h3{margin:0 0 6px;font-size:20px;letter-spacing:-.015em}
+.steps p{margin:0;color:var(--ink-2);font-size:15px}
+
+/* ---------- QR sheet ---------- */
+.qr-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:24px}
+.qr-tools label{display:grid;gap:6px;font-size:12px;color:var(--muted);flex:1 1 320px;min-width:0}
+.qr-tools input{font:inherit;font-size:15px;padding:12px 16px;border-radius:14px;border:1px solid var(--rule);background:var(--card);color:var(--ink);min-width:0}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:16px;margin-top:28px}
+.qr-card{background:#fff;color:#16171a;border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:12px;border:1px solid var(--rule)}
+.qr-card .code{background:#fff;border-radius:12px}
+.qr-card .code svg{width:100%;height:auto;display:block}
+.qr-card h3{margin:0;font-size:20px;letter-spacing:-.02em;line-height:1.1}
+.qr-card .ar{font-family:var(--f-ar-display);font-size:16px;direction:rtl;text-align:right}
+.qr-card .fr{font-size:14px;color:#55575c}
+.qr-card .scan{font-size:12px;color:#55575c;border-top:1px solid #e4e3df;padding-top:10px}
+.qr-card code{font-size:11px;color:#6a6c71;word-break:break-all}
+
+/* ---------- footer ---------- */
+footer.foot{border-top:1px solid var(--rule);padding-block:40px 120px;font-size:13px;color:var(--muted)}
+footer.foot .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
+footer.foot a{color:var(--ink)}
+footer.foot details{margin-top:18px}
+footer.foot summary{cursor:pointer;color:var(--ink)}
+footer.foot ul{padding-inline-start:18px;margin:10px 0 0;display:grid;gap:4px}
+
+/* ---------- floating mini player (phones) ---------- */
+.mini{position:fixed;z-index:40;left:50%;bottom:calc(14px + env(safe-area-inset-bottom, 0px));transform:translate(-50%,140%);
+  width:min(calc(100% - 28px),520px);display:flex;align-items:center;gap:12px;padding:8px 14px 8px 8px;border-radius:999px;
+  background:var(--ink);color:var(--bg);box-shadow:0 12px 32px rgba(0,0,0,.28);transition:transform .45s var(--ease-out)}
+.mini.show{transform:translate(-50%,0)}
+.mini .play{width:44px;height:44px}
+.mini .t{min-width:0;flex:1;font-size:13px;line-height:1.3}
+.mini .t b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini .t span{opacity:.65;font-variant-numeric:tabular-nums}
+.mini .x{border:0;background:none;color:inherit;width:40px;height:40px;border-radius:50%;cursor:pointer;display:grid;place-items:center;opacity:.75}
+.mini .x svg{width:16px;height:16px}
+
+/* ---------- phone ---------- */
+@media (max-width:720px){
+  .hero-track{height:190svh}
+  .stage{padding:76px 0 16px}
+    .pill{border-radius:32px}
+  .hero-foot{flex-direction:column;align-items:stretch;gap:16px;padding-bottom:22px}
+  .hero-rule{display:none}
+  .lede{font-size:15.5px}
+  .btn{justify-content:flex-start}
+  .brand span{display:none}
+  .stop{grid-template-columns:72px minmax(0,1fr);gap:12px}
+  .stop img{width:72px;height:72px;border-radius:14px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .hero-track{height:auto}.hero{position:relative}.word-row .ch{transform:none}.grain{display:none}
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+/* ==========================================================================
+   LANDMARK DATA — edit this block to add or change landmarks.
+   Each landmark gets its own page at  <site-address>/#<id>
+   Coordinates come from OpenStreetMap. Photos are from Wikimedia Commons
+   (see "credits"); swap in your own photos any time.
+   ========================================================================== */
+const CITY = {
+  name: { en: "Batroun", ar: "البترون", fr: "Batroun" },
+  hero: { en: ["Uncover", "Batroun"], ar: ["اكتشف", "البترون"], fr: ["Découvrir", "Batroun"] },
+  image: "images/batroun-port.jpg",
+  intro: {
+    en: "One of the oldest continuously inhabited towns on earth, Batroun has been a harbour for more than three thousand years. Scan the code at each site to hear its story in English, Arabic or French, then follow the trail to the next stop.",
+    ar: "البترون من أقدم المدن المأهولة بلا انقطاع في العالم، ومرفأ عامر منذ أكثر من ثلاثة آلاف سنة. امسح الرمز عند كل معلم لتستمع إلى قصته بالعربية أو الإنجليزية أو الفرنسية، ثم تابع الطريق إلى المحطة التالية.",
+    fr: "L'une des plus anciennes villes habitées sans interruption au monde, Batroun est un port depuis plus de trois mille ans. Scannez le code sur chaque site pour écouter son histoire en français, en arabe ou en anglais, puis suivez le parcours jusqu'à l'étape suivante."
+  }
+};
+
+const LANDMARKS = [
+  {
+    id: "phoenician-wall",
+    lat: 34.25480, lng: 35.65560,
+    name: { en: "Phoenician Wall", ar: "السور الفينيقي", fr: "Mur phénicien" },
+    hero: { en: ["Phoenician", "Wall"], ar: ["السور", "الفينيقي"], fr: ["Mur", "Phénicien"] },
+    tagline: {
+      en: "A sandstone shield between the town and the open sea.",
+      ar: "درع من الحجر الرملي بين المدينة والبحر المفتوح.",
+      fr: "Un bouclier de grès entre la ville et le large."
+    },
+    facts: [
+      { k: { en: "Era", ar: "الحقبة", fr: "Époque" }, v: { en: "Phoenician, by tradition", ar: "فينيقية بحسب الرواية", fr: "Phénicienne, selon la tradition" } },
+      { k: { en: "Made of", ar: "المادة", fr: "Matériau" }, v: { en: "A natural dune hardened into sandstone", ar: "كثيب طبيعي تحوّل إلى حجر رملي", fr: "Une dune naturelle devenue grès" } },
+      { k: { en: "Visit", ar: "الزيارة", fr: "Visite" }, v: { en: "Open air, best at sunset", ar: "في الهواء الطلق، والأجمل عند الغروب", fr: "En plein air, idéal au coucher du soleil" } }
+    ],
+    images: ["images/phoenician-wall-1.jpg", "images/phoenician-wall-2.jpg", "images/phoenician-wall-3.jpg"],
+    story: {
+      en: [
+        "Where Batroun meets the open sea, a long rampart of golden sandstone rises from the rocks.",
+        "It began as a natural ridge: an ancient sand dune that hardened into stone along the shore over thousands of years.",
+        "Tradition credits the Phoenicians, the town's first great builders, with turning it into a wall, cutting into the rock and filling its gaps with squared blocks.",
+        "For the people of ancient Botrys, it was a shield against winter storms and high waves, sheltering the homes and boats behind it.",
+        "Batroun is one of the oldest continuously inhabited towns in the world. It appears as Batruna in the Amarna letters of the fourteenth century BC, and ancient writers say that Ithobaal, king of Tyre, founded the city anew in the ninth century BC.",
+        "Look along the face of the wall and you can still see where stone was cut away, block by block, to build the town.",
+        "Today the wall still stands against the sea, and the rock pools at its feet are where Batroun comes to swim at sunset."
+      ],
+      ar: [
+        "حيث تلتقي البترون بالبحر المفتوح، يرتفع فوق الصخور سورٌ طويل من الحجر الرملي الذهبي.",
+        "في الأصل كان هذا السور حافةً طبيعية، كثيباً رملياً قديماً تحوّل إلى صخر على امتداد الشاطئ عبر آلاف السنين.",
+        "وتنسب الرواية إلى الفينيقيين، أوّل بناة المدينة الكبار، تحويله إلى سور، فنحتوا الصخر وسدّوا ثغراته بحجارة مربّعة.",
+        "وكان لأهل بوتريس القديمة درعاً في وجه عواصف الشتاء والأمواج العالية، يحمي البيوت والمراكب خلفه.",
+        "والبترون من أقدم المدن المأهولة بلا انقطاع في العالم، فهي تَرِد باسم بَترونا في رسائل تل العمارنة في القرن الرابع عشر قبل الميلاد، ويروي المؤرخون القدماء أن إيتوبعل ملك صور أعاد تأسيسها في القرن التاسع قبل الميلاد.",
+        "وإذا تأمّلت واجهة السور، ما زلت ترى المواضع التي اقتُطع منها الحجر، كتلةً بعد كتلة، لبناء المدينة.",
+        "واليوم ما زال السور صامداً في وجه البحر، وعند قدميه برك صخرية يقصدها أهل البترون للسباحة عند الغروب."
+      ],
+      fr: [
+        "Là où Batroun rencontre le large, un long rempart de grès doré s'élève au-dessus des rochers.",
+        "À l'origine, c'était une crête naturelle : une ancienne dune de sable, durcie en pierre le long du rivage au fil des millénaires.",
+        "La tradition attribue aux Phéniciens, premiers grands bâtisseurs de la ville, l'idée d'en faire un mur, en taillant la roche et en comblant ses brèches de blocs équarris.",
+        "Pour les habitants de l'antique Botrys, c'était un bouclier contre les tempêtes d'hiver et les hautes vagues, qui protégeait les maisons et les bateaux.",
+        "Batroun est l'une des plus anciennes villes habitées sans interruption au monde. Elle apparaît sous le nom de Batruna dans les lettres d'Amarna, au quatorzième siècle avant notre ère, et les auteurs anciens racontent qu'Ithobaal, roi de Tyr, la refonda au neuvième siècle avant notre ère.",
+        "Le long de la paroi, on distingue encore les endroits où la pierre a été taillée, bloc après bloc, pour bâtir la ville.",
+        "Aujourd'hui, le mur fait toujours face à la mer, et les bassins de roche à ses pieds sont l'endroit où Batroun vient se baigner au coucher du soleil."
+      ]
+    }
+  },
+  {
+    id: "our-lady-of-the-sea",
+    lat: 34.25451, lng: 35.65601,
+    name: { en: "Our Lady of the Sea", ar: "كنيسة سيدة البحر", fr: "Notre-Dame de la Mer" },
+    hero: { en: ["Our Lady", "of the Sea"], ar: ["سيدة", "البحر"], fr: ["Notre-Dame", "de la Mer"] },
+    tagline: {
+      en: "The fishermen's church, on the rocks of the old harbour.",
+      ar: "كنيسة الصيادين على صخور المرفأ القديم.",
+      fr: "L'église des pêcheurs, sur les rochers du vieux port."
+    },
+    facts: [
+      { k: { en: "Church", ar: "الكنيسة", fr: "Église" }, v: { en: "Greek Orthodox", ar: "للروم الأرثوذكس", fr: "Grecque orthodoxe" } },
+      { k: { en: "Setting", ar: "الموقع", fr: "Cadre" }, v: { en: "On the rocks of the old harbour", ar: "على صخور المرفأ القديم", fr: "Sur les rochers du vieux port" } },
+      { k: { en: "Visit", ar: "الزيارة", fr: "Visite" }, v: { en: "Best at sunset", ar: "الأجمل عند الغروب", fr: "Idéal au coucher du soleil" } }
+    ],
+    images: ["images/our-lady-of-the-sea-1.jpg", "images/our-lady-of-the-sea-2.jpg", "images/our-lady-of-the-sea-3.jpg"],
+    story: {
+      en: [
+        "On the rocks at the edge of the old harbour stands Saydet el Bahr, Our Lady of the Sea, a small Greek Orthodox church of pale sandstone.",
+        "It is said to rise on the remains of an older sanctuary, and its thick walls seem to grow out of the shore itself.",
+        "For generations, the fishermen and sailors of Batroun have stopped here to ask the Virgin Mary for protection before heading out to sea.",
+        "Inside, a carved wooden iconostasis glows with painted icons, in the tradition of the Eastern churches.",
+        "Beside the church, a row of stone arches frames the Mediterranean like a line of open windows.",
+        "Batroun's Greek Orthodox community is one of the oldest in the region: bishops from the town are recorded as early as the fifth century.",
+        "Come back at sunset, when the stone turns gold and the sound of the bells mixes with the waves."
+      ],
+      ar: [
+        "على الصخور عند طرف المرفأ القديم تقف كنيسة سيدة البحر، كنيسة صغيرة للروم الأرثوذكس مبنية من الحجر الرملي الفاتح.",
+        "ويُقال إنها شُيّدت فوق بقايا مزار أقدم، وتبدو جدرانها السميكة وكأنها تنبت من الشاطئ نفسه.",
+        "ومنذ أجيال، يتوقف صيادو البترون وبحّارتها هنا ليطلبوا حماية السيدة العذراء قبل أن يُبحروا.",
+        "وفي الداخل، يتلألأ حاجز الأيقونات الخشبي المحفور بأيقونات ملوّنة، على تقليد الكنائس الشرقية.",
+        "وإلى جانب الكنيسة، صفّ من القناطر الحجرية يؤطّر البحر المتوسط كأنه نوافذ مفتوحة.",
+        "وطائفة الروم الأرثوذكس في البترون من أقدم الطوائف في المنطقة، إذ يُذكر أساقفة من المدينة منذ القرن الخامس الميلادي.",
+        "عُد إليها عند الغروب، حين يتحوّل الحجر إلى ذهب ويختلط صوت الأجراس بصوت الموج."
+      ],
+      fr: [
+        "Sur les rochers, au bord du vieux port, se dresse Saydet el Bahr, Notre-Dame de la Mer, une petite église grecque orthodoxe en grès clair.",
+        "On dit qu'elle s'élève sur les vestiges d'un sanctuaire plus ancien, et ses murs épais semblent sortir du rivage lui-même.",
+        "Depuis des générations, les pêcheurs et les marins de Batroun s'y arrêtent pour demander la protection de la Vierge Marie avant de prendre la mer.",
+        "À l'intérieur, une iconostase en bois sculpté s'illumine d'icônes peintes, dans la tradition des Églises d'Orient.",
+        "À côté de l'église, une rangée d'arcs de pierre encadre la Méditerranée comme une suite de fenêtres ouvertes.",
+        "La communauté grecque orthodoxe de Batroun est l'une des plus anciennes de la région : des évêques de la ville sont mentionnés dès le cinquième siècle.",
+        "Revenez au coucher du soleil, quand la pierre devient dorée et que le son des cloches se mêle à celui des vagues."
+      ]
+    }
+  },
+  {
+    id: "st-stephen",
+    lat: 34.25716, lng: 35.65880,
+    name: { en: "Saint Stephen's Cathedral", ar: "كاتدرائية مار اسطفان", fr: "Cathédrale Saint-Étienne" },
+    hero: { en: ["Saint", "Stephen"], ar: ["مار", "اسطفان"], fr: ["Saint", "Étienne"] },
+    tagline: {
+      en: "Twin bell towers above the old harbour.",
+      ar: "برجا أجراس فوق المرفأ القديم.",
+      fr: "Deux clochers au-dessus du vieux port."
+    },
+    facts: [
+      { k: { en: "Church", ar: "الكنيسة", fr: "Église" }, v: { en: "Maronite cathedral", ar: "كاتدرائية مارونية", fr: "Cathédrale maronite" } },
+      { k: { en: "Built", ar: "البناء", fr: "Construction" }, v: { en: "Late 19th century", ar: "أواخر القرن التاسع عشر", fr: "Fin du XIXe siècle" } },
+      { k: { en: "Today", ar: "اليوم", fr: "Aujourd'hui" }, v: { en: "Seat of the Maronite Eparchy of Batroun", ar: "مقرّ أبرشية البترون المارونية", fr: "Siège de l'éparchie maronite de Batroun" } }
+    ],
+    images: ["images/st-stephen-1.jpg", "images/st-stephen-2.jpg", "images/st-stephen-3.jpg"],
+    story: {
+      en: [
+        "Facing the old harbour, the twin bell towers of Saint Stephen's Cathedral rise above the boats and the sea wall.",
+        "Known locally as Mar Estephan, the church is dedicated to Saint Stephen, remembered as the first Christian martyr.",
+        "It was built in the last years of the nineteenth century, when Batroun was a busy port under Ottoman rule and the seat of a Maronite diocese.",
+        "Its builders blended styles: rounded Romanesque arches, a round window over the entrance, and the warm local sandstone used across the old town.",
+        "Inside, tall columns lead the eye to the altar, where an opening above lets daylight fall across the sanctuary.",
+        "Since 1999 it has been the cathedral of the Maronite Eparchy of Batroun.",
+        "Step out onto the square in front, where the town has gathered for weddings, feasts and processions for more than a century."
+      ],
+      ar: [
+        "قبالة المرفأ القديم، يرتفع برجا أجراس كاتدرائية مار اسطفان فوق المراكب والسور البحري.",
+        "والكنيسة مكرّسة على اسم القديس اسطفانوس، الذي يُذكر بوصفه أوّل شهداء المسيحية.",
+        "وقد بُنيت في السنوات الأخيرة من القرن التاسع عشر، يوم كانت البترون مرفأً ناشطاً في ظل الحكم العثماني ومقرّاً لأبرشية مارونية.",
+        "ومزج بُناتها بين الأساليب، فجمعوا القناطر المستديرة على الطراز الرومانسكي، ونافذة مستديرة فوق المدخل، والحجر الرملي المحلي الدافئ الذي بُنيت به البلدة القديمة.",
+        "وفي الداخل، تقود الأعمدة العالية النظر نحو المذبح، حيث تسمح فتحة في الأعلى بانسياب ضوء النهار على الهيكل.",
+        "ومنذ عام 1999 أصبحت كاتدرائية أبرشية البترون المارونية.",
+        "اخرج إلى الساحة أمامها، حيث اجتمع أهل البلدة في الأعراس والأعياد والتطوافات منذ أكثر من قرن."
+      ],
+      fr: [
+        "Face au vieux port, les deux clochers de la cathédrale Saint-Étienne s'élèvent au-dessus des bateaux et du mur de mer.",
+        "Appelée Mar Estephan par les habitants, l'église est dédiée à saint Étienne, considéré comme le premier martyr chrétien.",
+        "Elle a été construite dans les dernières années du dix-neuvième siècle, lorsque Batroun était un port actif sous l'Empire ottoman et le siège d'un diocèse maronite.",
+        "Ses bâtisseurs ont mêlé les styles : arcs romans en plein cintre, fenêtre ronde au-dessus de l'entrée, et le grès chaleureux de la vieille ville.",
+        "À l'intérieur, de hautes colonnes guident le regard vers l'autel, où une ouverture laisse tomber la lumière du jour sur le sanctuaire.",
+        "Depuis 1999, c'est la cathédrale de l'éparchie maronite de Batroun.",
+        "Sortez sur la place, où la ville se rassemble depuis plus d'un siècle pour les mariages, les fêtes et les processions."
+      ]
+    }
+  },
+  {
+    id: "st-george",
+    lat: 34.25679, lng: 35.65789,
+    name: { en: "Saint George's Church", ar: "كنيسة مار جرجس", fr: "Église Saint-Georges" },
+    hero: { en: ["Saint", "George"], ar: ["مار", "جرجس"], fr: ["Saint", "Georges"] },
+    tagline: {
+      en: "A white bell tower over the rooftops of the old town.",
+      ar: "برج أجراس أبيض فوق سطوح البلدة القديمة.",
+      fr: "Un clocher blanc au-dessus des toits de la vieille ville."
+    },
+    facts: [
+      { k: { en: "Church", ar: "الكنيسة", fr: "Église" }, v: { en: "Greek Orthodox", ar: "للروم الأرثوذكس", fr: "Grecque orthodoxe" } },
+      { k: { en: "Feast day", ar: "العيد", fr: "Fête" }, v: { en: "23 April", ar: "23 نيسان", fr: "23 avril" } },
+      { k: { en: "Setting", ar: "الموقع", fr: "Cadre" }, v: { en: "Old town, near the harbour", ar: "البلدة القديمة قرب المرفأ", fr: "Vieille ville, près du port" } }
+    ],
+    images: ["images/st-george-1.jpg", "images/st-george-2.jpg"],
+    story: {
+      en: [
+        "In the heart of the old town, Saint George's Church, Mar Gerges, is home to Batroun's Greek Orthodox community.",
+        "Saint George, the soldier saint who slays the dragon, is one of the most loved saints in Lebanon.",
+        "The church is built of the same golden sandstone as the houses around it, and its white bell tower rises above the rooftops.",
+        "Inside, the iconostasis, the wall of icons between the sanctuary and the nave, follows the Byzantine tradition.",
+        "The Orthodox presence in Batroun reaches back to the early centuries of Christianity: bishops of the town are recorded in the fifth and sixth centuries.",
+        "On the saint's feast day, the twenty-third of April, the church fills with families from the town and the villages around it.",
+        "Before you leave, look up at the bell tower, white against the sky above the narrow street."
+      ],
+      ar: [
+        "في قلب البلدة القديمة، تحتضن كنيسة مار جرجس طائفة الروم الأرثوذكس في البترون.",
+        "والقديس جاورجيوس، الفارس الذي يصرع التنّين، من أحبّ القديسين إلى قلوب اللبنانيين.",
+        "والكنيسة مبنية من الحجر الرملي الذهبي نفسه الذي بُنيت به البيوت المحيطة، ويرتفع برج أجراسها الأبيض فوق السطوح.",
+        "وفي الداخل، يتبع الإيقونسطاس، أي حاجز الأيقونات بين الهيكل وصحن الكنيسة، التقليد البيزنطي.",
+        "ويعود الحضور الأرثوذكسي في البترون إلى القرون الأولى للمسيحية، إذ يُذكر أساقفة من المدينة في القرنين الخامس والسادس.",
+        "وفي عيد القديس، في الثالث والعشرين من نيسان، تمتلئ الكنيسة بالعائلات من البلدة والقرى المجاورة.",
+        "وقبل أن تغادر، ارفع نظرك إلى برج الأجراس، أبيضَ في وجه السماء فوق الزقاق الضيّق."
+      ],
+      fr: [
+        "Au cœur de la vieille ville, l'église Saint-Georges, Mar Gerges, accueille la communauté grecque orthodoxe de Batroun.",
+        "Saint Georges, le saint soldat qui terrasse le dragon, est l'un des saints les plus aimés du Liban.",
+        "L'église est bâtie du même grès doré que les maisons voisines, et son clocher blanc s'élève au-dessus des toits.",
+        "À l'intérieur, l'iconostase, la cloison d'icônes qui sépare le sanctuaire de la nef, suit la tradition byzantine.",
+        "La présence orthodoxe à Batroun remonte aux premiers siècles du christianisme : des évêques de la ville sont mentionnés aux cinquième et sixième siècles.",
+        "Le jour de la fête du saint, le vingt-trois avril, l'église se remplit de familles venues de la ville et des villages voisins.",
+        "Avant de partir, levez les yeux vers le clocher, blanc sur le ciel au-dessus de la ruelle."
+      ]
+    }
+  },
+  {
+    id: "old-souk",
+    lat: 34.25647, lng: 35.65926,
+    name: { en: "The Old Souk", ar: "السوق القديم", fr: "Le Vieux Souk" },
+    hero: { en: ["Old", "Souk"], ar: ["السوق", "القديم"], fr: ["Vieux", "Souk"] },
+    tagline: {
+      en: "Sandstone lanes, arched doorways and the town's famous lemonade.",
+      ar: "أزقّة من الحجر الرملي وأبواب مقنطرة وليموناضة البترون الشهيرة.",
+      fr: "Ruelles de grès, portes en arc et la célèbre limonade de la ville."
+    },
+    facts: [
+      { k: { en: "What", ar: "ما هو", fr: "Quoi" }, v: { en: "Historic market streets", ar: "أسواق وأزقّة تاريخية", fr: "Rues marchandes historiques" } },
+      { k: { en: "Built from", ar: "البناء", fr: "Construit en" }, v: { en: "Local sandstone", ar: "الحجر الرملي المحلي", fr: "Grès local" } },
+      { k: { en: "Taste", ar: "تذوّق", fr: "À goûter" }, v: { en: "Batroun lemonade", ar: "ليموناضة البترون", fr: "La limonade de Batroun" } }
+    ],
+    images: ["images/old-souk-1.jpg", "images/old-souk-2.jpg"],
+    story: {
+      en: [
+        "Batroun grew up between two lines: the old coastal road linking Beirut to Tripoli, and the sea.",
+        "Between them, narrow lanes known as souks ran down toward the water, lined with workshops, shops and family houses.",
+        "The houses are built of local sandstone, with arched doorways, wooden shutters and small courtyards hidden behind heavy doors.",
+        "For generations, merchants, fishermen and craftsmen lived and worked here, and the life of the town moved at the pace of the market.",
+        "Since the early twentieth century, Batroun has been famous across Lebanon for its lemonade, made from the lemons of the citrus groves around the town.",
+        "Today many of the old houses have become guest houses, cafés and small shops, while their stones and arches remain.",
+        "Walk slowly, look up at the windows and balconies, and stop for a glass of lemonade, as visitors have done here for a hundred years."
+      ],
+      ar: [
+        "نشأت البترون بين خطّين: الطريق الساحلي القديم الذي يصل بيروت بطرابلس، والبحر.",
+        "وبينهما امتدت أزقّة ضيقة تُعرف بالأسواق نزولاً نحو الماء، تصطفّ على جانبيها المشاغل والدكاكين وبيوت العائلات.",
+        "والبيوت مبنية من الحجر الرملي المحلي، بأبواب مقنطرة ودرفات خشبية وباحات صغيرة تختبئ خلف الأبواب الثقيلة.",
+        "وعلى مدى أجيال، عاش هنا التجار والصيادون والحرفيون وعملوا، وكانت حياة البلدة تسير على إيقاع السوق.",
+        "ومنذ أوائل القرن العشرين اشتهرت البترون في كل لبنان بالليموناضة، المصنوعة من ليمون البساتين التي تحيط بالبلدة.",
+        "واليوم تحوّل كثير من البيوت القديمة إلى بيوت ضيافة ومقاهٍ ومتاجر صغيرة، فيما بقيت حجارتها وقناطرها على حالها.",
+        "امشِ على مهل، وارفع نظرك إلى النوافذ والشرفات، وتوقّف لتشرب كوباً من الليموناضة كما يفعل الزوار هنا منذ مئة عام."
+      ],
+      fr: [
+        "Batroun s'est développée entre deux lignes : l'ancienne route côtière qui reliait Beyrouth à Tripoli, et la mer.",
+        "Entre les deux, d'étroites ruelles appelées souks descendaient vers l'eau, bordées d'ateliers, de boutiques et de maisons de famille.",
+        "Les maisons sont bâties en grès local, avec des portes en arc, des volets de bois et de petites cours cachées derrière de lourdes portes.",
+        "Pendant des générations, marchands, pêcheurs et artisans ont vécu et travaillé ici, et la vie de la ville battait au rythme du marché.",
+        "Depuis le début du vingtième siècle, Batroun est célèbre dans tout le Liban pour sa limonade, faite avec les citrons des vergers qui entourent la ville.",
+        "Aujourd'hui, beaucoup de vieilles maisons sont devenues des maisons d'hôtes, des cafés et des boutiques, mais leurs pierres et leurs arcs sont restés.",
+        "Marchez lentement, levez les yeux vers les fenêtres et les balcons, et arrêtez-vous pour un verre de limonade, comme le font les visiteurs depuis cent ans."
+      ]
+    }
+  },
+  {
+    id: "mseilha-fort",
+    lat: 34.27380, lng: 35.68980,
+    name: { en: "Mseilha Fort", ar: "قلعة المسيلحة", fr: "Fort de Mseilha" },
+    hero: { en: ["Mseilha", "Fort"], ar: ["قلعة", "المسيلحة"], fr: ["Fort de", "Mseilha"] },
+    tagline: {
+      en: "A fortress grown from a rock, guarding the road north.",
+      ar: "قلعة نابتة من الصخر تحرس الطريق إلى الشمال.",
+      fr: "Une forteresse née du rocher, gardienne de la route du nord."
+    },
+    facts: [
+      { k: { en: "Built", ar: "البناء", fr: "Construction" }, v: { en: "17th century", ar: "القرن السابع عشر", fr: "XVIIe siècle" } },
+      { k: { en: "Likely by", ar: "على الأرجح", fr: "Sans doute par" }, v: { en: "Emir Fakhr al-Din II", ar: "الأمير فخر الدين المعني الثاني", fr: "L'émir Fakhr al-Din II" } },
+      { k: { en: "Walls", ar: "الجدران", fr: "Murs" }, v: { en: "Up to 2 m thick", ar: "حتى مترين سماكةً", fr: "Jusqu'à 2 m d'épaisseur" } }
+    ],
+    images: ["images/mseilha-fort-1.jpg", "images/mseilha-fort-2.jpg"],
+    story: {
+      en: [
+        "Two and a half kilometres north-east of Batroun, a small fortress sits on a sheer limestone rock above the Nahr al-Jaouz river.",
+        "Its name, Mseilha, comes from the Arabic for a fortified place.",
+        "In the year 551, a great earthquake brought down part of the Ras ash-Shaq'a headland and cut the coastal road to Tripoli, so travellers had to pass through this valley instead.",
+        "Whoever held the valley held the road, and during the Crusades this pass was defended as part of the County of Tripoli.",
+        "The fort you see today dates from the seventeenth century, and was most likely built for Emir Fakhr al-Din the Second, who ruled much of Mount Lebanon.",
+        "Its walls, up to two metres thick, follow the shape of the rock and wrap a narrow triangular courtyard pierced with arrow slits.",
+        "In 1964 the fort appeared on Lebanon's twenty-five lira banknote, and it still keeps watch over the valley beside the old stone bridge."
+      ],
+      ar: [
+        "على بعد كيلومترين ونصف شمال شرق البترون، تجثم قلعة صغيرة فوق صخرة كلسية شاهقة تطلّ على نهر الجوز.",
+        "واسمها، المسيلحة، تصغير لكلمة المَسلَحة، أي الموضع المحصّن.",
+        "في عام 551 ميلادية، أسقط زلزال عظيم جزءاً من رأس الشقعة وقطع الطريق الساحلي إلى طرابلس، فصار المسافرون يعبرون هذا الوادي بدلاً منه.",
+        "ومن سيطر على الوادي سيطر على الطريق، وفي زمن الحملات الصليبية كان هذا الممرّ محمياً ضمن كونتية طرابلس.",
+        "أما القلعة القائمة اليوم فتعود إلى القرن السابع عشر، وقد بُنيت على الأرجح بأمر الأمير فخر الدين المعني الثاني، الذي حكم معظم جبل لبنان.",
+        "وتتبع جدرانها، التي تبلغ سماكتها مترين، شكل الصخرة، وتحيط بباحة مثلّثة ضيقة تتخللها فتحات لرمي السهام.",
+        "وفي عام 1964 ظهرت القلعة على ورقة الخمس والعشرين ليرة اللبنانية، وما زالت تحرس الوادي إلى جانب الجسر الحجري القديم."
+      ],
+      fr: [
+        "À deux kilomètres et demi au nord-est de Batroun, une petite forteresse se dresse sur un rocher calcaire abrupt, au-dessus du Nahr al-Jaouz.",
+        "Son nom, Mseilha, vient de l'arabe et signifie « le lieu fortifié ».",
+        "En 551, un grand tremblement de terre fit s'effondrer une partie du cap de Ras ash-Shaq'a et coupa la route côtière vers Tripoli : les voyageurs durent alors passer par cette vallée.",
+        "Qui tenait la vallée tenait la route, et à l'époque des croisades, ce passage était défendu au sein du comté de Tripoli.",
+        "Le fort que vous voyez aujourd'hui date du dix-septième siècle et fut très probablement construit pour l'émir Fakhr al-Din II, qui gouvernait une grande partie du Mont-Liban.",
+        "Ses murs, épais de deux mètres par endroits, épousent la forme du rocher et entourent une étroite cour triangulaire percée de meurtrières.",
+        "En 1964, le fort figurait sur le billet de vingt-cinq livres libanaises, et il veille toujours sur la vallée, à côté du vieux pont de pierre."
+      ]
+    }
+  }
+];
+
+/* Photo credits (Wikimedia Commons). Required by the photos' licences. */
+const CREDITS = {
+ "phoenician-wall-1": {
+  "file": "Lebanon - 20150614 - Batroun - The phoenician wall 7.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Lebanon_-_20150614_-_Batroun_-_The_phoenician_wall_7.jpg",
+  "license": "CC BY-SA 4.0",
+  "author": "Clément Bucco-Lechat",
+  "tall": false
+ },
+ "phoenician-wall-2": {
+  "file": "Lebanon - 20150614 - Batroun - The phoenician wall 1.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Lebanon_-_20150614_-_Batroun_-_The_phoenician_wall_1.jpg",
+  "license": "CC BY-SA 4.0",
+  "author": "Clément Bucco-Lechat",
+  "tall": false
+ },
+ "phoenician-wall-3": {
+  "file": "Batroun Phoenician Wall.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Batroun_Phoenician_Wall.jpg",
+  "license": "CC0",
+  "author": "TheGrg",
+  "tall": false
+ },
+ "our-lady-of-the-sea-1": {
+  "file": "Batroun, Notre Dame de la Mer.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Batroun,_Notre_Dame_de_la_Mer.JPG",
+  "license": "CC BY-SA 4.0",
+  "author": "Canaïma",
+  "tall": false
+ },
+ "our-lady-of-the-sea-2": {
+  "file": "Batroun, Notre Dame de la Mer avec les toiles blanches.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Batroun,_Notre_Dame_de_la_Mer_avec_les_toiles_blanches.JPG",
+  "license": "CC BY-SA 4.0",
+  "author": "Canaïma",
+  "tall": false
+ },
+ "our-lady-of-the-sea-3": {
+  "file": "OurLadyoftheSeasBatroun.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:OurLadyoftheSeasBatroun.jpg",
+  "license": "Public domain",
+  "author": "Louaymk",
+  "tall": true
+ },
+ "st-stephen-1": {
+  "file": "Lebanon - 20150614 - Batroun - St Stephen's church.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Lebanon_-_20150614_-_Batroun_-_St_Stephen%27s_church.jpg",
+  "license": "CC BY-SA 4.0",
+  "author": "Clément Bucco-Lechat",
+  "tall": false
+ },
+ "st-stephen-2": {
+  "file": "Batroun - Inside the church (2309047714).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Batroun_-_Inside_the_church_(2309047714).jpg",
+  "license": "CC BY 2.0",
+  "author": "Serge Melki from Indianapolis, USA",
+  "tall": false
+ },
+ "st-stephen-3": {
+  "file": "St.StephenBatroun.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:St.StephenBatroun.jpg",
+  "license": "Public domain",
+  "author": "Louaymk",
+  "tall": false
+ },
+ "st-george-1": {
+  "file": "Lebanon - 20150614 - Batroun - St George's church 1.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Lebanon_-_20150614_-_Batroun_-_St_George%27s_church_1.jpg",
+  "license": "CC BY-SA 4.0",
+  "author": "Clément Bucco-Lechat",
+  "tall": false
+ },
+ "st-george-2": {
+  "file": "Lebanon - 20150614 - Batroun - St George's church.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Lebanon_-_20150614_-_Batroun_-_St_George%27s_church.jpg",
+  "license": "CC BY-SA 4.0",
+  "author": "Clément Bucco-Lechat",
+  "tall": false
+ },
+ "old-souk-1": {
+  "file": "Lebanon - 20150614 - Batroun 2.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Lebanon_-_20150614_-_Batroun_2.jpg",
+  "license": "CC BY-SA 4.0",
+  "author": "Clément Bucco-Lechat",
+  "tall": true
+ },
+ "old-souk-2": {
+  "file": "Batroun - Old Street (2309070744).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Batroun_-_Old_Street_(2309070744).jpg",
+  "license": "CC BY 2.0",
+  "author": "Serge Melki from Indianapolis, USA",
+  "tall": true
+ },
+ "mseilha-fort-1": {
+  "file": "Mseilha fort, Lebanon.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Mseilha_fort,_Lebanon.jpg",
+  "license": "CC BY 4.0",
+  "author": "Robi Ahmad",
+  "tall": false
+ },
+ "mseilha-fort-2": {
+  "file": "Mseilha fort and bridge, Lebanon.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Mseilha_fort_and_bridge,_Lebanon.jpg",
+  "license": "CC BY 4.0",
+  "author": "Robi Ahmad",
+  "tall": false
+ },
+ "batroun-port": {
+  "file": "Batroun port IMG 1038.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Batroun_port_IMG_1038.jpg",
+  "license": "CC BY-SA 3.0",
+  "author": "Amalmc",
+  "tall": false
+ }
+};
+
+</script>
+<script>
+(() => {
+"use strict";
+
+/* ---------------- UI strings ---------------- */
+const T = {
+  en: {
+    trail: "Heritage trail", listen: "Listen to the story", pause: "Pause", resume: "Resume", replay: "Listen again",
+    story: "The story", minListen: n => `${n} min listen`, sentence: (i, n) => `${i} of ${n}`,
+    facts: "At a glance", gallery: "Photos", next: "Next stop", nextTitle: "Where to go from here",
+    walk: n => `${n} min walk`, drive: n => `${n} min drive`, closest: "Closest", directions: "Directions", open: "Open story",
+    fromHere: n => `Bearings and distances from ${n}. Travel times are estimates.`,
+    fromYou: "Bearings and distances from where you are. Travel times are estimates.",
+    useLoc: "Measure from my location", locating: "Finding you…", locFail: "Location isn't available here, so distances are measured from this landmark.",
+    noVoice: l => `This device has no ${l} voice installed, so the story can't be read aloud. You can add one in your phone's text-to-speech settings, or read along below.`,
+    noSpeech: "This browser can't read text aloud. The full story is below.",
+    tapHint: "Tap any sentence to listen from there.",
+    langName: "English",
+    allStops: "All landmarks", homeTitle: "Six stops, three thousand years", homeEyebrow: "The Batroun trail",
+    howEyebrow: "How it works", how: [
+      ["Scan the code", "Each landmark has a QR code at its entrance. Point your phone camera at it."],
+      ["Listen to the story", "Choose English, Arabic or French. The story is read aloud while you look around."],
+      ["Walk to the next stop", "See the nearest landmarks, how far they are, and get directions."]
+    ],
+    start: "Start the trail", qrLink: "QR codes for print", credits: "Photo credits", photo: "Photo",
+    qrTitle: "QR codes", qrIntro: "One code per landmark. Each code opens that landmark's page. Print them and place each one at its site.",
+    qrAddr: "Website address the codes point to", qrPrint: "Print the codes", qrScan: "Scan to hear the story · English · عربي · Français",
+    qrNote: "Codes update as you edit the address. When the site is online at its own address, open this page there and the codes will match it.",
+    back: "All landmarks", made: "Uncover Lebanon · Batroun", m: "m", km: "km"
+  },
+  ar: {
+    trail: "درب التراث", listen: "استمع إلى القصة", pause: "إيقاف مؤقت", resume: "متابعة", replay: "استمع مجدداً",
+    story: "الحكاية", minListen: n => `${n} دقائق استماع`, sentence: (i, n) => `${i} من ${n}`,
+    facts: "لمحة سريعة", gallery: "صور", next: "المحطة التالية", nextTitle: "إلى أين بعد هنا",
+    walk: n => `${n} دقيقة سيراً`, drive: n => `${n} دقيقة بالسيارة`, closest: "الأقرب", directions: "الاتجاهات", open: "افتح القصة",
+    fromHere: n => `الاتجاهات والمسافات انطلاقاً من ${n}. أوقات التنقل تقديرية.`,
+    fromYou: "الاتجاهات والمسافات انطلاقاً من موقعك. أوقات التنقل تقديرية.",
+    useLoc: "احسب المسافة من موقعي", locating: "جارٍ تحديد موقعك…", locFail: "تحديد الموقع غير متاح هنا، لذا تُحسب المسافات من هذا المعلم.",
+    noVoice: () => "لا يتوفر صوت عربي على هذا الجهاز، لذلك لا يمكن قراءة القصة بصوت عالٍ. يمكنك إضافة صوت من إعدادات تحويل النص إلى كلام في هاتفك، أو قراءة النص أدناه.",
+    noSpeech: "هذا المتصفح لا يستطيع قراءة النص بصوت عالٍ. القصة كاملة أدناه.",
+    tapHint: "اضغط على أي جملة للاستماع منها.",
+    langName: "العربية",
+    allStops: "كل المعالم", homeTitle: "ست محطات وثلاثة آلاف سنة", homeEyebrow: "درب البترون",
+    howEyebrow: "كيف يعمل", how: [
+      ["امسح الرمز", "لكل معلم رمز QR عند مدخله. وجّه كاميرا هاتفك نحوه."],
+      ["استمع إلى الحكاية", "اختر العربية أو الإنجليزية أو الفرنسية، وتُروى لك الحكاية وأنت تتجوّل."],
+      ["امشِ إلى المحطة التالية", "اكتشف أقرب المعالم، والمسافة إليها، واحصل على الاتجاهات."]
+    ],
+    start: "ابدأ الجولة", qrLink: "رموز QR للطباعة", credits: "حقوق الصور", photo: "صورة",
+    qrTitle: "رموز QR", qrIntro: "رمز لكل معلم، يفتح صفحة المعلم. اطبعها وضع كل رمز في موقعه.",
+    qrAddr: "عنوان الموقع الذي تشير إليه الرموز", qrPrint: "اطبع الرموز", qrScan: "Scan to hear the story · English · عربي · Français",
+    qrNote: "تتحدّث الرموز عند تعديل العنوان. عندما يصبح الموقع على عنوانه الخاص، افتح هذه الصفحة هناك فتتطابق الرموز معه.",
+    back: "كل المعالم", made: "اكتشف لبنان · البترون", m: "م", km: "كم"
+  },
+  fr: {
+    trail: "Parcours patrimoine", listen: "Écouter l'histoire", pause: "Pause", resume: "Reprendre", replay: "Réécouter",
+    story: "L'histoire", minListen: n => `${n} min d'écoute`, sentence: (i, n) => `${i} sur ${n}`,
+    facts: "En bref", gallery: "Photos", next: "Prochaine étape", nextTitle: "Où aller ensuite",
+    walk: n => `${n} min à pied`, drive: n => `${n} min en voiture`, closest: "Le plus proche", directions: "Itinéraire", open: "Voir l'histoire",
+    fromHere: n => `Directions et distances depuis ${n}. Temps de trajet estimés.`,
+    fromYou: "Directions et distances depuis votre position. Temps de trajet estimés.",
+    useLoc: "Mesurer depuis ma position", locating: "Localisation…", locFail: "La localisation n'est pas disponible ici : les distances sont mesurées depuis ce site.",
+    noVoice: () => "Aucune voix française n'est installée sur cet appareil, l'histoire ne peut donc pas être lue à voix haute. Vous pouvez en ajouter une dans les réglages de synthèse vocale, ou lire le texte ci-dessous.",
+    noSpeech: "Ce navigateur ne peut pas lire le texte à voix haute. L'histoire complète est ci-dessous.",
+    tapHint: "Touchez une phrase pour l'écouter à partir de là.",
+    langName: "Français",
+    allStops: "Tous les sites", homeTitle: "Six étapes, trois mille ans", homeEyebrow: "Le parcours de Batroun",
+    howEyebrow: "Comment ça marche", how: [
+      ["Scannez le code", "Chaque site a un code QR à son entrée. Pointez l'appareil photo de votre téléphone."],
+      ["Écoutez l'histoire", "Choisissez le français, l'arabe ou l'anglais. L'histoire est lue pendant que vous visitez."],
+      ["Rejoignez l'étape suivante", "Voyez les sites les plus proches, leur distance, et obtenez l'itinéraire."]
+    ],
+    start: "Commencer le parcours", qrLink: "Codes QR à imprimer", credits: "Crédits photo", photo: "Photo",
+    qrTitle: "Codes QR", qrIntro: "Un code par site. Chaque code ouvre la page du site. Imprimez-les et placez chacun à son emplacement.",
+    qrAddr: "Adresse du site vers laquelle pointent les codes", qrPrint: "Imprimer les codes", qrScan: "Scan to hear the story · English · عربي · Français",
+    qrNote: "Les codes se mettent à jour quand vous modifiez l'adresse. Une fois le site en ligne à sa propre adresse, ouvrez cette page là-bas et les codes correspondront.",
+    back: "Tous les sites", made: "Uncover Lebanon · Batroun", m: "m", km: "km"
+  }
+};
+const SPEECH_TAG = { en: "en", ar: "ar", fr: "fr" };
+
+/* ---------------- icons ---------------- */
+const I = {
+  play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4.5" height="16" rx="1.2" fill="currentColor"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.2" fill="currentColor"/></svg>',
+  x: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" aria-hidden="true" class="flip"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="currentColor"/></svg>',
+  locate: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4" stroke="currentColor" stroke-width="2"/></svg>',
+  mark: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/><rect x="11.3" y="6" width="1.4" height="12" rx=".7" fill="var(--bg)"/></svg>'
+};
+
+/* ---------------- state ---------------- */
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+function initialLang(){
+  const saved = store.get("ul-lang"); if (saved && T[saved]) return saved;
+  const n = (navigator.language || "en").slice(0,2).toLowerCase();
+  return T[n] ? n : "en";
+}
+let lang = initialLang();
+let origin = null;        // {lat,lng} when the visitor shares their location
+const app = document.getElementById("app");
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const t = () => T[lang];
+const byId = id => LANDMARKS.find(l => l.id === id);
+
+/* ---------------- geo ---------------- */
+function distKm(a, b){
+  const R = 6371, r = Math.PI/180;
+  const dLat = (b.lat-a.lat)*r, dLng = (b.lng-a.lng)*r;
+  const h = Math.sin(dLat/2)**2 + Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function bearing(a, b){
+  const r = Math.PI/180, y = Math.sin((b.lng-a.lng)*r)*Math.cos(b.lat*r);
+  const x = Math.cos(a.lat*r)*Math.sin(b.lat*r) - Math.sin(a.lat*r)*Math.cos(b.lat*r)*Math.cos((b.lng-a.lng)*r);
+  return Math.atan2(y, x);
+}
+/* Estimates: street routes are ~35% longer than a straight line; walking 4.8 km/h; town driving ~30 km/h + 3 min to park. */
+function travel(km){
+  const walk = Math.max(1, Math.round(km*1.35/4.8*60));
+  const drive = Math.max(2, Math.round(km*1.4/30*60 + 3));
+  return { walk, drive, preferDrive: walk > 25 };
+}
+function fmtDist(km){
+  const L = t(), nf = new Intl.NumberFormat(lang === "ar" ? "ar-LB" : lang);
+  if (km < 1) return `${nf.format(Math.round(km*1000/10)*10)} ${L.m}`;
+  return `${nf.format(Math.round(km*10)/10)} ${L.km}`;
+}
+const num = n => new Intl.NumberFormat(lang === "ar" ? "ar-LB" : lang).format(n);
+
+/* ---------------- voiceover ----------------
+   Uses the phone's built-in text-to-speech (free, works offline once loaded).
+   To use recorded audio instead, add e.g.  audio: { en: "audio/phoenician-wall-en.mp3", ... }
+   to a landmark; the player then plays the file and follows along in the text. */
+const Voice = {
+  idx: 0, playing: false, token: 0, sents: [], audio: null, landmark: null,
+  voices: [],
+  load(){ if (!("speechSynthesis" in window)) return; this.voices = speechSynthesis.getVoices(); },
+  pick(code){
+    const list = this.voices.filter(v => v.lang && v.lang.toLowerCase().replace("_","-").startsWith(code));
+    if (!list.length) return null;
+    const score = v => (/natural|neural|online|premium|enhanced|siri/i.test(v.name) ? 4 : 0) + (/google/i.test(v.name) ? 2 : 0)
+      + (code === "en" && /en-(gb|us)/i.test(v.lang) ? 1 : 0) + (code === "fr" && /fr-fr/i.test(v.lang) ? 1 : 0) + (v.localService ? 0 : 1);
+    return list.sort((a,b) => score(b) - score(a))[0];
+  },
+  setup(l){
+    this.stop(true); this.landmark = l;
+    this.sents = l ? l.story[lang] : []; this.idx = 0;
+  },
+  toggle(){ this.playing ? this.pause() : this.play(this.idx >= this.sents.length ? 0 : this.idx); },
+  play(from){
+    const L = t(); const note = document.getElementById("voice-note");
+    const file = this.landmark && this.landmark.audio && this.landmark.audio[lang];
+    if (file){ return this.playFile(file, from); }
+    if (!("speechSynthesis" in window)){ if (note){ note.textContent = L.noSpeech; note.hidden = false; } return; }
+    this.load();
+    const v = this.pick(SPEECH_TAG[lang]);
+    if (this.voices.length && !v){ if (note){ note.textContent = L.noVoice(L.langName); note.hidden = false; } return; }
+    if (note) note.hidden = true;
+    this.voice = v; this.playing = true; this.token++;
+    speechSynthesis.cancel();
+    this.say(from, this.token);
+    this.render();
+  },
+  say(i, tok){
+    if (tok !== this.token) return;
+    if (i >= this.sents.length){ this.finish(); return; }
+    this.idx = i; this.mark(); this.render();
+    const u = new SpeechSynthesisUtterance(this.sents[i]);
+    u.lang = this.voice ? this.voice.lang : SPEECH_TAG[lang];
+    if (this.voice) u.voice = this.voice;
+    u.rate = lang === "ar" ? 0.92 : 0.96; u.pitch = 1;
+    u.onend = () => { if (tok === this.token && this.playing) setTimeout(() => this.say(i+1, tok), 260); };
+    u.onerror = e => {
+      if (tok !== this.token || !this.playing || e.error === "interrupted" || e.error === "canceled") return;
+      this.pause(); const note = document.getElementById("voice-note");
+      if (note){ note.textContent = t().noVoice(t().langName); note.hidden = false; }
+    };
+    speechSynthesis.speak(u);
+  },
+  playFile(src, from){
+    if (!this.audio){ this.audio = new Audio(); this.audio.preload = "auto"; }
+    const a = this.audio;
+    if (!a.src.endsWith(src)) a.src = src;
+    const lens = this.sents.map(s => s.length), total = lens.reduce((x,y) => x+y, 0);
+    const startFrac = lens.slice(0, from).reduce((x,y) => x+y, 0) / total;
+    a.ontimeupdate = () => {
+      if (!a.duration) return;
+      let acc = 0, f = a.currentTime / a.duration, i = 0;
+      for (; i < lens.length; i++){ acc += lens[i]/total; if (f < acc) break; }
+      if (i !== this.idx){ this.idx = Math.min(i, lens.length-1); this.mark(); this.render(); }
+    };
+    a.onended = () => this.finish();
+    const go = () => { if (a.duration && from) a.currentTime = startFrac * a.duration; a.play(); };
+    a.readyState >= 1 ? go() : a.addEventListener("loadedmetadata", go, { once: true });
+    this.playing = true; this.idx = from; this.mark(); this.render();
+  },
+  pause(){
+    this.playing = false; this.token++;
+    if (this.audio) this.audio.pause();
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
+    this.render();
+  },
+  stop(silent){
+    this.playing = false; this.token++; this.idx = 0;
+    if (this.audio){ this.audio.pause(); }
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
+    document.querySelectorAll(".s").forEach(s => s.classList.remove("on","done"));
+    if (!silent) this.render();
+    const m = document.getElementById("mini"); if (m) m.classList.remove("show");
+  },
+  finish(){ this.playing = false; this.idx = this.sents.length; this.mark(); this.render(); },
+  mark(){
+    const st = document.querySelector(".story"); if (st) st.classList.toggle("live", this.playing || (this.idx > 0 && this.idx < this.sents.length));
+    const all = document.querySelectorAll(".s");
+    all.forEach((s, k) => { s.classList.toggle("on", k === this.idx && this.idx < this.sents.length); s.classList.toggle("done", k < this.idx); });
+    const cur = all[this.idx];
+    if (cur && this.playing){
+      const r = cur.getBoundingClientRect();
+      if (r.top < 80 || r.bottom > innerHeight - 110) cur.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+    }
+  },
+  render(){
+    const L = t(), n = this.sents.length, done = this.idx >= n;
+    const label = this.playing ? L.pause : (done && n ? L.replay : (this.idx > 0 ? L.resume : L.listen));
+    const icon = this.playing ? I.pause : I.play;
+    document.querySelectorAll("[data-play]").forEach(b => { b.innerHTML = b.classList.contains("btn") ? `<span class="disc">${icon}</span>${esc(label)}` : icon; b.setAttribute("aria-label", label); });
+    const pct = n ? Math.min(100, (this.idx + (this.playing ? .5 : 0)) / n * 100) : 0;
+    document.querySelectorAll(".bar i").forEach(b => b.style.width = (done ? 100 : pct) + "%");
+    const st = document.getElementById("player-state");
+    if (st) st.textContent = this.idx > 0 && !done ? L.sentence(num(Math.min(this.idx+1, n)), num(n)) : L.minListen(num(Math.max(1, Math.round(this.sents.join(" ").length / 900)))) ;
+    const mini = document.getElementById("mini");
+    if (mini){
+      const storyEl = document.getElementById("story");
+      const offscreen = storyEl ? storyEl.getBoundingClientRect().top > innerHeight || storyEl.getBoundingClientRect().bottom < 0 || innerWidth < 900 : true;
+      mini.classList.toggle("show", (this.playing || (this.idx > 0 && !done)) && offscreen);
+      const ms = mini.querySelector(".t span"); if (ms) ms.textContent = L.sentence(num(Math.min(this.idx+1, n)), num(n));
+    }
+  }
+};
+if ("speechSynthesis" in window){ Voice.load(); speechSynthesis.onvoiceschanged = () => Voice.load(); }
+
+/* ---------------- shared pieces ---------------- */
+function topBar(){
+  const L = t();
+  return `<header class="top">
+    <a class="brand" href="#" aria-label="${esc(L.allStops)}">${I.mark}<b>Uncover Lebanon</b><span>· ${esc(CITY.name[lang])}</span></a>
+    <div class="langs" role="group" aria-label="Language">
+      ${[["en","EN"],["ar","عربي"],["fr","FR"]].map(([c,lab]) => `<button type="button" lang="${c}" data-lang="${c}" aria-pressed="${c===lang}">${lab}</button>`).join("")}
+    </div></header>`;
+}
+function linesSVG(){
+  let d = "";
+  for (let i = 0; i < 15; i++){
+    const y = 120 + i*62, a = 40 + (i%4)*22;
+    d += `<path d="M-60 ${y+220} C 260 ${y+160-a}, 420 ${y-40+a}, 720 ${y-60} S 1180 ${y-260+a}, 1560 ${y-330}" stroke-width="${(1.2 + (i*7%5)*.6).toFixed(1)}" opacity="${(.55 + (i%3)*.15).toFixed(2)}"/>`;
+  }
+  return `<svg viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${d}</svg>`;
+}
+function splitChars(word, base){
+  if (lang === "ar") return `<span class="ch" style="--i:${base}">${esc(word)}</span>`;
+  return [...word].map((ch, i) => `<span class="ch" style="--i:${base + i}">${ch === " " ? "&nbsp;" : esc(ch)}</span>`).join("");
+}
+function fmtCoord(p){ return `${Math.abs(p.lat).toFixed(4)}° ${p.lat >= 0 ? "N" : "S"} · ${Math.abs(p.lng).toFixed(4)}° ${p.lng >= 0 ? "E" : "W"}`; }
+function heroHTML({ words, img, alt, meta, lede, cta, title, coord }){
+  const scrollCue = { en: "Scroll", ar: "مرّر للأسفل", fr: "Défiler" }[lang];
+  return `<div class="hero-track" id="track"><section class="hero bars" aria-label="${esc(words.join(" "))}">
+    <div class="amb" aria-hidden="true"><img src="${img}" alt=""></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="frame" id="frame"><img src="${img}" alt="${esc(alt)}" fetchpriority="high"><div class="shade"></div></div>
+    <div class="cap" id="cap" aria-hidden="true"><div><span class="coord" dir="ltr">${esc(coord)}</span><strong>${esc(title)}</strong></div><span class="cue"><i></i>${esc(scrollCue)}</span></div>
+    ${topBar()}
+    <div class="stage">
+      <h1 class="word-row" id="words"><span class="w" data-a="w1">${splitChars(words[0], 0)}</span><span class="pill" data-a="pill" aria-hidden="true"></span><span class="w" data-a="w2">${splitChars(words[1], words[0].length)}</span></h1>
+    </div>
+    <div class="hero-foot" data-a="foot">
+      <p class="lede"><span class="meta">${esc(meta)}</span>${esc(lede)}</p>
+      <div class="hero-rule" data-a="rule"></div>
+      ${cta}
+    </div>
+  </section></div>`;
+}
+function footerHTML(images){
+  const L = t();
+  const list = images.map(src => { const k = src.split("/").pop().replace(".jpg",""); const c = CREDITS[k]; return c ? `<li>${esc(c.author)}, <a href="${c.page}" target="_blank" rel="noopener">${esc(c.license)}</a></li>` : ""; }).join("");
+  return `<footer class="foot"><div class="wrap">
+    <div class="row"><span>${esc(L.made)}</span><span><a href="#">${esc(L.allStops)}</a> · <a href="#qr-codes">${esc(L.qrLink)}</a></span></div>
+    <details><summary>${esc(L.credits)}</summary><ul>${list}</ul></details>
+  </div></footer>`;
+}
+
+/* ---------------- landmark page ---------------- */
+function landmarkPage(l){
+  const L = t();
+  const here = origin || l;
+  const others = LANDMARKS.filter(o => o.id !== l.id).map(o => ({ o, km: distKm(here, o), br: bearing(here, o) })).sort((a,b) => a.km - b.km);
+  const paras = []; const s = l.story[lang];
+  // group sentences into paragraphs of 2-3 for rhythm
+  for (let i = 0, p = 0; i < s.length; p++){ const n = p === 0 ? 2 : 3; paras.push(s.slice(i, i+n).map((x, k) => ({ x, k: i+k }))); i += n; }
+  const cta = `<button class="btn" type="button" data-play data-start-story>${""}</button>`;
+  return `${heroHTML({ words: l.hero[lang], img: l.images[0], alt: l.name[lang], meta: `${L.trail} · ${CITY.name[lang]}`, lede: l.tagline[lang], cta, title: l.name[lang], coord: fmtCoord(l) })}
+  <main>
+    <section class="block" id="story"><div class="wrap story-grid">
+      <aside class="story-side">
+        <div><p class="eyebrow">${esc(L.story)}</p><h2 class="title">${esc(l.name[lang])}</h2></div>
+        <div class="player">
+          <button class="play" type="button" data-play></button>
+          <div class="player-info"><strong>${esc(L.listen)} · ${esc(L.langName)}</strong><small id="player-state"></small><div class="bar"><i></i></div></div>
+        </div>
+        <p class="note" id="voice-note" role="status" hidden></p>
+        <p class="note">${esc(L.tapHint)}</p>
+        <dl class="facts">${l.facts.map(f => `<div><dt>${esc(f.k[lang])}</dt><dd>${esc(f.v[lang])}</dd></div>`).join("")}</dl>
+      </aside>
+      <div class="story" lang="${lang}">${paras.map(p => `<p>${p.map(({x,k}) => `<span class="s" data-i="${k}">${esc(x)}</span>`).join(" ")}</p>`).join("")}</div>
+    </div></section>
+
+    <section class="block" style="padding-top:0"><div class="wrap">
+      <p class="eyebrow">${esc(L.gallery)}</p>
+      <div class="strip" tabindex="0" aria-label="${esc(L.gallery)}">
+        ${l.images.map((src, i) => { const k = src.split("/").pop().replace(".jpg",""); const c = CREDITS[k] || {}; return `<figure class="${c.tall ? "tall" : ""}"><img src="${src}" alt="${esc(l.name[lang])}, ${esc(L.photo)} ${i+1}" loading="lazy"><figcaption>${esc(L.photo)}: ${esc(c.author || "")} · <a href="${c.page || "#"}" target="_blank" rel="noopener">${esc(c.license || "")}</a></figcaption></figure>`; }).join("")}
+      </div>
+    </div></section>
+
+    <section class="block" id="next" style="background:var(--paper)"><div class="wrap">
+      <div class="next-head">
+        <div><p class="eyebrow">${esc(L.next)}</p><h2 class="title">${esc(L.nextTitle)}</h2></div>
+        <div class="locate"><button class="chip" type="button" id="locate">${I.locate}${esc(L.useLoc)}</button><p class="note" id="loc-note" role="status" hidden></p></div>
+      </div>
+      <div class="next-grid">
+        <div><div class="compass">${compassSVG(here, l, others)}</div><p class="compass-cap">${esc(origin ? L.fromYou : L.fromHere(l.name[lang]))}</p></div>
+        <ol class="stops">${others.map((x, i) => stopHTML(x, i)).join("")}</ol>
+      </div>
+    </div></section>
+  </main>
+  ${footerHTML(l.images)}
+  <div class="mini" id="mini" role="region" aria-label="${esc(L.listen)}">
+    <button class="play" type="button" data-play></button>
+    <div class="t"><b>${esc(l.name[lang])}</b><span></span></div>
+    <button class="x" type="button" data-stop aria-label="Stop">${I.x}</button>
+  </div>`;
+}
+function stopHTML({ o, km }, i){
+  const first = i === 0;
+  const L = t(), tr = travel(km);
+  const mode = tr.preferDrive ? "driving" : "walking";
+  const time = tr.preferDrive ? L.drive(num(tr.drive)) : L.walk(num(tr.walk));
+  const maps = `https://www.google.com/maps/dir/?api=1&destination=${o.lat},${o.lng}&travelmode=${mode}`;
+  return `<li class="stop"><div class="thumb"><img src="${o.images[0]}" alt="" loading="lazy"><span class="num">${num(i+1)}</span></div><div>
+    ${first ? `<span class="badge">${esc(L.closest)}</span>` : ""}
+    <h3>${esc(o.name[lang])}</h3>
+    <div class="km"><span><b>${fmtDist(km)}</b></span><span>${esc(time)}</span></div>
+    <div class="acts"><a class="chip go" href="${maps}" target="_blank" rel="noopener">${I.pin}${esc(L.directions)}</a><a class="chip" href="#${o.id}">${esc(L.open)}</a></div>
+  </div></li>`;
+}
+/* Compass: true bearings; distance on a log scale so the old-town cluster and the fort both fit.
+   Numbers match the list beside it. */
+function compassSVG(here, l, others){
+  const L = t(), S = 400, C = S/2, R = 168, k0 = 0.05;
+  const max = Math.max(1, ...others.map(x => x.km));
+  const rr = km => R * Math.log(1 + km / k0) / Math.log(1 + max / k0);
+  const rings = [0.1, 0.5, 2].filter(k => k < max * 1.05);
+  let g = rings.map(k => `<circle class="ring" cx="${C}" cy="${C}" r="${rr(k).toFixed(1)}"/><text class="ring-l" x="${C}" y="${(C - rr(k) - 5).toFixed(1)}" text-anchor="middle">${fmtDist(k)}</text>`).join("");
+  g += `<text class="n" x="${C}" y="20" text-anchor="middle">N</text>`;
+  const pts = [];
+  others.forEach(({ km, br }, i) => {
+    let r = rr(km), x = C + r * Math.sin(br), y = C - r * Math.cos(br), tries = 0;
+    while (pts.some(p => Math.hypot(p.x - x, p.y - y) < 26) && tries++ < 12){ r += 10; x = C + r * Math.sin(br); y = C - r * Math.cos(br); }
+    pts.push({ x, y, i });
+  });
+  pts.forEach(p => { g += `<line class="ray" x1="${C}" y1="${C}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}"/>`; });
+  g += `<circle cx="${C}" cy="${C}" r="17" fill="none" stroke="var(--murex)" opacity=".35"/><circle class="here" cx="${C}" cy="${C}" r="8"/>`;
+  pts.forEach(p => { const o = others[p.i].o; g += `<a href="#${o.id}" aria-label="${esc(o.name[lang])}"><circle class="dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="12"/><text class="dn" x="${p.x.toFixed(1)}" y="${(p.y + 4.5).toFixed(1)}" text-anchor="middle">${num(p.i + 1)}</text></a>`; });
+  return `<svg viewBox="0 0 ${S} ${S}" role="img" aria-label="${esc(origin ? L.fromYou : L.fromHere(l.name[lang]))}">${g}</svg>`;
+}
+
+/* ---------------- home ---------------- */
+function homePage(){
+  const L = t();
+  const cta = `<a class="btn" href="#${LANDMARKS[0].id}"><span class="disc">${I.arrow}</span>${esc(L.start)}</a>`;
+  return `${heroHTML({ words: CITY.hero[lang], img: CITY.image, alt: CITY.name[lang], meta: `${L.trail} · ${num(LANDMARKS.length)} ${lang === "ar" ? "معالم" : lang === "fr" ? "sites" : "landmarks"}`, lede: CITY.intro[lang], cta, title: CITY.name[lang], coord: fmtCoord({ lat: 34.2553, lng: 35.6581 }) })}
+  <main>
+    <section class="block"><div class="wrap">
+      <p class="eyebrow">${esc(L.homeEyebrow)}</p><h2 class="title">${esc(L.homeTitle)}</h2>
+      <div class="cards">${LANDMARKS.map(l => `<a class="card" href="#${l.id}"><img src="${l.images[0]}" alt="" loading="lazy"><div><h3>${esc(l.name[lang])}</h3><p>${esc(l.tagline[lang])}</p></div></a>`).join("")}</div>
+    </div></section>
+    <section class="block" style="padding-top:0"><div class="wrap">
+      <p class="eyebrow">${esc(L.howEyebrow)}</p>
+      <div class="steps">${L.how.map((h, i) => `<div><b>${num(i+1)}</b><h3>${esc(h[0])}</h3><p>${esc(h[1])}</p></div>`).join("")}</div>
+      <p style="margin-top:32px"><a class="btn ghost" href="#qr-codes">${esc(L.qrLink)}</a></p>
+    </div></section>
+  </main>
+  ${footerHTML([CITY.image])}`;
+}
+
+/* ---------------- QR sheet ---------------- */
+function baseURL(){ return location.href.split("#")[0]; }
+function qrPage(){
+  const L = t();
+  const saved = store.get("ul-qr-base");
+  const framed = window.self !== window.top;
+  return `${topBar()}
+  <main><section class="block" style="padding-top:120px"><div class="wrap">
+    <p class="eyebrow">${esc(CITY.name[lang])}</p><h2 class="title">${esc(L.qrTitle)}</h2>
+    <p class="lede" style="margin-top:16px">${esc(L.qrIntro)}</p>
+    <div class="qr-tools">
+      <label for="qr-base">${esc(L.qrAddr)}<input id="qr-base" type="url" inputmode="url" spellcheck="false" value="${esc(saved || baseURL())}"></label>
+      ${framed ? "" : `<button class="btn" type="button" id="qr-print"><span class="disc">${I.arrow}</span>${esc(L.qrPrint)}</button>`}
+    </div>
+    <p class="note" style="margin-top:10px">${esc(L.qrNote)}</p>
+    <div class="qr-grid" id="qr-grid"></div>
+  </div></section></main>
+  ${footerHTML([])}`;
+}
+function drawQRs(){
+  const grid = document.getElementById("qr-grid"); if (!grid) return;
+  const base = (document.getElementById("qr-base").value || baseURL()).split("#")[0];
+  grid.innerHTML = LANDMARKS.map(l => {
+    const url = `${base}#${l.id}`;
+    let svg = "";
+    if (window.qrcode){ const q = qrcode(0, "M"); q.addData(url); q.make(); svg = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true }); }
+    return `<article class="qr-card"><div class="code">${svg}</div><h3>${esc(l.name.en)}</h3><div class="ar">${esc(l.name.ar)}</div><div class="fr">${esc(l.name.fr)}</div><div class="scan">${esc(T.en.qrScan)}</div><code>${esc(url)}</code></article>`;
+  }).join("");
+}
+
+/* ---------------- hero animation (pill opens from a hairline) ---------------- */
+function fitHero(){
+  const row = document.getElementById("words"); if (!row) return;
+  const w1 = row.querySelector('[data-a="w1"]'), w2 = row.querySelector('[data-a="w2"]');
+  const phone = innerWidth <= 720, vw = innerWidth, vh = innerHeight;
+  const pw = Math.min(vw - (phone ? 32 : 48), 1500);
+  row.style.setProperty("--pw", pw + "px");
+  row.style.fontSize = "100px";
+  const a = w1.getBoundingClientRect().width, b = w2.getBoundingClientRect().width;
+  const fs = Math.floor(Math.min(pw / (Math.max(a, b) / 100), phone ? vw * 0.2 : vh * 0.13, lang === "ar" ? vh * 0.075 : vh * 0.13));
+  row.style.fontSize = fs + "px";
+  // the photo takes whatever height is left after the two words, the top bar and the footer
+  const foot = document.querySelector('[data-a="foot"]');
+  const footH = foot ? foot.getBoundingClientRect().height : 120;
+  const wordsH = w1.getBoundingClientRect().height + w2.getBoundingClientRect().height + fs * 0.2;
+  const ph = Math.max(phone ? 260 : 320, Math.min(vh - 96 - footH - wordsH - 20, phone ? pw * 1.25 : pw * 0.62));
+  row.style.setProperty("--ph", Math.round(ph) + "px");
+  measureFrame();
+}
+/* geometry of the photo window, relative to the sticky hero */
+let G = null;
+function measureFrame(){
+  const hero = document.querySelector(".hero"), slot = document.querySelector('[data-a="pill"]');
+  if (!hero || !slot) { G = null; return; }
+  const h = hero.getBoundingClientRect(), r = slot.getBoundingClientRect();
+  const W = h.width, H = h.height, top = r.top - h.top;
+  G = { W, H, t: top, l: r.left - h.left, r: W - (r.right - h.left), b: H - (top + r.height), w: r.width, h: r.height,
+        rad: innerWidth <= 720 ? 32 : Math.min(96, Math.max(28, innerWidth * .06)) };
+  applyScroll();
+}
+const clip = (t, r, b, l, rad) => `inset(${t.toFixed(1)}px ${r.toFixed(1)}px ${b.toFixed(1)}px ${l.toFixed(1)}px round ${rad.toFixed(1)}px)`;
+const easeIO = x => x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2;
+let introRunning = false;
+function applyScroll(){
+  if (!G || introRunning) return;
+  const track = document.getElementById("track"), frame = document.getElementById("frame"); if (!track || !frame) return;
+  const span = Math.max(1, track.offsetHeight - innerHeight);
+  const p = reduceMotion ? 0 : Math.min(1, Math.max(0, -track.getBoundingClientRect().top / span));
+  const e = easeIO(Math.min(1, p / .8));
+  frame.style.clipPath = clip(G.t*(1-e), G.r*(1-e), G.b*(1-e), G.l*(1-e), G.rad*(1-e));
+  frame.querySelector("img").style.transform = `scale(${(1.14 - .14*e).toFixed(4)})`;
+  frame.querySelector(".shade").style.opacity = Math.min(1, e * 1.4).toFixed(3);
+  const w1 = document.querySelector('[data-a="w1"]'), w2 = document.querySelector('[data-a="w2"]');
+  const dir = lang === "ar" ? -1 : 1;
+  if (w1){ w1.style.transform = `translate3d(${-dir*e*18}vw, ${-e*12}vh, 0)`; w1.style.opacity = Math.max(0, 1 - e*1.7).toFixed(3); }
+  if (w2){ w2.style.transform = `translate3d(${dir*e*18}vw, ${e*12}vh, 0)`; w2.style.opacity = Math.max(0, 1 - e*1.7).toFixed(3); }
+  const foot = document.querySelector('[data-a="foot"]'); if (foot){ foot.style.opacity = Math.max(0, 1 - p*4).toFixed(3); foot.style.pointerEvents = p > .2 ? "none" : ""; }
+  const cap = document.getElementById("cap"); if (cap){ const c = Math.min(1, Math.max(0, (p - .55) / .25)); cap.style.opacity = c.toFixed(3); cap.style.transform = `translateY(${(1-c)*24}px)`; }
+}
+let heroAnim = [];
+function playHero(){
+  heroAnim.forEach(a => a.cancel()); heroAnim = [];
+  const row = document.getElementById("words"); if (!row) return;
+  if (reduceMotion || !document.body.animate || !G){ row.querySelectorAll(".ch").forEach(c => c.style.transform = "none"); introRunning = false; applyScroll(); return; }
+  const frame = document.getElementById("frame");
+  const midT = G.t + G.h/2 - .75, midB = G.b + G.h/2 - .75, half = G.w/2;
+  const ease = "cubic-bezier(.45,0,.3,1)", D = 2300;
+  introRunning = true;
+  frame.querySelector("img").style.transform = "scale(1.14)";
+  const a = frame.animate([
+    { clipPath: clip(midT, G.r + half, midB, G.l + half, 1), offset: 0 },
+    { clipPath: clip(midT, G.r + half, midB, G.l + half, 1), offset: .12 },
+    { clipPath: clip(midT, G.r, midB, G.l, 1), offset: .32 },
+    { clipPath: clip(G.t + G.h*.3, G.r, G.b + G.h*.3, G.l, G.rad*.6), offset: .6 },
+    { clipPath: clip(G.t, G.r, G.b, G.l, G.rad), offset: 1 }
+  ], { duration: D, easing: ease, fill: "both" });
+  heroAnim.push(a);
+  a.finished.then(() => { a.cancel(); introRunning = false; applyScroll(); }).catch(() => {});
+  row.classList.remove("go"); void row.offsetWidth; row.style.setProperty("--d", ".85s"); row.classList.add("go");
+  const seg = (el, kf, s, e) => el && heroAnim.push(el.animate(kf, { duration: D*(e-s), delay: D*s, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" }));
+  seg(document.querySelector(".hero .top"), [{ transform: "translateY(-140%)", opacity: 0 }, { transform: "none", opacity: 1 }], .45, .85);
+  seg(document.querySelector('[data-a="foot"]'), [{ transform: "translateY(40px)", opacity: 0 }, { transform: "none", opacity: 1 }], .55, .95);
+  seg(document.querySelector('[data-a="rule"]'), [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], .5, 1);
+}
+function finishIntro(){
+  heroAnim.forEach(a => { try { a.finish(); } catch(e){} });
+  const row = document.getElementById("words"); if (row) row.querySelectorAll(".ch").forEach(c => { c.style.animation = "none"; c.style.transform = "none"; });
+  introRunning = false; applyScroll();
+}
+
+/* scroll reveals */
+let io = null;
+function armReveals(){
+  if (io) io.disconnect();
+  if (reduceMotion || !("IntersectionObserver" in window)) return;
+  document.documentElement.classList.add("anim");
+  const groups = [".story-side > *", ".story p", ".strip figure", ".next-head", ".compass", ".stops .stop", ".cards .card", ".steps > div", "section.block .eyebrow + .title", ".qr-card"];
+  io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
+  groups.forEach(sel => document.querySelectorAll(sel).forEach((el, i) => {
+    const r = el.getBoundingClientRect();
+    if (r.top < innerHeight * .9) return;          // already on screen: leave it visible
+    el.setAttribute("data-reveal", ""); el.style.setProperty("--d", (Math.min(i, 5) * .08) + "s"); io.observe(el);
+  }));
+}
+
+/* ---------------- router ---------------- */
+function route(){
+  const id = decodeURIComponent(location.hash.slice(1));
+  const l = byId(id);
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  if (l){
+    Voice.setup(l);
+    app.innerHTML = landmarkPage(l);
+    document.title = `${l.name[lang]} · Uncover Lebanon`;
+  } else if (id === "qr-codes"){
+    Voice.setup(null);
+    app.innerHTML = qrPage(); drawQRs();
+    document.title = `${t().qrTitle} · Uncover Lebanon`;
+  } else {
+    Voice.setup(null);
+    app.innerHTML = homePage();
+    document.title = `Uncover Lebanon · ${CITY.name[lang]}`;
+  }
+  Voice.render();
+  fitHero();
+  armReveals();
+  const go = () => { fitHero(); playHero(); };
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go);
+}
+function rerender(keepScroll){
+  const y = scrollY; const wasPlaying = Voice.playing;
+  route();
+  if (keepScroll){ scrollTo(0, y); requestAnimationFrame(() => { fitHero(); finishIntro(); }); setTimeout(finishIntro, 50); }
+  if (wasPlaying) Voice.play(0);
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click", e => {
+  const lb = e.target.closest("[data-lang]");
+  if (lb){ lang = lb.dataset.lang; store.set("ul-lang", lang); rerender(true); return; }
+  const pb = e.target.closest("[data-play]");
+  if (pb){
+    if (pb.hasAttribute("data-start-story") && !Voice.playing){ document.getElementById("story").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" }); }
+    Voice.toggle(); return;
+  }
+  if (e.target.closest("[data-stop]")){ Voice.stop(); return; }
+  const s = e.target.closest(".s");
+  if (s){ Voice.play(+s.dataset.i); return; }
+  if (e.target.closest("#locate")){ locate(); return; }
+  if (e.target.closest("#qr-print")){ window.print(); return; }
+});
+document.addEventListener("input", e => { if (e.target.id === "qr-base"){ store.set("ul-qr-base", e.target.value); drawQRs(); } });
+addEventListener("hashchange", () => { Voice.stop(true); origin = null; route(); scrollTo(0, 0); });
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { finishIntro(); fitHero(); }, 120); });
+let ticking = false;
+addEventListener("scroll", () => {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(() => { ticking = false; if (introRunning && scrollY > 8) finishIntro(); applyScroll(); Voice.render(); });
+}, { passive: true });
+
+function locate(){
+  const L = t(), note = document.getElementById("loc-note");
+  const fail = () => { note.textContent = L.locFail; note.hidden = false; };
+  if (!navigator.geolocation) return fail();
+  note.textContent = L.locating; note.hidden = false;
+  try {
+    navigator.geolocation.getCurrentPosition(p => {
+      origin = { lat: p.coords.latitude, lng: p.coords.longitude };
+      rerender(true);
+    }, fail, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+  } catch(err){ fail(); }
+}
+
+document.body.insertAdjacentHTML("beforeend", '<div class="grain" aria-hidden="true"></div>');
+route();
+})();
+
+</script>
+</body>
+</html>
