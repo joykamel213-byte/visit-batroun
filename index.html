@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='2' width='20' height='20' rx='10' fill='%237b2a5e'/%3E%3Crect x='11.3' y='6' width='1.4' height='12' rx='.7' fill='white'/%3E%3C/svg%3E">
-<title>Uncover Batroun</title>
+<title>Visit Batroun</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Scan, listen and explore Batroun's landmarks in English, Arabic and French.">
 <meta name="theme-color" content="#f1f1ee">
@@ -15,10 +15,11 @@
    then a reading column for the story, a photo strip, and a "next stop" compass + list. */
 :root{
   /* single deliberate look: night cinema, sandstone light, murex (Tyrian purple) accent */
-  --bg:#0a0a0b; --paper:#111113; --ink:#f3efe8; --ink-2:#cdc7bd; --muted:#8f8a83;
-  --rule:rgba(243,239,232,.13); --line:rgba(255,255,255,.07);
-  --murex:#d97db6; --murex-ink:#16090f; --murex-tint:rgba(217,125,182,.16);
-  --card:#141416; --pill-fill:#1b1b1e;
+  --bg:#0d1320; --paper:#121a2b; --ink:#f3eee5; --ink-2:#cfd2d8; --muted:#8e97a8;
+  --rule:rgba(214,224,245,.13); --line:rgba(255,255,255,.07);
+  --murex:#e07fb6; --murex-ink:#1a0b14; --murex-tint:rgba(224,127,182,.17);
+  --sand:#e6c08e; --sea:#3f7fb4;
+  --card:#162034; --pill-fill:#1b2438;
   --f-display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
   --f-read:"Newsreader", Georgia, "Times New Roman", serif;
   --f-ar-display:"Noto Kufi Arabic", "Segoe UI", Tahoma, sans-serif;
@@ -43,8 +44,11 @@ img{display:block;max-width:100%}
   padding:14px var(--gut-r) 0 var(--gut);font-size:13px;font-weight:500}
 .brand{display:flex;align-items:center;gap:8px;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
 .brand svg{width:20px;height:20px;flex:none}
-.brand b{font-weight:700}
-.brand span{color:var(--muted)}
+.brand .wm{display:grid;line-height:1.1}
+.brand b{font-weight:700;font-size:14px;letter-spacing:-.01em}
+.brand small{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+[dir="rtl"] .brand small{letter-spacing:0;font-size:11px}
+.brand svg{width:24px;height:24px}
 .langs{display:flex;gap:2px;padding:3px;border-radius:999px;background:color-mix(in srgb,var(--card) 70%,transparent);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--rule)}
 .langs button{border:0;background:none;padding:7px 12px;min-width:44px;min-height:34px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-2)}
@@ -53,12 +57,12 @@ img{display:block;max-width:100%}
 
 /* ---------- hero: sticky stage, the photo window widens to full screen as you scroll ---------- */
 .hero-track{position:relative;height:230svh}
-.hero{position:sticky;top:0;height:100svh;min-height:560px;display:grid;grid-template-rows:1fr auto;overflow:hidden;isolation:isolate;background:#060607}
+.hero{position:sticky;top:0;height:100svh;min-height:560px;display:grid;grid-template-rows:1fr auto;overflow:hidden;isolation:isolate;background:#0a0f1a}
 .amb{position:absolute;inset:-8%;z-index:0;pointer-events:none}
-.amb img{width:100%;height:100%;object-fit:cover;filter:blur(46px) saturate(1.25) brightness(.42);transform:scale(1.15);animation:breathe 22s ease-in-out infinite alternate}
+.amb img{width:100%;height:100%;object-fit:cover;filter:blur(46px) saturate(1.3) brightness(.5) hue-rotate(-8deg);transform:scale(1.15);animation:breathe 22s ease-in-out infinite alternate}
 @keyframes breathe{from{transform:scale(1.15) translate3d(-1.5%,0,0)}to{transform:scale(1.25) translate3d(1.5%,-1%,0)}}
-.vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 40%,rgba(0,0,0,.7) 100%)}
-.frame{position:absolute;inset:0;z-index:2;overflow:hidden;clip-path:inset(30% 20% 30% 20% round 48px);will-change:clip-path;background:#000}
+.vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 40%,rgba(8,12,22,.75) 100%)}
+.frame{position:absolute;inset:0;z-index:2;overflow:hidden;clip-path:inset(30% 20% 30% 20% round 48px);will-change:clip-path;background:#0a0f1a}
 .frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.14);will-change:transform}
 .frame .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 22%,transparent 55%,rgba(0,0,0,.72) 100%);opacity:0}
 .cap{position:absolute;z-index:3;left:var(--gut);right:var(--gut-r);bottom:calc(32px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:14px 24px;color:#fff;opacity:0;pointer-events:none}
@@ -68,7 +72,7 @@ img{display:block;max-width:100%}
 .cap .cue{display:flex;align-items:center;gap:10px;font-size:13px;opacity:.85}
 .cap .cue i{display:block;width:1px;height:38px;background:linear-gradient(#fff,transparent);animation:cue 1.8s var(--ease-out) infinite}
 @keyframes cue{from{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}to{transform:scaleY(0);transform-origin:bottom}}
-.bars::before,.bars::after{content:"";position:absolute;left:0;right:0;height:12vh;background:#000;z-index:30;pointer-events:none;animation:bar 1.3s cubic-bezier(.7,0,.2,1) .15s both}
+.bars::before,.bars::after{content:"";position:absolute;left:0;right:0;height:12vh;background:#070b14;z-index:30;pointer-events:none;animation:bar 1.3s cubic-bezier(.7,0,.2,1) .15s both}
 .bars::before{top:0;transform-origin:top}.bars::after{bottom:0;transform-origin:bottom}
 @keyframes bar{from{transform:scaleY(1)}to{transform:scaleY(0)}}
 .stage{position:relative;z-index:4;display:flex;align-items:center;justify-content:center;padding:76px 0 20px;color:#fff}
@@ -85,7 +89,7 @@ img{display:block;max-width:100%}
 .pill{position:relative;flex:none;height:var(--ph,52svh);width:100%;visibility:hidden}
 .hero .top,.hero-foot{position:relative;z-index:5}
 .hero .top{position:absolute;color:#fff}
-.hero .brand span{color:rgba(255,255,255,.6)}
+.hero .brand small{color:rgba(255,255,255,.6)}
 .hero .langs{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16)}
 .hero .langs button{color:rgba(255,255,255,.8)}
 .hero .langs button[aria-pressed="true"]{background:#fff;color:#000}
@@ -172,32 +176,74 @@ h2.title{font-size:clamp(34px,5.4vw,64px);line-height:.95;letter-spacing:-.035em
 .strip figcaption a{text-decoration:underline;text-underline-offset:2px}
 
 /* ---------- next stop ---------- */
-.next-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:28px}
-.next-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
-@media (min-width:900px){.next-grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px}}
-.compass{position:relative;border-radius:28px;background:var(--paper);border:1px solid var(--rule);aspect-ratio:1/1;max-width:100%;overflow:hidden}
-.compass svg{width:100%;height:100%;display:block}
-.compass .ring{fill:none;stroke:var(--rule)}
-.compass .ring-l{fill:var(--muted);font-size:10px;font-family:var(--f-display)}
-.compass .ray{stroke:var(--murex);stroke-width:1.2;stroke-dasharray:3 4;opacity:.55}
-.compass .dot{fill:var(--ink);transition:fill .2s}
-.compass a:hover .dot,.compass a:focus .dot{fill:var(--murex)}
-.compass .dn{fill:var(--bg);font-size:12px;font-weight:700;font-family:var(--f-display);pointer-events:none}
-.compass .here{fill:var(--murex)}
-.compass .lbl{fill:var(--ink);font-size:12px;font-weight:600;font-family:var(--f-display)}
-[dir="rtl"] .compass .lbl{font-family:var(--f-ar-display)}
-.compass .n{fill:var(--muted);font-size:11px;font-weight:700;font-family:var(--f-display)}
+.nextstop{position:relative;overflow:hidden;background:
+  radial-gradient(80% 60% at 85% 0%,rgba(63,127,180,.28),transparent 60%),
+  radial-gradient(70% 55% at 0% 100%,rgba(224,127,182,.16),transparent 60%),var(--paper)}
+.next-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:32px}
+.next-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+@media (min-width:900px){.next-grid{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;align-items:stretch}}
+.feat{position:relative;display:flex;border-radius:30px;overflow:hidden;min-height:440px;isolation:isolate;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.feat>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease-out)}
+.feat:hover>img{transform:scale(1.04)}
+.feat::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(10,16,28,.25) 0%,transparent 30%,rgba(10,16,28,.88) 100%)}
+.feat-in{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:120px;min-height:440px;padding:22px 22px 24px;color:#fff}
+.feat-top{display:flex;align-items:center;gap:10px}
+.feat .badge{color:#fff;background:rgba(255,255,255,.14);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:7px 12px;border-radius:999px;margin:0}
+.feat-dist{display:flex;align-items:baseline;gap:8px;line-height:.85;margin-bottom:10px}
+.feat-dist b{font-size:clamp(64px,9vw,112px);font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.feat-dist span{font-size:20px;font-weight:600;opacity:.8}
+.feat h3{margin:0;font-size:clamp(24px,3vw,34px);letter-spacing:-.025em;line-height:1.05}
+[dir="rtl"] .feat h3{letter-spacing:0;line-height:1.4}
+.feat p{margin:8px 0 14px;max-width:34ch;opacity:.82;font-family:var(--f-read);font-size:17px;line-height:1.4}
+[dir="rtl"] .feat p{font-family:var(--f-ar-read)}
+.feat-row{margin-bottom:16px}
+.time{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.12);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff}
+.time svg{width:16px;height:16px}
+.feat .acts{display:flex;flex-wrap:wrap;gap:8px}
+.feat .chip.go{background:#fff;color:#0d1320}
+.chip.glass{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#fff;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.pin-n{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--murex);color:var(--murex-ink);font-weight:800;font-size:13px;flex:none}
+.radar-wrap{display:flex;flex-direction:column}
+.radar{position:relative;flex:1;min-height:0;aspect-ratio:1/1;border-radius:30px;overflow:hidden;border:1px solid var(--rule);
+  background:radial-gradient(circle at 50% 50%,rgba(63,127,180,.22),rgba(13,19,32,.6) 70%),var(--card)}
+.radar svg{position:relative;z-index:1;width:100%;height:100%;display:block}
+.sweep{position:absolute;inset:0;z-index:0;background:conic-gradient(from 0deg,rgba(224,127,182,.0) 0deg,rgba(224,127,182,.0) 300deg,rgba(224,127,182,.28) 360deg);
+  border-radius:50%;transform:scale(1.1);animation:sweep 6s linear infinite;mask:radial-gradient(circle,#000 62%,transparent 63%);-webkit-mask:radial-gradient(circle,#000 62%,transparent 63%)}
+@keyframes sweep{to{transform:scale(1.1) rotate(360deg)}}
+.radar .ring{fill:none;stroke:var(--rule)}
+.radar .ring-l{fill:var(--muted);font-size:10px;font-family:var(--f-display)}
+.radar .ray{stroke:var(--murex);stroke-width:1.2;stroke-dasharray:2 5;opacity:.6}
+.radar .dot-ring{fill:var(--bg);stroke:rgba(255,255,255,.55);stroke-width:1.5;transition:stroke .2s}
+.radar .dot-ring.first{stroke:var(--murex);stroke-width:2.5}
+.radar a:hover .dot-ring,.radar a:focus .dot-ring{stroke:var(--murex)}
+.radar .dn-bg{fill:var(--murex)}
+.radar .dn{fill:var(--murex-ink);font-size:10px;font-weight:800;font-family:var(--f-display);pointer-events:none}
+.radar .here{fill:var(--murex)}
+.radar .pulse{fill:var(--murex);opacity:.5;transform-origin:center;transform-box:fill-box;animation:pulse 2.4s var(--ease-out) infinite}
+@keyframes pulse{from{transform:scale(1);opacity:.5}to{transform:scale(3.2);opacity:0}}
+.radar .n{fill:var(--muted);font-size:11px;font-weight:700;font-family:var(--f-display)}
 .compass-cap{font-size:12px;color:var(--muted);margin-top:10px}
-.stops{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-.stop{display:grid;grid-template-columns:88px minmax(0,1fr);gap:16px;align-items:center;padding:10px;border-radius:22px;background:var(--card);border:1px solid var(--rule)}
-.stop .thumb{position:relative}
-.stop img{width:88px;height:88px;border-radius:16px;object-fit:cover}
-.stop .num{position:absolute;top:-6px;inset-inline-start:-6px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;display:grid;place-items:center;border:2px solid var(--card)}
-.stop h3{margin:0;font-size:18px;letter-spacing:-.015em;line-height:1.15;font-weight:700}
-[dir="rtl"] .stop h3{letter-spacing:0;line-height:1.5}
-.stop .km{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin:6px 0 10px;font-variant-numeric:tabular-nums}
-.stop .km b{color:var(--ink);font-weight:600}
-.stop .acts{display:flex;flex-wrap:wrap;gap:8px}
+.more-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:44px 0 14px}
+.more-head .eyebrow{margin:0}
+.rail{list-style:none;margin:0;padding:0 0 12px;display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.tile{position:relative;flex:0 0 auto;width:min(72vw,280px);aspect-ratio:3/4;border-radius:26px;overflow:hidden;scroll-snap-align:start;isolation:isolate;color:#fff}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease-out)}
+.tile:hover img{transform:scale(1.06)}
+.tile::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,transparent 35%,rgba(10,16,28,.9))}
+.tile-link{position:absolute;inset:0;z-index:2}
+.tile .pin-n{position:absolute;top:14px;inset-inline-start:14px;z-index:1;width:28px;height:28px;font-size:12px}
+.tile-in{position:absolute;inset:auto 0 0;z-index:1;padding:16px}
+.tile-dist{font-size:13px;opacity:.85;font-variant-numeric:tabular-nums}
+.tile-dist b{font-size:30px;font-weight:800;letter-spacing:-.04em;opacity:1}
+.tile h3{margin:2px 0 10px;font-size:19px;letter-spacing:-.02em;line-height:1.1}
+[dir="rtl"] .tile h3{letter-spacing:0;line-height:1.45}
+.tile-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tile .time{font-size:12px;padding:6px 10px}
+.tile .ico{position:relative;z-index:3;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;color:#0d1320}
+.tile .ico svg{width:16px;height:16px}
+.locate{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.locate .note{max-width:28rem}
 .chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--rule);background:transparent;cursor:pointer}
 .chip.go{background:var(--ink);color:var(--bg);border-color:transparent}
 .chip svg{width:14px;height:14px}
@@ -265,11 +311,10 @@ footer.foot ul{padding-inline-start:18px;margin:10px 0 0;display:grid;gap:4px}
   .hero-rule{display:none}
   .lede{font-size:15.5px}
   .btn{justify-content:flex-start}
-  .brand span{display:none}
-  .stop{grid-template-columns:72px minmax(0,1fr);gap:12px}
-  .stop img{width:72px;height:72px;border-radius:14px}
+  .feat,.feat-in{min-height:420px}
 }
 @media (prefers-reduced-motion: reduce){
+  .sweep{display:none}
   *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   .hero-track{height:auto}.hero{position:relative}.word-row .ch{transform:none}.grain{display:none}
 }
@@ -288,7 +333,7 @@ footer.foot ul{padding-inline-start:18px;margin:10px 0 0;display:grid;gap:4px}
    ========================================================================== */
 const CITY = {
   name: { en: "Batroun", ar: "البترون", fr: "Batroun" },
-  hero: { en: ["Uncover", "Batroun"], ar: ["اكتشف", "البترون"], fr: ["Découvrir", "Batroun"] },
+  hero: { en: ["Visit", "Batroun"], ar: ["زوروا", "البترون"], fr: ["Visitez", "Batroun"] },
   image: "images/batroun-port.jpg",
   intro: {
     en: "One of the oldest continuously inhabited towns on earth, Batroun has been a harbour for more than three thousand years. Scan the code at each site to hear its story in English, Arabic or French, then follow the trail to the next stop.",
@@ -703,7 +748,7 @@ const T = {
     trail: "Heritage trail", listen: "Listen to the story", pause: "Pause", resume: "Resume", replay: "Listen again",
     story: "The story", minListen: n => `${n} min listen`, sentence: (i, n) => `${i} of ${n}`,
     facts: "At a glance", gallery: "Photos", next: "Next stop", nextTitle: "Where to go from here",
-    walk: n => `${n} min walk`, drive: n => `${n} min drive`, closest: "Closest", directions: "Directions", open: "Open story",
+    walk: n => `${n} min walk`, drive: n => `${n} min drive`, closest: "Closest", moreNearby: "More nearby", swipe: "Swipe to see all", away: "away", directions: "Directions", open: "Open story",
     fromHere: n => `Bearings and distances from ${n}. Travel times are estimates.`,
     fromYou: "Bearings and distances from where you are. Travel times are estimates.",
     useLoc: "Measure from my location", locating: "Finding you…", locFail: "Location isn't available here, so distances are measured from this landmark.",
@@ -721,13 +766,13 @@ const T = {
     qrTitle: "QR codes", qrIntro: "One code per landmark. Each code opens that landmark's page. Print them and place each one at its site.",
     qrAddr: "Website address the codes point to", qrPrint: "Print the codes", qrScan: "Scan to hear the story · English · عربي · Français",
     qrNote: "Codes update as you edit the address. When the site is online at its own address, open this page there and the codes will match it.",
-    back: "All landmarks", made: "Uncover Lebanon · Batroun", m: "m", km: "km"
+    back: "All landmarks", made: "Visit Batroun · Municipality of Batroun", brand: "Visit Batroun", muni: "Municipality of Batroun", m: "m", km: "km"
   },
   ar: {
     trail: "درب التراث", listen: "استمع إلى القصة", pause: "إيقاف مؤقت", resume: "متابعة", replay: "استمع مجدداً",
     story: "الحكاية", minListen: n => `${n} دقائق استماع`, sentence: (i, n) => `${i} من ${n}`,
     facts: "لمحة سريعة", gallery: "صور", next: "المحطة التالية", nextTitle: "إلى أين بعد هنا",
-    walk: n => `${n} دقيقة سيراً`, drive: n => `${n} دقيقة بالسيارة`, closest: "الأقرب", directions: "الاتجاهات", open: "افتح القصة",
+    walk: n => `${n} دقيقة سيراً`, drive: n => `${n} دقيقة بالسيارة`, closest: "الأقرب", moreNearby: "معالم قريبة أخرى", swipe: "اسحب لرؤية الكل", away: "", directions: "الاتجاهات", open: "افتح القصة",
     fromHere: n => `الاتجاهات والمسافات انطلاقاً من ${n}. أوقات التنقل تقديرية.`,
     fromYou: "الاتجاهات والمسافات انطلاقاً من موقعك. أوقات التنقل تقديرية.",
     useLoc: "احسب المسافة من موقعي", locating: "جارٍ تحديد موقعك…", locFail: "تحديد الموقع غير متاح هنا، لذا تُحسب المسافات من هذا المعلم.",
@@ -745,13 +790,13 @@ const T = {
     qrTitle: "رموز QR", qrIntro: "رمز لكل معلم، يفتح صفحة المعلم. اطبعها وضع كل رمز في موقعه.",
     qrAddr: "عنوان الموقع الذي تشير إليه الرموز", qrPrint: "اطبع الرموز", qrScan: "Scan to hear the story · English · عربي · Français",
     qrNote: "تتحدّث الرموز عند تعديل العنوان. عندما يصبح الموقع على عنوانه الخاص، افتح هذه الصفحة هناك فتتطابق الرموز معه.",
-    back: "كل المعالم", made: "اكتشف لبنان · البترون", m: "م", km: "كم"
+    back: "كل المعالم", made: "زوروا البترون · بلدية البترون", brand: "زوروا البترون", muni: "بلدية البترون", m: "م", km: "كم"
   },
   fr: {
     trail: "Parcours patrimoine", listen: "Écouter l'histoire", pause: "Pause", resume: "Reprendre", replay: "Réécouter",
     story: "L'histoire", minListen: n => `${n} min d'écoute`, sentence: (i, n) => `${i} sur ${n}`,
     facts: "En bref", gallery: "Photos", next: "Prochaine étape", nextTitle: "Où aller ensuite",
-    walk: n => `${n} min à pied`, drive: n => `${n} min en voiture`, closest: "Le plus proche", directions: "Itinéraire", open: "Voir l'histoire",
+    walk: n => `${n} min à pied`, drive: n => `${n} min en voiture`, closest: "Le plus proche", moreNearby: "À proximité", swipe: "Faites glisser pour tout voir", away: "", directions: "Itinéraire", open: "Voir l'histoire",
     fromHere: n => `Directions et distances depuis ${n}. Temps de trajet estimés.`,
     fromYou: "Directions et distances depuis votre position. Temps de trajet estimés.",
     useLoc: "Mesurer depuis ma position", locating: "Localisation…", locFail: "La localisation n'est pas disponible ici : les distances sont mesurées depuis ce site.",
@@ -769,7 +814,7 @@ const T = {
     qrTitle: "Codes QR", qrIntro: "Un code par site. Chaque code ouvre la page du site. Imprimez-les et placez chacun à son emplacement.",
     qrAddr: "Adresse du site vers laquelle pointent les codes", qrPrint: "Imprimer les codes", qrScan: "Scan to hear the story · English · عربي · Français",
     qrNote: "Les codes se mettent à jour quand vous modifiez l'adresse. Une fois le site en ligne à sa propre adresse, ouvrez cette page là-bas et les codes correspondront.",
-    back: "Tous les sites", made: "Uncover Lebanon · Batroun", m: "m", km: "km"
+    back: "Tous les sites", made: "Visitez Batroun · Municipalité de Batroun", brand: "Visitez Batroun", muni: "Municipalité de Batroun", m: "m", km: "km"
   }
 };
 const SPEECH_TAG = { en: "en", ar: "ar", fr: "fr" };
@@ -782,6 +827,8 @@ const I = {
   arrow: '<svg viewBox="0 0 24 24" aria-hidden="true" class="flip"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="currentColor"/></svg>',
   locate: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4" stroke="currentColor" stroke-width="2"/></svg>',
+  walk: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="13" cy="4" r="2" fill="currentColor"/><path d="M10.5 21l2-6.5 2.5 2.5V21M9 11.5l1.5-4 3 1 2 3.5 2.5 1M10.5 7.5L7 9.5 6 13" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  car: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16v-4l2-5h12l2 5v4M4 16h16v2.5M4 16v2.5M7.5 13h.01M16.5 13h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   mark: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/><rect x="11.3" y="6" width="1.4" height="12" rx=".7" fill="var(--bg)"/></svg>'
 };
 
@@ -944,7 +991,7 @@ if ("speechSynthesis" in window){ Voice.load(); speechSynthesis.onvoiceschanged 
 function topBar(){
   const L = t();
   return `<header class="top">
-    <a class="brand" href="#" aria-label="${esc(L.allStops)}">${I.mark}<b>Uncover Lebanon</b><span>· ${esc(CITY.name[lang])}</span></a>
+    <a class="brand" href="#" aria-label="${esc(L.allStops)}">${I.mark}<span class="wm"><b>${esc(L.brand)}</b><small>${esc(L.muni)}</small></span></a>
     <div class="langs" role="group" aria-label="Language">
       ${[["en","EN"],["ar","عربي"],["fr","FR"]].map(([c,lab]) => `<button type="button" lang="${c}" data-lang="${c}" aria-pressed="${c===lang}">${lab}</button>`).join("")}
     </div></header>`;
@@ -1021,15 +1068,17 @@ function landmarkPage(l){
       </div>
     </div></section>
 
-    <section class="block" id="next" style="background:var(--paper)"><div class="wrap">
+    <section class="block nextstop" id="next"><div class="wrap">
       <div class="next-head">
         <div><p class="eyebrow">${esc(L.next)}</p><h2 class="title">${esc(L.nextTitle)}</h2></div>
         <div class="locate"><button class="chip" type="button" id="locate">${I.locate}${esc(L.useLoc)}</button><p class="note" id="loc-note" role="status" hidden></p></div>
       </div>
       <div class="next-grid">
-        <div><div class="compass">${compassSVG(here, l, others)}</div><p class="compass-cap">${esc(origin ? L.fromYou : L.fromHere(l.name[lang]))}</p></div>
-        <ol class="stops">${others.map((x, i) => stopHTML(x, i)).join("")}</ol>
+        ${featuredHTML(others[0])}
+        <div class="radar-wrap"><div class="radar"><div class="sweep" aria-hidden="true"></div>${compassSVG(here, l, others)}</div><p class="compass-cap">${esc(origin ? L.fromYou : L.fromHere(l.name[lang]))}</p></div>
       </div>
+      <div class="more-head"><p class="eyebrow">${esc(L.moreNearby)}</p><span class="note">${esc(L.swipe)}</span></div>
+      <ol class="rail">${others.slice(1).map((x, i) => railHTML(x, i + 1)).join("")}</ol>
     </div></section>
   </main>
   ${footerHTML(l.images)}
@@ -1039,18 +1088,40 @@ function landmarkPage(l){
     <button class="x" type="button" data-stop aria-label="Stop">${I.x}</button>
   </div>`;
 }
-function stopHTML({ o, km }, i){
-  const first = i === 0;
-  const L = t(), tr = travel(km);
-  const mode = tr.preferDrive ? "driving" : "walking";
-  const time = tr.preferDrive ? L.drive(num(tr.drive)) : L.walk(num(tr.walk));
-  const maps = `https://www.google.com/maps/dir/?api=1&destination=${o.lat},${o.lng}&travelmode=${mode}`;
-  return `<li class="stop"><div class="thumb"><img src="${o.images[0]}" alt="" loading="lazy"><span class="num">${num(i+1)}</span></div><div>
-    ${first ? `<span class="badge">${esc(L.closest)}</span>` : ""}
-    <h3>${esc(o.name[lang])}</h3>
-    <div class="km"><span><b>${fmtDist(km)}</b></span><span>${esc(time)}</span></div>
-    <div class="acts"><a class="chip go" href="${maps}" target="_blank" rel="noopener">${I.pin}${esc(L.directions)}</a><a class="chip" href="#${o.id}">${esc(L.open)}</a></div>
-  </div></li>`;
+function tripInfo(o, km){
+  const L = t(), tr = travel(km), mode = tr.preferDrive ? "driving" : "walking";
+  return { tr, mode, time: tr.preferDrive ? L.drive(num(tr.drive)) : L.walk(num(tr.walk)), icon: tr.preferDrive ? I.car : I.walk,
+    maps: `https://www.google.com/maps/dir/?api=1&destination=${o.lat},${o.lng}&travelmode=${mode}` };
+}
+function distParts(km){ const s = fmtDist(km).split(" "); return { n: s[0], u: s.slice(1).join(" ") }; }
+function featuredHTML({ o, km }){
+  const L = t(), x = tripInfo(o, km), d = distParts(km);
+  return `<article class="feat">
+    <img src="${o.images[0]}" alt="${esc(o.name[lang])}" loading="lazy">
+    <div class="feat-in">
+      <div class="feat-top"><span class="pin-n">${num(1)}</span><span class="badge">${esc(L.closest)}</span></div>
+      <div class="feat-bot">
+        <div class="feat-dist"><b>${d.n}</b><span>${d.u}</span></div>
+        <h3>${esc(o.name[lang])}</h3>
+        <p>${esc(o.tagline[lang])}</p>
+        <div class="feat-row"><span class="time">${x.icon}${esc(x.time)}</span></div>
+        <div class="acts"><a class="chip go" href="${x.maps}" target="_blank" rel="noopener">${I.pin}${esc(L.directions)}</a><a class="chip glass" href="#${o.id}">${esc(L.open)} ${I.arrow}</a></div>
+      </div>
+    </div>
+  </article>`;
+}
+function railHTML({ o, km }, i){
+  const L = t(), x = tripInfo(o, km), d = distParts(km);
+  return `<li class="tile">
+    <a class="tile-link" href="#${o.id}" aria-label="${esc(o.name[lang])}"></a>
+    <img src="${o.images[0]}" alt="" loading="lazy">
+    <span class="pin-n">${num(i + 1)}</span>
+    <div class="tile-in">
+      <div class="tile-dist"><b>${d.n}</b> ${d.u}</div>
+      <h3>${esc(o.name[lang])}</h3>
+      <div class="tile-row"><span class="time">${x.icon}${esc(x.time)}</span><a class="ico" href="${x.maps}" target="_blank" rel="noopener" aria-label="${esc(L.directions)}">${I.pin}</a></div>
+    </div>
+  </li>`;
 }
 /* Compass: true bearings; distance on a log scale so the old-town cluster and the fort both fit.
    Numbers match the list beside it. */
@@ -1061,15 +1132,19 @@ function compassSVG(here, l, others){
   const rings = [0.1, 0.5, 2].filter(k => k < max * 1.05);
   let g = rings.map(k => `<circle class="ring" cx="${C}" cy="${C}" r="${rr(k).toFixed(1)}"/><text class="ring-l" x="${C}" y="${(C - rr(k) - 5).toFixed(1)}" text-anchor="middle">${fmtDist(k)}</text>`).join("");
   g += `<text class="n" x="${C}" y="20" text-anchor="middle">N</text>`;
-  const pts = [];
+  const pts = []; const minGap = 34;
   others.forEach(({ km, br }, i) => {
     let r = rr(km), x = C + r * Math.sin(br), y = C - r * Math.cos(br), tries = 0;
-    while (pts.some(p => Math.hypot(p.x - x, p.y - y) < 26) && tries++ < 12){ r += 10; x = C + r * Math.sin(br); y = C - r * Math.cos(br); }
+    while ((Math.hypot(C - x, C - y) < 36 || pts.some(p => Math.hypot(p.x - x, p.y - y) < minGap)) && tries++ < 14){ r += 10; x = C + r * Math.sin(br); y = C - r * Math.cos(br); }
     pts.push({ x, y, i });
   });
   pts.forEach(p => { g += `<line class="ray" x1="${C}" y1="${C}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}"/>`; });
-  g += `<circle cx="${C}" cy="${C}" r="17" fill="none" stroke="var(--murex)" opacity=".35"/><circle class="here" cx="${C}" cy="${C}" r="8"/>`;
-  pts.forEach(p => { const o = others[p.i].o; g += `<a href="#${o.id}" aria-label="${esc(o.name[lang])}"><circle class="dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="12"/><text class="dn" x="${p.x.toFixed(1)}" y="${(p.y + 4.5).toFixed(1)}" text-anchor="middle">${num(p.i + 1)}</text></a>`; });
+  g += `<circle class="pulse" cx="${C}" cy="${C}" r="10"/><circle class="here" cx="${C}" cy="${C}" r="8"/><circle cx="${C}" cy="${C}" r="3" fill="var(--bg)"/>`;
+  pts.forEach(p => { const o = others[p.i].o, R0 = p.i === 0 ? 17 : 13, id = "cp" + p.i;
+    g += `<a href="#${o.id}" aria-label="${esc(o.name[lang])}"><clipPath id="${id}"><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${R0}"/></clipPath>
+      <circle class="dot-ring${p.i === 0 ? " first" : ""}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${R0 + 2.5}"/>
+      <image href="${o.images[0]}" x="${(p.x - R0).toFixed(1)}" y="${(p.y - R0).toFixed(1)}" width="${R0*2}" height="${R0*2}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>
+      <circle class="dn-bg" cx="${(p.x + R0*.75).toFixed(1)}" cy="${(p.y - R0*.75).toFixed(1)}" r="8"/><text class="dn" x="${(p.x + R0*.75).toFixed(1)}" y="${(p.y - R0*.75 + 3.6).toFixed(1)}" text-anchor="middle">${num(p.i + 1)}</text></a>`; });
   return `<svg viewBox="0 0 ${S} ${S}" role="img" aria-label="${esc(origin ? L.fromYou : L.fromHere(l.name[lang]))}">${g}</svg>`;
 }
 
@@ -1208,7 +1283,7 @@ function armReveals(){
   if (io) io.disconnect();
   if (reduceMotion || !("IntersectionObserver" in window)) return;
   document.documentElement.classList.add("anim");
-  const groups = [".story-side > *", ".story p", ".strip figure", ".next-head", ".compass", ".stops .stop", ".cards .card", ".steps > div", "section.block .eyebrow + .title", ".qr-card"];
+  const groups = [".story-side > *", ".story p", ".strip figure", ".next-head", ".compass", ".feat", ".radar-wrap", ".rail", ".cards .card", ".steps > div", "section.block .eyebrow + .title", ".qr-card"];
   io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
   groups.forEach(sel => document.querySelectorAll(sel).forEach((el, i) => {
     const r = el.getBoundingClientRect();
@@ -1226,15 +1301,15 @@ function route(){
   if (l){
     Voice.setup(l);
     app.innerHTML = landmarkPage(l);
-    document.title = `${l.name[lang]} · Uncover Lebanon`;
+    document.title = `${l.name[lang]} · ${t().brand}`;
   } else if (id === "qr-codes"){
     Voice.setup(null);
     app.innerHTML = qrPage(); drawQRs();
-    document.title = `${t().qrTitle} · Uncover Lebanon`;
+    document.title = `${t().qrTitle} · ${t().brand}`;
   } else {
     Voice.setup(null);
     app.innerHTML = homePage();
-    document.title = `Uncover Lebanon · ${CITY.name[lang]}`;
+    document.title = `${t().brand} · ${t().muni}`;
   }
   Voice.render();
   fitHero();
