@@ -55,9 +55,9 @@ img{display:block;max-width:100%}
 .langs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .langs button[lang="ar"]{font-family:var(--f-ar-display);font-size:13px}
 
-/* ---------- hero: sticky stage, the photo window widens to full screen as you scroll ---------- */
-.hero-track{position:relative;height:calc(100svh + 120vh);background:#0a0f1a}
-.hero{position:sticky;top:0;height:100svh;min-height:560px;display:grid;grid-template-rows:1fr auto;overflow:hidden;isolation:isolate;background:#0a0f1a}
+/* ---------- hero: one screen; the pill photo widens and drifts as the page scrolls on ---------- */
+.hero-track{position:relative;background:#0a0f1a}
+.hero{position:relative;height:100svh;min-height:560px;display:grid;grid-template-rows:1fr auto;overflow:hidden;isolation:isolate;background:#0a0f1a}
 .amb{position:absolute;inset:-8%;z-index:0;pointer-events:none}
 .amb img{width:100%;height:100%;object-fit:cover;filter:blur(46px) saturate(1.3) brightness(.5) hue-rotate(-8deg);transform:scale(1.15);animation:breathe 22s ease-in-out infinite alternate}
 @keyframes breathe{from{transform:scale(1.15) translate3d(-1.5%,0,0)}to{transform:scale(1.25) translate3d(1.5%,-1%,0)}}
@@ -305,7 +305,6 @@ footer.foot ul{padding-inline-start:18px;margin:10px 0 0;display:grid;gap:4px}
 
 /* ---------- phone ---------- */
 @media (max-width:720px){
-  .hero-track{height:calc(100svh + 95vh)}
   .stage{padding:76px 0 16px}
     .pill{border-radius:32px}
   .hero-foot{flex-direction:column;align-items:stretch;gap:16px;padding-bottom:22px}
@@ -397,6 +396,20 @@ footer.foot ul{padding-inline-start:18px;margin:10px 0 0;display:grid;gap:4px}
   .rpop-x{width:28px;height:28px;top:6px}
 }
 .leg-pill .sep{width:4px;height:4px;border-radius:50%;background:var(--muted);display:inline-block}
+
+/* ---------- gallery: every photo visible at once (no sideways swiping) ---------- */
+.strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;overflow:visible;scroll-snap-type:none;padding-bottom:0}
+.strip.n2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.strip figure,.strip figure.tall{width:auto;min-width:0}
+.strip img{height:clamp(260px,32vw,440px)}
+.anim .strip[data-reveal]{transform:translateY(34px)}
+@media (max-width:720px){
+  .strip,.strip.n2{grid-template-columns:1fr 1fr;gap:10px}
+  .strip figure:first-child,.strip.n2 figure{grid-column:1 / -1}
+  .strip img{height:auto;aspect-ratio:4/3;border-radius:18px}
+  .strip.n3 figure:not(:first-child) img{aspect-ratio:3/4}
+  .strip figcaption{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
 
 </style>
 </head>
@@ -1094,7 +1107,6 @@ function heroHTML({ words, img, alt, meta, lede, cta, title, coord }){
     <div class="amb" aria-hidden="true"><img src="${img}" alt=""></div>
     <div class="vignette" aria-hidden="true"></div>
     <div class="frame" id="frame"><div class="inner"><img src="${img}" alt="${esc(alt)}" fetchpriority="high"><div class="shade"></div></div></div>
-    <div class="cap" id="cap" aria-hidden="true"><div><span class="coord" dir="ltr">${esc(coord)}</span><strong>${esc(title)}</strong></div><span class="cue"><i></i>${esc(scrollCue)}</span></div>
     ${topBar()}
     <div class="stage">
       <h1 class="word-row" id="words"><span class="w" data-a="w1">${splitChars(words[0], 0)}</span><span class="pill" data-a="pill" aria-hidden="true"></span><span class="w" data-a="w2">${splitChars(words[1], words[0].length)}</span></h1>
@@ -1144,8 +1156,8 @@ function landmarkPage(l){
 
     <section class="block" style="padding-top:0"><div class="wrap">
       <p class="eyebrow">${esc(L.gallery)}</p>
-      <div class="strip" tabindex="0" aria-label="${esc(L.gallery)}">
-        ${l.images.map((src, i) => { const k = src.split("/").pop().replace(".jpg",""); const c = CREDITS[k] || {}; return `<figure class="${c.tall ? "tall" : ""}"><img src="${src}" alt="${esc(l.name[lang])}, ${esc(L.photo)} ${i+1}" loading="lazy"><figcaption>${esc(L.photo)}: ${esc(c.author || "")} · <a href="${c.page || "#"}" target="_blank" rel="noopener">${esc(c.license || "")}</a></figcaption></figure>`; }).join("")}
+      <div class="strip n${l.images.length}" aria-label="${esc(L.gallery)}">
+        ${l.images.map((src, i) => { const k = src.split("/").pop().replace(".jpg",""); const c = CREDITS[k] || {}; return `<figure class="${c.tall ? "tall" : ""}"><img src="${src}" alt="${esc(l.name[lang])}, ${esc(L.photo)} ${i+1}" decoding="async"><figcaption>${esc(L.photo)}: ${esc(c.author || "")} · <a href="${c.page || "#"}" target="_blank" rel="noopener">${esc(c.license || "")}</a></figcaption></figure>`; }).join("")}
       </div>
     </div></section>
 
@@ -1356,33 +1368,34 @@ function measureFrame(){
   render(true);
 }
 function readTarget(){
-  const track = document.getElementById("track"); if (!track) return 0;
-  const span = Math.max(1, track.offsetHeight - innerHeight);
-  return reduceMotion ? 0 : clamp01(-track.getBoundingClientRect().top / span);
+  const hero = document.querySelector(".hero"); if (!hero) return 0;
+  return reduceMotion ? 0 : clamp01(-hero.getBoundingClientRect().top / Math.max(1, hero.offsetHeight));
 }
+/* The hero scrolls away like normal content (no pinning, so the story is one swipe away).
+   While it leaves, the pill widens to the screen edges, the photo drifts slower than the page
+   (parallax) and settles its zoom, and the two words part and fade. */
 function render(snap){
   if (!G) return;
   targetP = readTarget();
-  smoothP = snap ? targetP : smoothP + (targetP - smoothP) * 0.16;
+  smoothP = snap ? targetP : smoothP + (targetP - smoothP) * 0.2;
   if (Math.abs(targetP - smoothP) < 0.0005) smoothP = targetP;
-  const p = smoothP, e = smoothstep(0, .78, p);
+  const p = smoothP, e = smoothstep(0, .6, p);
   const frame = document.getElementById("frame"); if (!frame) return;
-  const L = G.l * (1 - e), T = G.t * (1 - e);
-  const w = G.w + (G.W - G.w) * e, h = G.h + (G.H - G.h) * e;
-  const sx = w / G.w, sy = h / G.h, R = G.rad * (1 - e);
+  const grow = G.h * .1 * e;
+  const L = G.l * (1 - e), T = G.t - grow * .5;
+  const w = G.w + (G.W - G.w) * e, h = G.h + grow;
+  const sx = w / G.w, sy = h / G.h, R = G.rad * (1 - .7 * e);
   frame.style.transform = `translate3d(${L.toFixed(2)}px,${T.toFixed(2)}px,0) scale(${sx.toFixed(5)},${sy.toFixed(5)})`;
   frame.style.borderRadius = `${(R / sx).toFixed(2)}px / ${(R / sy).toFixed(2)}px`;
   frame.querySelector(".inner").style.transform = `translate3d(${(-L / sx).toFixed(2)}px,${(-T / sy).toFixed(2)}px,0) scale(${(1 / sx).toFixed(5)},${(1 / sy).toFixed(5)})`;
-  frame.querySelector("img").style.transform = `scale(${(1.12 - .12 * e).toFixed(4)})`;
-  frame.querySelector(".shade").style.opacity = smoothstep(.35, .9, p).toFixed(3);
-  const out = smoothstep(0, .45, p), dir = lang === "ar" ? -1 : 1;
+  frame.querySelector("img").style.transform = `translate3d(0,${(p * G.H * .05).toFixed(1)}px,0) scale(${(1.12 - .05 * e).toFixed(4)})`;
+  frame.querySelector(".shade").style.opacity = (e * .6).toFixed(3);
+  const out = smoothstep(0, .5, p), dir = lang === "ar" ? -1 : 1;
   const w1 = document.querySelector('[data-a="w1"]'), w2 = document.querySelector('[data-a="w2"]');
-  if (w1){ w1.style.transform = `translate3d(${(-dir * out * G.W * .12).toFixed(1)}px,${(-out * G.H * .08).toFixed(1)}px,0)`; w1.style.opacity = (1 - out).toFixed(3); }
-  if (w2){ w2.style.transform = `translate3d(${(dir * out * G.W * .12).toFixed(1)}px,${(out * G.H * .08).toFixed(1)}px,0)`; w2.style.opacity = (1 - out).toFixed(3); }
+  if (w1){ w1.style.transform = `translate3d(${(-dir * out * G.W * .1).toFixed(1)}px,${(out * G.H * .06).toFixed(1)}px,0)`; w1.style.opacity = (1 - out).toFixed(3); }
+  if (w2){ w2.style.transform = `translate3d(${(dir * out * G.W * .1).toFixed(1)}px,${(-out * G.H * .02).toFixed(1)}px,0)`; w2.style.opacity = (1 - out).toFixed(3); }
   const foot = document.querySelector('[data-a="foot"]');
-  if (foot){ const f = smoothstep(0, .22, p); foot.style.opacity = (1 - f).toFixed(3); foot.style.transform = `translate3d(0,${(f * 30).toFixed(1)}px,0)`; foot.style.pointerEvents = f > .5 ? "none" : ""; }
-  const cap = document.getElementById("cap");
-  if (cap){ const c = smoothstep(.62, .92, p); cap.style.opacity = c.toFixed(3); cap.style.transform = `translate3d(0,${((1 - c) * 28).toFixed(1)}px,0)`; }
+  if (foot){ const f = smoothstep(0, .3, p); foot.style.opacity = (1 - f).toFixed(3); foot.style.transform = `translate3d(0,${(-f * 24).toFixed(1)}px,0)`; }
   if (!snap && smoothP !== targetP) tick();
 }
 function routeFill(){
@@ -1432,7 +1445,7 @@ function armReveals(){
   if (io) io.disconnect();
   if (reduceMotion || !("IntersectionObserver" in window)) return;
   document.documentElement.classList.add("anim");
-  const groups = [".story-side > *", ".story p", ".strip figure", ".next-head", ".compass", ".feat", ".radar-wrap", ".rail", ".rcard", ".leg-pill", ".cards .card", ".steps > div", "section.block .eyebrow + .title", ".qr-card"];
+  const groups = [".story-side > *", ".story p", ".strip", ".next-head", ".compass", ".feat", ".radar-wrap", ".rail", ".rcard", ".leg-pill", ".cards .card", ".steps > div", "section.block .eyebrow + .title", ".qr-card"];
   io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
   groups.forEach(sel => document.querySelectorAll(sel).forEach((el, i) => {
     const r = el.getBoundingClientRect();
