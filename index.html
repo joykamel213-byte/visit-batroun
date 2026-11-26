@@ -482,31 +482,25 @@ section.block.story-first{padding-top:clamp(28px,4vw,56px)}
   [dir="rtl"] .tm-card{left:auto;right:20px}
 }
 @media (prefers-reduced-motion: reduce){ .tm-bill{transition:none} }
-/* stops as a constellation */
-.snake{position:relative;margin-top:8px}
-.sn-grid{list-style:none;margin:0;padding:0;position:relative;z-index:1;min-height:300px}
+/* route as a snake */
+.snake{position:relative;margin-top:4px}
+.sn-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));column-gap:clamp(6px,2vw,28px);row-gap:clamp(16px,2.6vw,34px);position:relative;z-index:1}
 .sn-line{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .sn-line path{fill:none;stroke-linecap:round;stroke-linejoin:round}
-.sn-bg{stroke:rgba(255,255,255,.14);stroke-width:2;stroke-dasharray:2 7}
+.sn-bg{stroke:rgba(255,255,255,.16);stroke-width:2;stroke-dasharray:2 7}
 .sn-fill{stroke:#f1c98f;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .3s linear}
-.sn-flow{stroke:#fff6e6;stroke-width:3.4;stroke-dasharray:.25 2.75;opacity:.5;animation:snflow 2.4s linear infinite}
-@keyframes snflow{to{stroke-dashoffset:-3}}
-.sn{position:absolute;left:0;top:0;width:90px;margin-left:-45px;--d:54px;--s:1}
-.sn.ph{--s:1.2}
-.sn a{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:inherit;text-align:center;-webkit-tap-highlight-color:transparent;
-  transform:translateY(calc(var(--d) * var(--s) * -.5)) scale(.4);opacity:0;transition:transform .7s var(--ease-out),opacity .5s;transition-delay:calc(var(--i) * 55ms)}
-.snake.go .sn a{transform:translateY(calc(var(--d) * var(--s) * -.5));opacity:1}
-.sn-ph{position:relative;width:calc(var(--d) * var(--s));height:calc(var(--d) * var(--s));flex:none;border-radius:50%;padding:3px;background:var(--bg);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 45%,transparent);transition:box-shadow .5s,transform .4s var(--ease-out)}
-.sn-ph img{width:100%;height:100%;max-width:none;border-radius:50%;object-fit:cover;display:block;filter:saturate(.6) brightness(.78);transition:filter .6s}
-.sn-ph b{position:absolute;top:-4px;inset-inline-end:-6px;min-width:21px;height:21px;padding:0 5px;border-radius:11px;display:grid;place-items:center;background:var(--c);color:#14182a;font-size:10.5px;font-weight:800;box-shadow:0 0 0 3px var(--bg)}
-.sn.lit .sn-ph{box-shadow:0 0 0 2px var(--c),0 0 22px color-mix(in srgb,var(--c) 40%,transparent)}
+.sn a{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:inherit;text-align:center;-webkit-tap-highlight-color:transparent}
+.sn-ph{position:relative;--d:clamp(62px,17vw,104px);width:var(--d);height:var(--d);flex:none;border-radius:50%;padding:3px;background:var(--bg);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 40%,transparent);transition:box-shadow .5s,transform .4s var(--ease-out)}
+.sn-ph img{width:100%;height:100%;max-width:none;border-radius:50%;object-fit:cover;display:block;filter:saturate(.55) brightness(.75);transition:filter .6s}
+.sn-ph b{position:absolute;top:-3px;inset-inline-end:-5px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;display:grid;place-items:center;background:var(--c);color:#14182a;font-size:11px;font-weight:800;box-shadow:0 0 0 3px var(--bg)}
+.sn.lit .sn-ph{box-shadow:0 0 0 2px var(--c),0 0 24px color-mix(in srgb,var(--c) 38%,transparent)}
 .sn.lit .sn-ph img{filter:none}
-.sn a:hover .sn-ph,.sn a:focus-visible .sn-ph{transform:scale(1.07)}
-.sn-name{font-size:11.5px;line-height:1.22;font-weight:600;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;transition:color .5s}
+.sn a:hover .sn-ph,.sn a:focus-visible .sn-ph{transform:translateY(-3px) scale(1.05)}
+.sn-name{font-size:12px;line-height:1.25;font-weight:600;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;transition:color .5s}
 .sn.lit .sn-name{color:var(--ink)}
-[dir="rtl"] .sn-name{line-height:1.4;font-size:12px}
-@media (min-width:600px){ .sn{width:150px;margin-left:-75px;--d:80px} .sn-name{font-size:13.5px} }
-@media (prefers-reduced-motion: reduce){ .sn-flow{animation:none} .sn a{transition:none} }
+[dir="rtl"] .sn-name{line-height:1.45;font-size:12.5px}
+@media (min-width:700px){ .sn-name{font-size:14px} }
+
 /* scroll progress line with section dots (landmark pages) */
 .sdots{--p:0;position:fixed;z-index:30;inset-inline-end:5px;top:72px;bottom:18px;width:18px;pointer-events:none;animation:sdin .9s .6s both}
 @keyframes sdin{from{opacity:0;transform:scaleY(.6)}}
@@ -525,7 +519,6 @@ section.block.story-first{padding-top:clamp(28px,4vw,56px)}
 @media (min-width:900px){ .sdots{inset-inline-end:16px;top:90px;bottom:40px} }
 @media (prefers-reduced-motion: reduce){ .sd-fill u{animation:none;display:none} }
 .hero.off .amb img{animation-play-state:paused}
-.sn-name{text-shadow:0 0 6px #0d1320,0 0 3px #0d1320,0 0 1px #0d1320}
 
 </style>
 </head>
@@ -3037,84 +3030,44 @@ function routeOrder(list){
   while (left.length){ const cur = out[out.length - 1]; left.sort((a, b) => distKm(cur, a) - distKm(cur, b)); out.push(left.shift()); }
   return out;
 }
-let snakeRO = null, heroIO = null, snakeIO = null;
-/* The stops as a "constellation": each stop sits roughly where it is in
-   Batroun (distances squeezed so the old town gets room), nudged apart so
-   nothing overlaps, and one curving line links them in walking order. */
+function snakeColsFor(){ const w = Math.min(innerWidth, 1180); return w < 350 ? 3 : w < 700 ? 4 : w < 1000 ? 5 : 6; }
+let snakeCols = 0, snakeRO = null, heroIO = null;
+/* The route as a compact "snake": stops sit in rows that alternate direction,
+   joined by one winding line that fills in as you scroll. */
 function routeHTML(){
   const L = t(), order = routeOrder(LANDMARKS.filter(l => routeCat === "all" || l.cat === routeCat));
+  const cols = snakeCols = snakeColsFor();
   let walk = 0, drive = 0, html = "";
   order.forEach((l, i) => {
     if (i > 0){ const x = tripInfo(l, distKm(order[i - 1], l)); x.tr.preferDrive ? drive += x.tr.drive : walk += x.tr.walk; }
-    html += `<li class="sn${l.noPhoto ? "" : " ph"}" data-id="${l.id}" style="--c:${TM_CAT[l.cat] || "#e6c08e"};--i:${i}"><a href="#${l.id}">
-      <span class="sn-ph"><img src="${l.images[0]}" alt="" loading="lazy" decoding="async"><b>${num(i + 1)}</b></span>
+    const r = Math.floor(i / cols), c0 = i % cols, c = r % 2 ? cols - 1 - c0 : c0;
+    html += `<li class="sn" style="grid-row:${r + 1};grid-column:${c + 1};--c:${TM_CAT[l.cat] || "#e6c08e"}"><a href="#${l.id}">
+      <span class="sn-ph"><img src="${l.images[0]}" alt="" loading="lazy"><b>${num(i + 1)}</b></span>
       <span class="sn-name">${esc(l.name[lang])}</span></a></li>`;
   });
   return `<p class="route-sum">${esc(L.routeTotal(num(order.length), num(walk), num(drive)))}</p>
-    <div class="snake" id="snake"><svg class="sn-line" aria-hidden="true"><path class="sn-bg"/><path class="sn-fill" id="sn-fill" pathLength="1"/><path class="sn-flow" pathLength="100"/></svg><ol class="sn-grid">${html}</ol></div>`;
-}
-function cstLayout(){
-  const box = document.getElementById("snake"); if (!box) return;
-  const ol = box.querySelector(".sn-grid"), items = [...ol.children], n = items.length, W = box.clientWidth;
-  if (!n || !W) return; box._w = W;
-  const phone = W < 600, cw = phone ? Math.min(90, W / 3.9) : 156, ch = (phone ? 110 : 150) + (lang === "ar" ? 8 : 0);
-  const list = items.map(li => byId(li.dataset.id));
-  let P = list.map(tmXY);
-  const cx = P.reduce((a, p) => a + p[0], 0) / n, cy = P.reduce((a, p) => a + p[1], 0) / n;
-  P = P.map(([x, y]) => { const dx = x - cx, dy = y - cy, r = Math.hypot(dx, dy) || 1, k = Math.pow(r, .42) / r; return [dx * k, dy * k]; });
-  let H = Math.max(n < 6 ? 300 : phone ? 520 : 440, n * cw * ch * (phone ? 1.45 : 1.4) / W);
-  const asp = Q => { const xs = Q.map(p => p[0]), ys = Q.map(p => p[1]); return (Math.max(...xs) - Math.min(...xs) + 1) / (Math.max(...ys) - Math.min(...ys) + 1); };
-  const rot = P.map(([x, y]) => [-y, x]);
-  if (Math.abs(Math.log(asp(rot) / (W / H))) < Math.abs(Math.log(asp(P) / (W / H)))) P = rot;
-  // even out the density: blend each coordinate with its rank, so the busy old town spreads out
-  const spread = k => { const v = P.map(p => p[k]), lo = Math.min(...v), hi = Math.max(...v), ord = v.map((x, i) => i).sort((a, b) => v[a] - v[b]), rank = []; ord.forEach((i, r) => rank[i] = r / Math.max(1, n - 1)); return v.map((x, i) => .65 * rank[i] + .35 * (x - lo) / ((hi - lo) || 1)); };
-  const sx = spread(0), sy = spread(1); P = P.map((p, i) => [sx[i], sy[i]]);
-  const x0 = 0, x1 = 1, y0 = 0, y1 = 1;
-  let pos;
-  for (let tries = 0; tries < 14; tries++){
-    const bx0 = cw / 2, bx1 = W - cw / 2, by0 = ch * .38, by1 = H - ch * .62;
-    pos = P.map(([x, y]) => [bx0 + (x - x0) / ((x1 - x0) || 1) * (bx1 - bx0), by0 + (y - y0) / ((y1 - y0) || 1) * (by1 - by0)]);
-    let worst = 0;
-    for (let it = 0; it < 500; it++){
-      worst = 0;
-      for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++){
-        const a = pos[i], b = pos[j], dx = b[0] - a[0], dy = b[1] - a[1], ox = cw - Math.abs(dx), oy = ch - Math.abs(dy);
-        if (ox <= 0 || oy <= 0) continue;
-        worst = Math.max(worst, Math.min(ox / cw, oy / ch));
-        if (ox / cw < oy / ch){ const s = ox * .26 * (dx >= 0 ? 1 : -1); a[0] -= s; b[0] += s; }
-        else { const s = oy * .26 * (dy >= 0 ? 1 : -1) || oy * .26; a[1] -= s; b[1] += s; }
-      }
-      for (const p of pos){ p[0] = Math.min(bx1, Math.max(bx0, p[0])); p[1] = Math.min(by1, Math.max(by0, p[1])); }
-      if (worst < .01) break;
-    }
-    if (worst < .015) break;
-    H *= 1.07;
-  }
-  ol.style.height = Math.round(H) + "px";
-  items.forEach((li, i) => { li.style.left = pos[i][0].toFixed(1) + "px"; li.style.top = pos[i][1].toFixed(1) + "px"; });
+    <div class="snake" id="snake" style="--cols:${cols}"><svg class="sn-line" aria-hidden="true"><path class="sn-bg"/><path class="sn-fill" id="sn-fill" pathLength="1"/></svg><ol class="sn-grid">${html}</ol></div>`;
 }
 function snakeDraw(){
   const box = document.getElementById("snake"); if (!box) return;
-  const b = box.getBoundingClientRect();
-  const P = [...box.querySelectorAll(".sn")].map(li => [parseFloat(li.style.left) || 0, (parseFloat(li.style.top) || 0)]);
+  const b = box.getBoundingClientRect(), mid = b.width / 2, li = box.querySelector(".sn"), cw = li ? li.getBoundingClientRect().width : 80;
+  const P = [...box.querySelectorAll(".sn-ph")].map(e => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2 - b.left, r.top + r.height / 2 - b.top]; });
   if (!P.length) return;
   let d = `M${P[0][0].toFixed(1)} ${P[0][1].toFixed(1)}`;
-  for (let i = 0; i < P.length - 1; i++){
-    const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
-    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
-    d += ` C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+  for (let i = 1; i < P.length; i++){
+    const [px, py] = P[i - 1], [x, y] = P[i];
+    if (Math.abs(y - py) < 4){ d += ` L${x.toFixed(1)} ${y.toFixed(1)}`; continue; }
+    const k = (x > mid ? 1 : -1) * (cw / 2 + 6) / .75;
+    d += ` C${(px + k).toFixed(1)} ${py.toFixed(1)} ${(x + k).toFixed(1)} ${y.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`;
   }
   box.querySelectorAll(".sn-line path").forEach(p => p.setAttribute("d", d));
   routeFill();
 }
 function snakeInit(){
   const box = document.getElementById("snake"); if (!box) return;
-  cstLayout(); snakeDraw();
+  snakeDraw();
   if (snakeRO) snakeRO.disconnect();
-  if (window.ResizeObserver){ snakeRO = new ResizeObserver(() => { if (box.clientWidth !== box._w){ cstLayout(); snakeDraw(); } }); snakeRO.observe(box); }
-  if (snakeIO) snakeIO.disconnect();
-  if (reduceMotion || !window.IntersectionObserver) box.classList.add("go");
-  else { snakeIO = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ box.classList.add("go"); snakeIO.disconnect(); } }), { threshold: .12 }); snakeIO.observe(box); }
+  if (window.ResizeObserver){ snakeRO = new ResizeObserver(() => snakeDraw()); snakeRO.observe(box); }
 }
 
 /* ---------------- 3D trail map (home) ----------------
@@ -3630,7 +3583,7 @@ function route(){
   const go = () => { fitHero(); playHero(); };
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go);
 }
-addEventListener("resize", () => { if (tmEls && document.getElementById("tm-stage")){ tmSize(); if (tmMode !== "tour"){ tmClampGoal(); } tmDirty = true; tmKick(); }  });
+addEventListener("resize", () => { if (tmEls && document.getElementById("tm-stage")){ tmSize(); if (tmMode !== "tour"){ tmClampGoal(); } tmDirty = true; tmKick(); } const box = document.getElementById("route-box"); if (box && snakeColsFor() !== snakeCols){ box.innerHTML = routeHTML(); snakeInit(); }  });
 function rerender(keepScroll){
   const y = scrollY; const wasPlaying = Voice.playing;
   route();
