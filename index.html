@@ -484,6 +484,24 @@ section.block.story-first{padding-top:clamp(28px,4vw,56px)}
 .tm-stage.go .tm-pin.sel .tm-bill{transform:translateX(-50%) translateZ(80px);opacity:1;transition-delay:0s}
 .tm-stage.done .tm-bill{transition-delay:0s}
 .tm-base{-webkit-mask-image:radial-gradient(ellipse 60% 60% at 50% 50%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 60% 60% at 50% 50%,#000 62%,transparent 100%)}
+/* route as a snake */
+.snake{position:relative;margin-top:4px}
+.sn-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));column-gap:clamp(6px,2vw,28px);row-gap:clamp(16px,2.6vw,34px);position:relative;z-index:1}
+.sn-line{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.sn-line path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.sn-bg{stroke:rgba(255,255,255,.16);stroke-width:2;stroke-dasharray:2 7}
+.sn-fill{stroke:#f1c98f;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px rgba(241,201,143,.5));transition:stroke-dashoffset .3s linear}
+.sn a{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:inherit;text-align:center;-webkit-tap-highlight-color:transparent}
+.sn-ph{position:relative;--d:clamp(62px,17vw,104px);width:var(--d);height:var(--d);flex:none;border-radius:50%;padding:3px;background:var(--bg);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 40%,transparent);transition:box-shadow .5s,transform .4s var(--ease-out)}
+.sn-ph img{width:100%;height:100%;max-width:none;border-radius:50%;object-fit:cover;display:block;filter:saturate(.55) brightness(.75);transition:filter .6s}
+.sn-ph b{position:absolute;top:-3px;inset-inline-end:-5px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;display:grid;place-items:center;background:var(--c);color:#14182a;font-size:11px;font-weight:800;box-shadow:0 0 0 3px var(--bg)}
+.sn.lit .sn-ph{box-shadow:0 0 0 2px var(--c),0 0 24px color-mix(in srgb,var(--c) 38%,transparent)}
+.sn.lit .sn-ph img{filter:none}
+.sn a:hover .sn-ph,.sn a:focus-visible .sn-ph{transform:translateY(-3px) scale(1.05)}
+.sn-name{font-size:12px;line-height:1.25;font-weight:600;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;transition:color .5s}
+.sn.lit .sn-name{color:var(--ink)}
+[dir="rtl"] .sn-name{line-height:1.45;font-size:12.5px}
+@media (min-width:700px){ .sn-name{font-size:14px} }
 
 </style>
 </head>
@@ -2971,22 +2989,45 @@ function routeOrder(list){
   while (left.length){ const cur = out[out.length - 1]; left.sort((a, b) => distKm(cur, a) - distKm(cur, b)); out.push(left.shift()); }
   return out;
 }
+function snakeColsFor(){ const w = Math.min(innerWidth, 1180); return w < 350 ? 3 : w < 700 ? 4 : w < 1000 ? 5 : 6; }
+let snakeCols = 0, snakeRO = null;
+/* The route as a compact "snake": stops sit in rows that alternate direction,
+   joined by one winding line that fills in as you scroll. */
 function routeHTML(){
   const L = t(), order = routeOrder(LANDMARKS.filter(l => routeCat === "all" || l.cat === routeCat));
+  const cols = snakeCols = snakeColsFor();
   let walk = 0, drive = 0, html = "";
   order.forEach((l, i) => {
-    if (i > 0){
-      const km = distKm(order[i - 1], l), x = tripInfo(l, km), d = distParts(km);
-      x.tr.preferDrive ? drive += x.tr.drive : walk += x.tr.walk;
-      html += `<li class="leg" aria-hidden="true"><span class="leg-pill">${x.icon}<span>${esc(x.time)}</span><i class="sep"></i><span>${d.n} ${d.u}</span></span></li>`;
-    }
-    html += `<li class="rstop ${i % 2 ? "r" : "l"}"><span class="node">${num(i + 1)}</span>
-      <a class="rcard" href="#${l.id}"><img src="${l.images[0]}" alt="" loading="lazy"><div><span class="rk">${esc(L.stopN(num(i + 1)))}</span><h3>${esc(l.name[lang])}</h3><p>${esc(l.tagline[lang])}</p></div><span class="rgo">${I.arrow}</span></a></li>`;
+    if (i > 0){ const x = tripInfo(l, distKm(order[i - 1], l)); x.tr.preferDrive ? drive += x.tr.drive : walk += x.tr.walk; }
+    const r = Math.floor(i / cols), c0 = i % cols, c = r % 2 ? cols - 1 - c0 : c0;
+    html += `<li class="sn" style="grid-row:${r + 1};grid-column:${c + 1};--c:${TM_CAT[l.cat] || "#e6c08e"}"><a href="#${l.id}">
+      <span class="sn-ph"><img src="${l.images[0]}" alt="" loading="lazy"><b>${num(i + 1)}</b></span>
+      <span class="sn-name">${esc(l.name[lang])}</span></a></li>`;
   });
   return `<p class="route-sum">${esc(L.routeTotal(num(order.length), num(walk), num(drive)))}</p>
-    <div class="route-wrap"><div class="rail-line" aria-hidden="true"><i id="route-fill"></i></div><ol class="route">${html}</ol></div>`;
+    <div class="snake" id="snake" style="--cols:${cols}"><svg class="sn-line" aria-hidden="true"><path class="sn-bg"/><path class="sn-fill" id="sn-fill" pathLength="1"/></svg><ol class="sn-grid">${html}</ol></div>`;
 }
-
+function snakeDraw(){
+  const box = document.getElementById("snake"); if (!box) return;
+  const b = box.getBoundingClientRect(), mid = b.width / 2, li = box.querySelector(".sn"), cw = li ? li.getBoundingClientRect().width : 80;
+  const P = [...box.querySelectorAll(".sn-ph")].map(e => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2 - b.left, r.top + r.height / 2 - b.top]; });
+  if (!P.length) return;
+  let d = `M${P[0][0].toFixed(1)} ${P[0][1].toFixed(1)}`;
+  for (let i = 1; i < P.length; i++){
+    const [px, py] = P[i - 1], [x, y] = P[i];
+    if (Math.abs(y - py) < 4){ d += ` L${x.toFixed(1)} ${y.toFixed(1)}`; continue; }
+    const k = (x > mid ? 1 : -1) * (cw / 2 + 6) / .75;
+    d += ` C${(px + k).toFixed(1)} ${py.toFixed(1)} ${(x + k).toFixed(1)} ${y.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`;
+  }
+  box.querySelectorAll(".sn-line path").forEach(p => p.setAttribute("d", d));
+  routeFill();
+}
+function snakeInit(){
+  const box = document.getElementById("snake"); if (!box) return;
+  snakeDraw();
+  if (snakeRO) snakeRO.disconnect();
+  if (window.ResizeObserver){ snakeRO = new ResizeObserver(() => snakeDraw()); snakeRO.observe(box); }
+}
 
 /* ---------------- 3D trail map (home) ----------------
    A navy street map laid on a tilted plane (CSS 3D). Pins are billboards that
@@ -3242,11 +3283,11 @@ function render(snap){
   if (!snap && smoothP !== targetP) tick();
 }
 function routeFill(){
-  const f = document.getElementById("route-fill"); if (!f) return;
-  const r = f.parentElement.getBoundingClientRect();
-  const v = clamp01((innerHeight * .62 - r.top) / r.height);
-  f.style.transform = `scaleY(${v.toFixed(4)})`;
-  document.querySelectorAll(".rstop").forEach(el => { const b = el.getBoundingClientRect(); el.classList.toggle("lit", b.top + 40 < innerHeight * .62); });
+  const box = document.getElementById("snake"); if (!box) return;
+  const r = box.getBoundingClientRect(), line = innerHeight * .7;
+  const v = reduceMotion ? 1 : clamp01((line - r.top) / Math.max(1, r.height));
+  const f = document.getElementById("sn-fill"); if (f) f.style.strokeDashoffset = (1 - v).toFixed(4);
+  box.querySelectorAll(".sn").forEach(el => { const b = el.getBoundingClientRect(); el.classList.toggle("lit", reduceMotion || b.top + b.height * .3 < line); });
 }
 function tick(){ if (rafOn) return; rafOn = true; requestAnimationFrame(() => { rafOn = false; render(false); }); }
 function applyScroll(){ tick(); }
@@ -3320,10 +3361,11 @@ function route(){
   fitHero();
   armReveals();
   tmInit();
+  snakeInit();
   const go = () => { fitHero(); playHero(); };
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go);
 }
-addEventListener("resize", () => { if (document.getElementById("tm-stage")) tmSetView(tmView, true); });
+addEventListener("resize", () => { if (document.getElementById("tm-stage")) tmSetView(tmView, true); const box = document.getElementById("route-box"); if (box && snakeColsFor() !== snakeCols){ box.innerHTML = routeHTML(); snakeInit(); } });
 function rerender(keepScroll){
   const y = scrollY; const wasPlaying = Voice.playing;
   route();
@@ -3334,7 +3376,7 @@ function rerender(keepScroll){
 /* ---------------- events ---------------- */
 document.addEventListener("click", e => {
   const cb = e.target.closest("[data-cat]");
-  if (cb){ routeCat = cb.dataset.cat; document.querySelectorAll("[data-cat]").forEach(b => b.setAttribute("aria-pressed", b === cb)); const box = document.getElementById("route-box"); if (box){ box.innerHTML = routeHTML(); routeFill(); } return; }
+  if (cb){ routeCat = cb.dataset.cat; document.querySelectorAll("[data-cat]").forEach(b => b.setAttribute("aria-pressed", b === cb)); const box = document.getElementById("route-box"); if (box){ box.innerHTML = routeHTML(); snakeInit(); } return; }
   const tv = e.target.closest("[data-tmview]");
   if (tv){ tmClose(); tmSetView(tv.dataset.tmview); return; }
   const tp = e.target.closest("[data-tm]");
