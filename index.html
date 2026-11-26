@@ -3334,6 +3334,7 @@ function tmInit(){
   const ptrs = new Map(); let pinch = null, moved = 0, lastMoveT = 0;
   st.addEventListener("pointerdown", e => {
     if (e.target.closest(".tm-ctl, .tm-card, .tm-skip, .tm-replay")) return;
+    if (tmMode === "tour") return;   // the tour keeps playing through touches and scrolls; only the buttons stop it
     ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); moved = 0; tmVel.x = tmVel.y = 0;
     if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 }; }
   });
@@ -3357,8 +3358,8 @@ function tmInit(){
   });
   const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (performance.now() - lastMoveT > 90){ tmVel.x = tmVel.y = 0; } tmKick(); };
   st.addEventListener("pointerup", up); st.addEventListener("pointercancel", e => { ptrs.delete(e.pointerId); pinch = null; tmVel.x = tmVel.y = 0; });
-  st.addEventListener("wheel", e => { if (!e.ctrlKey) return; e.preventDefault(); tmZoom(Math.exp(-e.deltaY * .01)); }, { passive: false });
-  st.addEventListener("dblclick", () => tmZoom(1.7));
+  st.addEventListener("wheel", e => { if (!e.ctrlKey || tmMode === "tour") return; e.preventDefault(); tmZoom(Math.exp(-e.deltaY * .01)); }, { passive: false });
+  st.addEventListener("dblclick", () => { if (tmMode !== "tour") tmZoom(1.7); });
 }
 function tmOpen(i){
   const L = t(), l = tmOrder[i], card = document.getElementById("tm-card"); if (!l || !card) return;
