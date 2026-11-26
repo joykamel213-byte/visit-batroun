@@ -2703,6 +2703,26 @@ function setUnlocked(ids, on){ ids.forEach(id => on ? unlocked.add(id) : unlocke
 const mapsTo = o => `https://www.google.com/maps/dir/?api=1&destination=${o.lat},${o.lng}`;
 const IC_LOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 const IC_QR = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.2"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.2"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.2"/><path d="M14 14h2.5v2.5H14zM18 18h2.5v2.5H18zM14 19.5h1M19.5 14v1.5" stroke-linecap="round"/></svg>';
+/* ---- anonymous visit counts for the admin dashboard (/admin) ----
+   Only runs where the site has its own backend (Cloudflare Pages, functions/api/hit.js).
+   On GitHub Pages there is no backend, so nothing is sent. No names, emails or IPs:
+   just a random id kept on the phone, the stop, the language and the kind of device. */
+const HIT_URL = "/api/hit";
+const TRACK = location.protocol.startsWith("http") && !/github\.io$/.test(location.hostname);
+const visitorId = () => { let v = store.get("vb-vid"); if (!v){ v = (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)); store.set("vb-vid", v); } return v; };
+const deviceKind = () => /ipad|tablet/i.test(navigator.userAgent) || (/android/i.test(navigator.userAgent) && !/mobile/i.test(navigator.userAgent)) ? "tablet" : /mobi|iphone|android/i.test(navigator.userAgent) ? "phone" : "desktop";
+const hitSeen = {};
+function hit(type, stop, from){
+  if (!TRACK) return;
+  const k = type + "|" + (stop || ""), now = Date.now();
+  if (type !== "scan" && hitSeen[k] && now - hitSeen[k] < 20 * 60e3) return;   // one view / listen per stop per visit
+  hitSeen[k] = now;
+  try {
+    const body = JSON.stringify({ t: type, s: stop || null, f: from || null, l: lang, d: deviceKind(), v: visitorId() });
+    if (navigator.sendBeacon && navigator.sendBeacon(HIT_URL, new Blob([body], { type: "application/json" }))) return;
+    fetch(HIT_URL, { method: "POST", body, keepalive: true, headers: { "content-type": "application/json" } }).catch(() => {});
+  } catch(_){}
+}
 function initialLang(){
   const saved = store.get("ul-lang"); if (saved && T[saved]) return saved;
   const n = (navigator.language || "en").slice(0,2).toLowerCase();
@@ -2770,7 +2790,7 @@ const Voice = {
     const v = this.pick(SPEECH_TAG[lang]);
     if (this.voices.length && !v){ if (note){ note.textContent = L.noVoice(L.langName); note.hidden = false; } return; }
     if (note) note.hidden = true;
-    this.voice = v; this.playing = true; this.token++;
+    this.voice = v; this.playing = true; this.token++; hit("listen", this.landmark && this.landmark.id);
     speechSynthesis.cancel();
     this.say(from, this.token);
     this.render();
@@ -2806,7 +2826,7 @@ const Voice = {
     a.onended = () => this.finish();
     const go = () => { if (a.duration && from) a.currentTime = startFrac * a.duration; a.play(); };
     a.readyState >= 1 ? go() : a.addEventListener("loadedmetadata", go, { once: true });
-    this.playing = true; this.idx = from; this.mark(); this.render();
+    this.playing = true; this.idx = from; this.mark(); this.render(); hit("listen", this.landmark && this.landmark.id);
   },
   pause(){
     this.playing = false; this.token++;
@@ -3606,16 +3626,18 @@ function armReveals(){
 function route(){
   const raw = decodeURIComponent(location.hash.slice(1)), [id, key] = raw.split("/");
   const l = byId(id);
-  if (l && key && key === lockKey(l.id)){ setUnlocked([l.id], true); try { history.replaceState(null, "", "#" + l.id); } catch(_){} }
+  if (l && key && key === lockKey(l.id)){ setUnlocked([l.id], true); const prev = store.get("vb-last"); hit("scan", l.id, prev !== l.id ? prev : null); store.set("vb-last", l.id); try { history.replaceState(null, "", "#" + l.id); } catch(_){} }
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   if (l && !isOpen(l.id)){
     Voice.setup(null);
     app.innerHTML = lockedPage(l);
+    hit("locked", l.id);
     document.title = `${l.name[lang]} · ${t().brand}`;
   } else if (l){
     Voice.setup(l);
     app.innerHTML = landmarkPage(l);
+    hit("view", l.id);
     document.title = `${l.name[lang]} · ${t().brand}`;
   } else if (id === QR_ADMIN){
     Voice.setup(null);
@@ -3624,6 +3646,7 @@ function route(){
   } else {
     Voice.setup(null);
     app.innerHTML = homePage();
+    hit("home");
     document.title = `${t().brand} · ${t().muni}`;
   }
   Voice.render();
@@ -3648,6 +3671,8 @@ function rerender(keepScroll){
 
 /* ---------------- events ---------------- */
 document.addEventListener("click", e => {
+  const dl = e.target.closest('a[href*="google.com/maps/dir"]');
+  if (dl){ const m = dl.href.match(/destination=([-\d.]+),([-\d.]+)/); const o = m && LANDMARKS.find(x => String(x.lat) === m[1] && String(x.lng) === m[2]); hit("directions", o ? o.id : null); }
   const cb = e.target.closest("[data-cat]");
   if (cb){ routeCat = cb.dataset.cat; document.querySelectorAll("[data-cat]").forEach(b => b.setAttribute("aria-pressed", b === cb)); const box = document.getElementById("route-box"); if (box){ box.innerHTML = routeHTML(); snakeInit(); } return; }
   const sd = e.target.closest("[data-sd]"); if (sd){ const id = sd.dataset.sd; if (id === "top") scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }); else document.getElementById(id)?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }); return; }

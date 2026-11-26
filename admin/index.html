@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Batroun Trail Insights</title>
+<meta name="theme-color" content="#efe4d1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%235e1f47'/%3E%3Ccircle cx='20' cy='20' r='16.5' fill='none' stroke='%23e6c08e' stroke-width='1.4'/%3E%3Cpath d='M23.5 11.5 L15.5 16 L23.5 20.5 Z M23.5 11.5 V28.5 L16.5 28.5' fill='none' stroke='%23f3eee5' stroke-width='3' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Newsreader:opsz,wght@6..72,400..500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#efe4d1; --paper:#e6d3b3; --card:#f8f1e5; --ink:#2f2119; --ink-2:#4e3c2f; --muted:#7a6450;
+  --rule:rgba(84,56,30,.17); --grid:rgba(84,56,30,.10);
+  --accent:#8a3068; --accent-wash:rgba(138,48,104,.10);
+  /* categorical (validated: CVD all-pairs ΔE 11.9, normal-vision 21.9, all ≥3:1 on --card) */
+  --s1:#a3326f; --s2:#c87418; --s3:#1b78b8;
+  --good:#2e7d4f; --bad:#b23a2e;
+  --f:"Bricolage Grotesque",system-ui,sans-serif; --fr:"Newsreader",Georgia,serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='72'%3E%3Cg fill='none' stroke='%2354381e' stroke-opacity='.05' stroke-width='1.2'%3E%3Cpath d='M0 .6H160M0 36.6H160M.6 0V36M80.6 0V36M40.6 36V72M120.6 36V72'/%3E%3C/g%3E%3C/svg%3E"),var(--bg)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left)) 64px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 20px;padding:22px 0 18px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.brand svg{width:40px;height:40px;flex:none}
+.brand b{display:block;font-size:22px;letter-spacing:-.02em;line-height:1.05}
+.brand small{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:3px}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.seg{display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(255,250,240,.6);border:1px solid var(--rule)}
+.seg button{border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--ink-2);padding:8px 14px;border-radius:999px;cursor:pointer;min-height:36px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:999px;padding:0 16px;min-height:42px;cursor:pointer;text-decoration:none}
+.btn svg{width:15px;height:15px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+.banner{display:flex;gap:12px;align-items:flex-start;padding:14px 18px;border-radius:18px;background:#f6e7c9;border:1px solid rgba(176,106,44,.35);color:var(--ink-2);font-size:14px;line-height:1.45;margin-bottom:18px}
+.banner svg{flex:none;width:20px;height:20px;color:#b06a2c;margin-top:1px}
+.banner b{color:var(--ink)}
+.banner[hidden]{display:none}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.tile{background:var(--card);border:1px solid var(--rule);border-radius:22px;padding:16px 18px 18px}
+.tile .lab{font-size:13px;color:var(--muted);font-weight:600}
+.tile .val{font-size:clamp(28px,3.4vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-top:6px;font-variant-numeric:tabular-nums}
+.tile .delta{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;margin-top:4px;color:var(--muted)}
+.tile .delta .vs{font-weight:500;color:var(--muted);margin-inline-start:4px}
+.tile .delta.up{color:var(--good)} .tile .delta.down{color:var(--bad)}
+.tile .hint{display:block;font-size:12px;color:var(--muted);margin-top:2px;font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:24px;padding:18px 20px 20px;min-width:0}
+.card h2{margin:0;font-size:17px;letter-spacing:-.01em}
+.card .sub{margin:3px 0 14px;font-size:13px;color:var(--muted)}
+.c12{grid-column:span 12}.c7{grid-column:span 7}.c5{grid-column:span 5}.c4{grid-column:span 4}
+.stack{display:flex;flex-direction:column;gap:12px;min-width:0}
+svg text{font-family:var(--f)}
+.axis{fill:var(--muted);font-size:11px}
+.gridline{stroke:var(--grid);stroke-width:1}
+/* stops bars */
+.bars{display:grid;gap:6px}
+.brow{display:grid;grid-template-columns:24px minmax(0,190px) minmax(0,1fr);align-items:center;gap:10px;font-size:13px;border-radius:10px;padding:2px 4px;margin:0 -4px}
+.brow:hover{background:var(--accent-wash)}
+.brow .n{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;font-size:10.5px;font-weight:800;color:#fff}
+.brow .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
+.brow .tr{display:flex;align-items:center;gap:8px;min-width:0}
+.brow .b{flex:none}
+.brow .b{height:14px;border-radius:0 4px 4px 0;background:var(--accent);min-width:2px}
+.brow .v{font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px;color:var(--ink)}
+.cat-sacred{background:#9c3a74}.cat-ancient{background:#b06a2c}.cat-town{background:#456f9c}.cat-sea{background:#23807b}
+/* segmented share bar */
+.share{display:flex;height:16px;gap:2px;margin:6px 0 12px}
+.share i{display:block;height:100%}
+.share i:first-child{border-radius:4px 0 0 4px}.share i:last-child{border-radius:0 4px 4px 0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.legend b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.mini h3{font-size:13px;margin:16px 0 0;color:var(--muted);font-weight:600}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--grid)}
+.list li:last-child{border-bottom:0}
+.list .k{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.list .k .arrow{color:var(--muted);margin:0 6px}
+.list .x{font-variant-numeric:tabular-nums;font-weight:700}
+.empty{font-size:13px;color:var(--muted);padding:10px 0}
+/* heatmap */
+.heat{display:grid;grid-template-columns:34px repeat(24,minmax(0,1fr));gap:2px;font-size:10.5px;color:var(--muted)}
+.heat .c{aspect-ratio:1;border-radius:3px;min-height:10px}
+.heat .h{text-align:center;padding-top:4px}
+.heat .d{display:flex;align-items:center}
+.ramp{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);margin-top:12px}
+.ramp i{display:block;width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,#f1dfe8,#d99cbd,#b35588,#8a3068,#5c1a43)}
+/* tooltip */
+.tip{position:fixed;z-index:50;pointer-events:none;background:#fffaf1;border:1px solid var(--rule);box-shadow:0 12px 30px -12px rgba(74,44,18,.45);border-radius:12px;padding:8px 11px;font-size:12.5px;line-height:1.45;color:var(--ink);opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s;max-width:240px}
+.tip.on{opacity:1;transform:none}
+.tip b{font-weight:700}
+.tip .m{color:var(--muted)}
+details.tbl{margin-top:12px}
+details.tbl summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--ink-2);padding:10px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:start;padding:8px 10px;border-bottom:1px solid var(--grid)}
+th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.r,th.r{text-align:end}
+.scroll{overflow-x:auto}
+footer{margin-top:28px;font-size:12.5px;color:var(--muted);line-height:1.6}
+footer a{color:var(--ink)}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.c7,.c5,.c4{grid-column:span 12}}
+@media (max-width:620px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpis .tile:last-child{grid-column:span 2}
+  .tile .delta .vs{display:none}
+  .kpis::after{content:"▲▼ compared with the previous period of the same length";grid-column:1/-1;font-size:12px;color:var(--muted);margin-top:-2px}
+  .brow{grid-template-columns:22px minmax(0,120px) minmax(0,1fr)}
+  .seg button{padding:8px 10px}
+  .heat{grid-template-columns:28px repeat(24,minmax(0,1fr));gap:1px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="../" title="Back to the site">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#5e1f47"/><circle cx="20" cy="20" r="16" fill="none" stroke="#e6c08e" stroke-width="1"/><path d="M23.5 11.5 L15.5 16 L23.5 20.5 Z M23.5 11.5 V28.5 L16.5 28.5" fill="none" stroke="#f3eee5" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      <span><b>Trail insights</b><small>Visit Batroun · admin</small></span>
+    </a>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Time range" id="range">
+        <button type="button" data-days="7">7 days</button>
+        <button type="button" data-days="30" aria-pressed="true">30 days</button>
+        <button type="button" data-days="90">90 days</button>
+        <button type="button" data-days="365">12 months</button>
+      </div>
+      <button type="button" class="btn" id="csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Download CSV</button>
+    </div>
+  </header>
+
+  <p class="banner" id="banner" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
+    <span><b>Sample data.</b> These numbers are made up so you can see how the dashboard works. Real scans will show here once the site runs on Cloudflare, and then only the admin email can open this page.</span></p>
+
+  <section class="kpis" id="kpis" aria-label="Totals"></section>
+
+  <div class="grid">
+    <section class="card c12">
+      <h2>Scans per day</h2>
+      <p class="sub" id="day-sub">QR codes scanned at the landmarks, Batroun time</p>
+      <div id="days"></div>
+    </section>
+
+    <section class="card c7">
+      <h2>Scans by stop</h2>
+      <p class="sub">Most visited first. The dot shows the stop's number and theme on the trail.</p>
+      <div class="bars" id="stops"></div>
+      <details class="tbl"><summary>See every stop as a table</summary><div class="scroll"><table id="stop-table"></table></div></details>
+    </section>
+
+    <div class="c5 stack">
+      <section class="card">
+        <h2>Busiest times</h2>
+        <p class="sub">Scans by day of the week and hour</p>
+        <div class="heat" id="heat"></div>
+        <div class="ramp"><span>Fewer</span><i></i><span>More</span></div>
+      </section>
+      <section class="card mini">
+        <h2>Who's visiting</h2>
+        <p class="sub">Share of visitors</p>
+        <h3>Language they chose</h3><div id="langs"></div>
+        <h3>Device</h3><div id="devices"></div>
+      </section>
+    </div>
+
+    <section class="card c4">
+      <h2>How far visitors go</h2>
+      <p class="sub">Visitors by how many stops they scanned</p>
+      <div id="progress"></div>
+    </section>
+    <section class="card c4">
+      <h2>Popular routes</h2>
+      <p class="sub">Where people scanned next</p>
+      <ul class="list" id="routes"></ul>
+    </section>
+    <section class="card c4">
+      <h2>Where visitors are from</h2>
+      <p class="sub">Country of the phone's connection</p>
+      <ul class="list" id="countries"></ul>
+    </section>
+  </div>
+
+  <footer>
+    Counts are anonymous: no names, emails or IP addresses are kept, only a random id stored on each phone.
+    “Visitors” are phones, so a family sharing one phone counts once.
+    <span id="gen"></span>
+  </footer>
+</div>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+const STOPS = [{"n":1,"id":"phoenician-wall","cat":"ancient","en":"Phoenician Wall","ar":"السور الفينيقي"},{"n":2,"id":"our-lady-of-the-sea","cat":"sacred","en":"Our Lady of the Sea","ar":"كنيسة سيدة البحر العجائبية"},{"n":3,"id":"our-lady-of-the-square","cat":"sacred","en":"Our Lady of the Square","ar":"كنيسة سيدة الساحة"},{"n":4,"id":"phoenician-fortress","cat":"ancient","en":"Phoenician Fortress","ar":"القلعة الفينيقية"},{"n":5,"id":"st-george","cat":"sacred","en":"Saint George's Church","ar":"كنيسة مار جرجس"},{"n":6,"id":"beit-el-kahana","cat":"sacred","en":"Old Beit el Kahana","ar":"بيت الكهنة القديم"},{"n":7,"id":"st-stephen","cat":"sacred","en":"Saint Stephen's Cathedral","ar":"كاتدرائية مار اسطفان"},{"n":8,"id":"port","cat":"sea","en":"The Port","ar":"الميناء"},{"n":9,"id":"old-souk","cat":"town","en":"The Old Souk","ar":"السوق القديم"},{"n":10,"id":"dar-al-mouna","cat":"town","en":"Dar Al-Mouna","ar":"دار المنى"},{"n":11,"id":"municipality","cat":"town","en":"Batroun Municipal Palace","ar":"بلدية البترون"},{"n":12,"id":"railway-station","cat":"town","en":"The Old Railway Station","ar":"محطة قطار مدينة البترون"},{"n":13,"id":"roman-amphitheater","cat":"ancient","en":"The Roman Amphitheatre","ar":"المدرّج الروماني"},{"n":14,"id":"locanda-mnessa","cat":"town","en":"Locanda Mnessa","ar":"لوكندة مناسا"},{"n":15,"id":"michel-souleiman-statue","cat":"town","en":"Statue of Michel Souleiman","ar":"تمثال ميشال سليمان"},{"n":16,"id":"batroun-mosque","cat":"sacred","en":"Batroun Mosque","ar":"مسجد البترون"},{"n":17,"id":"aquarium","cat":"sea","en":"The Aquarium","ar":"الأكواريوم"},{"n":18,"id":"makaad-el-mir","cat":"ancient","en":"The Prince's Seat","ar":"مقعد المير"},{"n":19,"id":"st-rita","cat":"sacred","en":"Saint Rita Chapel","ar":"كنيسة القديسة ريتا"},{"n":20,"id":"darb-mseilha","cat":"sea","en":"Darb el Mseilha","ar":"درب المسيلحة"},{"n":21,"id":"st-sassine","cat":"sacred","en":"Saint Sassine Church","ar":"كنيسة مار ساسين"},{"n":22,"id":"mseilha-fort","cat":"sea","en":"Mseilha Fort","ar":"قلعة المسيلحة"}];
+const API = "../api/admin/stats";
+const byId = Object.fromEntries(STOPS.map(s => [s.id, s]));
+const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const LANG = { en: "English", ar: "Arabic", fr: "French" };
+const DEV = { phone: "Phone", tablet: "Tablet", desktop: "Computer" };
+const SER = ["var(--s1)", "var(--s2)", "var(--s3)"];
+const fmt = n => (n || 0).toLocaleString("en-US");
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const $ = id => document.getElementById(id);
+let state = { days: 30, data: null };
+const regionName = (() => { try { const d = new Intl.DisplayNames(["en"], { type: "region" }); return c => d.of(c) || c; } catch(_){ return c => c; } })();
+
+/* ---------- sample data (shown until the Cloudflare backend answers) ---------- */
+function sample(days){
+  let seed = 20261126 + days;
+  const rnd = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+  const pop = { "phoenician-wall": 1, "our-lady-of-the-sea": .95, "old-souk": .8, "st-george": .7, "st-stephen": .75, "port": .65, "mseilha-fort": .55, "phoenician-fortress": .45, "makaad-el-mir": .35, "roman-amphitheater": .3, "our-lady-of-the-square": .3 };
+  const dayStr = d => d.toISOString().slice(0, 10);
+  const now = new Date(); const perDay = []; let total = 0;
+  for (let i = days - 1; i >= 0; i--){
+    const d = new Date(now.getTime() - i * 864e5), w = (d.getUTCDay() + 6) % 7;
+    const season = 1 + .25 * Math.sin((d.getUTCMonth() - 3) / 12 * 2 * Math.PI);
+    const s = Math.round((w >= 5 ? 95 : 48) * season * (.75 + rnd() * .5));
+    perDay.push({ day: dayStr(d), scans: s, visitors: Math.round(s * (.42 + rnd() * .08)) }); total += s;
+  }
+  const weights = STOPS.map(s => (pop[s.id] || .12 + rnd() * .15));
+  const wsum = weights.reduce((a, b) => a + b, 0);
+  const perStop = STOPS.map((s, i) => { const sc = Math.round(total * weights[i] / wsum); return { stop: s.id, scans: sc, listens: Math.round(sc * (.55 + rnd() * .2)), directions: Math.round(sc * (.3 + rnd() * .2)), visitors: Math.round(sc * .9) }; });
+  const heat = []; for (let dw = 0; dw < 7; dw++) for (let h = 0; h < 24; h++){
+    const shape = h < 8 ? 0 : Math.exp(-((h - 11.5) ** 2) / 6) + .9 * Math.exp(-((h - 17.5) ** 2) / 5) + (dw >= 4 ? .6 * Math.exp(-((h - 21) ** 2) / 3) : 0);
+    heat.push({ dow: dw, hour: h, scans: Math.round(shape * (dw >= 5 ? 1.9 : 1) * total / 60 * (.8 + rnd() * .4)) });
+  }
+  const visitors = Math.round(total * .44);
+  const routes = []; for (let i = 0; i < 9; i++){ const a = STOPS[i], b = STOPS[i + 1]; routes.push({ a: a.id, b: b.id, n: Math.round(total * (.06 - i * .005) * (.8 + rnd() * .4)) }); }
+  routes.push({ a: "st-george", b: "old-souk", n: Math.round(total * .03) });
+  routes.sort((x, y) => y.n - x.n);
+  const prog = [[1, .38], [2, .21], [3, .14], [4, .09], [5, .06], [6, .04], [8, .03], [10, .025], [14, .015], [18, .01], [22, .008]].map(([n, f]) => ({ n, visitors: Math.round(visitors * f) }));
+  const t = { scans: total, visitors, listens: perStop.reduce((a, s) => a + s.listens, 0), directions: perStop.reduce((a, s) => a + s.directions, 0), unlocks: Math.round(total * .82) };
+  const prev = Object.fromEntries(Object.entries(t).map(([k, v]) => [k, Math.round(v * (.82 + rnd() * .3))]));
+  return { sample: true, range: { days, from: perDay[0].day, to: perDay[perDay.length - 1].day }, generated: now.toISOString(),
+    totals: t, previous: prev, perStop, perDay, heat,
+    langs: [{ k: "en", n: Math.round(visitors * .46) }, { k: "ar", n: Math.round(visitors * .35) }, { k: "fr", n: Math.round(visitors * .19) }],
+    devices: [{ k: "phone", n: Math.round(visitors * .9) }, { k: "desktop", n: Math.round(visitors * .07) }, { k: "tablet", n: Math.round(visitors * .03) }],
+    countries: [["LB", .52], ["FR", .1], ["AE", .07], ["US", .06], ["CA", .05], ["DE", .04], ["AU", .035], ["GB", .03], ["SA", .025], ["BR", .02]].map(([k, f]) => ({ k, n: Math.round(visitors * f) })),
+    routes, progress: prog };
+}
+
+/* ---------- tooltip ---------- */
+const tip = $("tip");
+function showTip(html, x, y){
+  tip.innerHTML = html; tip.classList.add("on");
+  const r = tip.getBoundingClientRect(); let lx = x + 14, ly = y - r.height - 12;
+  if (lx + r.width > innerWidth - 8) lx = x - r.width - 14;
+  if (ly < 8) ly = y + 16;
+  tip.style.left = Math.max(8, lx) + "px"; tip.style.top = ly + "px";
+}
+const hideTip = () => tip.classList.remove("on");
+function bindTip(root, sel, html){
+  root.querySelectorAll(sel).forEach(el => {
+    const on = e => { const p = e.touches ? e.touches[0] : e; showTip(html(el), p.clientX, p.clientY); };
+    el.addEventListener("pointermove", on); el.addEventListener("pointerenter", on);
+    el.addEventListener("pointerleave", hideTip);
+    el.addEventListener("focus", () => { const r = el.getBoundingClientRect(); showTip(html(el), r.left + r.width / 2, r.top); });
+    el.addEventListener("blur", hideTip);
+  });
+}
+
+/* ---------- pieces ---------- */
+function kpis(d){
+  const t = d.totals || {}, p = d.previous || {};
+  const items = [
+    ["Scans", "scans", "QR codes scanned"],
+    ["Visitors", "visitors", "Different phones"],
+    ["Stories unlocked", "unlocks", "First scan of a stop per phone"],
+    ["Stories played", "listens", "Listen button pressed"],
+    ["Directions opened", "directions", "Taps on Directions"],
+  ];
+  $("kpis").innerHTML = items.map(([lab, k, hint]) => {
+    const v = +t[k] || 0, pv = +p[k] || 0;
+    let delta = "";
+    if (pv > 0){ const ch = Math.round((v - pv) / pv * 100); delta = `<span class="delta ${ch > 0 ? "up" : ch < 0 ? "down" : ""}" title="Compared with the previous ${d.range.days} days">${ch > 0 ? "▲" : ch < 0 ? "▼" : "•"} ${Math.abs(ch)}%<span class="vs">vs previous ${d.range.days} days</span></span>`; }
+    return `<div class="tile"><div class="lab">${lab}</div><div class="val">${fmt(v)}</div>${delta}<span class="hint">${hint}</span></div>`;
+  }).join("");
+}
+
+function dayChart(d){
+  const box = $("days"); const W = box.clientWidth || 800, H = Math.max(200, Math.min(280, W * .3));
+  const m = { l: 38, r: 14, t: 12, b: 26 };
+  // fill missing days with zero
+  const map = Object.fromEntries((d.perDay || []).map(r => [r.day, r]));
+  const pts = []; const end = new Date(d.range.to + "T12:00:00Z");
+  for (let i = d.range.days - 1; i >= 0; i--){ const k = new Date(end.getTime() - i * 864e5).toISOString().slice(0, 10); pts.push({ day: k, scans: +(map[k]?.scans) || 0, visitors: +(map[k]?.visitors) || 0 }); }
+  const max = Math.max(4, ...pts.map(p => p.scans));
+  const step = niceStep(max / 4), top = Math.ceil(max / step) * step;
+  const x = i => m.l + (pts.length < 2 ? 0 : i / (pts.length - 1)) * (W - m.l - m.r);
+  const y = v => m.t + (1 - v / top) * (H - m.t - m.b);
+  let g = "";
+  for (let v = 0; v <= top; v += step) g += `<line class="gridline" x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end">${fmt(v)}</text>`;
+  const every = Math.ceil(pts.length / Math.max(3, Math.floor(W / 90)));
+  pts.forEach((p, i) => { if (i % every === 0 || i === pts.length - 1 && pts.length <= 14) g += `<text class="axis" x="${x(i)}" y="${H - 6}" text-anchor="middle">${shortDay(p.day, pts.length)}</text>`; });
+  const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.scans).toFixed(1)}`).join("");
+  const area = line + `L${x(pts.length - 1)},${y(0)}L${x(0)},${y(0)}Z`;
+  const last = pts[pts.length - 1];
+  box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Scans per day, ${pts.length} days">
+    ${g}<path d="${area}" fill="var(--accent)" fill-opacity=".1"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${x(pts.length - 1)}" cy="${y(last.scans)}" r="4.5" fill="var(--accent)" stroke="var(--card)" stroke-width="2"/>
+    <line id="xh" y1="${m.t}" y2="${H - m.b}" stroke="var(--ink)" stroke-opacity=".25" stroke-width="1" visibility="hidden"/>
+    <circle id="xd" r="4.5" fill="var(--accent)" stroke="var(--card)" stroke-width="2" visibility="hidden"/>
+    <rect x="${m.l}" y="0" width="${W - m.l - m.r}" height="${H}" fill="transparent" id="hit"/></svg>`;
+  const svg = box.querySelector("svg"), hit = svg.querySelector("#hit"), xh = svg.querySelector("#xh"), xd = svg.querySelector("#xd");
+  const move = e => {
+    const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * (W / r.width);
+    const i = Math.max(0, Math.min(pts.length - 1, Math.round((px - m.l) / (W - m.l - m.r) * (pts.length - 1))));
+    const p = pts[i]; xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.setAttribute("visibility", "visible");
+    xd.setAttribute("cx", x(i)); xd.setAttribute("cy", y(p.scans)); xd.setAttribute("visibility", "visible");
+    showTip(`<b>${longDay(p.day)}</b><br>${fmt(p.scans)} scans<br><span class="m">${fmt(p.visitors)} visitors</span>`, e.clientX, r.top + y(p.scans) * (r.height / H));
+  };
+  hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move);
+  hit.addEventListener("pointerleave", () => { xh.setAttribute("visibility", "hidden"); xd.setAttribute("visibility", "hidden"); hideTip(); });
+  const sum = pts.reduce((a, p) => a + p.scans, 0), best = pts.reduce((a, p) => p.scans > a.scans ? p : a, pts[0]);
+  $("day-sub").textContent = `QR codes scanned at the landmarks, Batroun time. Busiest day: ${longDay(best.day)} (${fmt(best.scans)}). Average ${sum / pts.length < 10 ? (sum / pts.length).toFixed(1) : fmt(Math.round(sum / pts.length))} a day.`;
+}
+function niceStep(raw){ const p = Math.pow(10, Math.floor(Math.log10(Math.max(raw, 1)))); const f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
+const shortDay = (s, n) => { const d = new Date(s + "T12:00:00Z"); return n > 120 ? d.toLocaleDateString("en-GB", { month: "short", timeZone: "UTC" }) : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }); };
+const longDay = s => new Date(s + "T12:00:00Z").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+
+function stopBars(d){
+  const map = Object.fromEntries((d.perStop || []).map(r => [r.stop, r]));
+  const rows = STOPS.map(s => ({ s, ...{ scans: 0, listens: 0, directions: 0, visitors: 0 }, ...(map[s.id] || {}) })).sort((a, b) => b.scans - a.scans || a.s.n - b.s.n);
+  const max = Math.max(1, ...rows.map(r => +r.scans));
+  $("stops").innerHTML = rows.map(r => `<div class="brow" tabindex="0" data-id="${r.s.id}">
+      <span class="n cat-${r.s.cat}">${r.s.n}</span><span class="nm">${esc(r.s.en)}</span>
+      <span class="tr"><span class="b" style="width:${(r.scans / max * 82).toFixed(2)}%"></span><span class="v">${fmt(r.scans)}</span></span></div>`).join("");
+  bindTip($("stops"), ".brow", el => { const r = rows.find(x => x.s.id === el.dataset.id);
+    return `<b>${r.s.n}. ${esc(r.s.en)}</b><br>${fmt(r.scans)} scans · ${fmt(r.visitors)} visitors<br><span class="m">${fmt(r.listens)} stories played · ${fmt(r.directions)} directions</span>`; });
+  $("stop-table").innerHTML = `<thead><tr><th>#</th><th>Stop</th><th class="r">Scans</th><th class="r">Visitors</th><th class="r">Played</th><th class="r">Directions</th></tr></thead><tbody>` +
+    rows.slice().sort((a, b) => a.s.n - b.s.n).map(r => `<tr><td>${r.s.n}</td><td>${esc(r.s.en)}</td><td class="r">${fmt(r.scans)}</td><td class="r">${fmt(r.visitors)}</td><td class="r">${fmt(r.listens)}</td><td class="r">${fmt(r.directions)}</td></tr>`).join("") + "</tbody>";
+  state.rows = rows;
+}
+
+const RAMP = ["#f4e8ee", "#ecd2df", "#dfaecb", "#cd85b0", "#b35588", "#9a3a72", "#7c2a5d", "#5c1a43"];
+function heatmap(d){
+  const g = {}; let max = 0; (d.heat || []).forEach(r => { g[r.dow + "|" + r.hour] = +r.scans; max = Math.max(max, +r.scans); });
+  let h = `<span></span>`; for (let i = 0; i < 24; i++) h += `<span class="h">${i % 3 === 0 ? i : ""}</span>`;
+  let cells = "";
+  for (let dw = 0; dw < 7; dw++){
+    cells += `<span class="d">${DAYS[dw]}</span>`;
+    for (let hr = 0; hr < 24; hr++){ const v = g[dw + "|" + hr] || 0; const k = v ? Math.min(RAMP.length - 1, 1 + Math.floor(v / Math.max(1, max) * (RAMP.length - 1.01))) : 0;
+      cells += `<span class="c" tabindex="-1" data-k="${dw}|${hr}" style="background:${v ? RAMP[k] : "rgba(84,56,30,.06)"}"></span>`; }
+  }
+  $("heat").innerHTML = cells + h;
+  bindTip($("heat"), ".c", el => { const [dw, hr] = el.dataset.k.split("|").map(Number); return `<b>${DAYS[dw]}, ${String(hr).padStart(2, "0")}:00–${String((hr + 1) % 24).padStart(2, "0")}:00</b><br>${fmt(g[el.dataset.k] || 0)} scans`; });
+}
+
+function share(el, rows, names){
+  const order = Object.keys(names); rows = order.map(k => ({ k, n: +(rows.find(r => r.k === k)?.n) || 0 }));
+  const tot = rows.reduce((a, r) => a + r.n, 0);
+  if (!tot){ el.innerHTML = `<p class="empty">No visitors yet</p>`; return; }
+  el.innerHTML = `<div class="share" role="img" aria-label="${rows.map(r => names[r.k] + " " + pct(r.n, tot) + "%").join(", ")}">${rows.filter(r => r.n).map(r => `<i data-k="${r.k}" style="flex:${r.n};background:${SER[order.indexOf(r.k)]}"></i>`).join("")}</div>
+    <div class="legend">${rows.map(r => `<span><i style="background:${SER[order.indexOf(r.k)]}"></i>${names[r.k]} <b>${pct(r.n, tot)}%</b></span>`).join("")}</div>`;
+  bindTip(el, ".share i", i => { const r = rows.find(x => x.k === i.dataset.k); return `<b>${names[r.k]}</b><br>${fmt(r.n)} visitors · ${pct(r.n, tot)}%`; });
+}
+
+function progress(d){
+  const buckets = [["1 stop", 1, 1], ["2", 2, 2], ["3–5", 3, 5], ["6–10", 6, 10], ["11–21", 11, 21], ["All 22", 22, 99]];
+  const v = buckets.map(([lab, a, b]) => ({ lab, n: (d.progress || []).filter(r => +r.n >= a && +r.n <= b).reduce((s, r) => s + +r.visitors, 0) }));
+  const tot = v.reduce((a, r) => a + r.n, 0);
+  if (!tot){ $("progress").innerHTML = `<p class="empty">No scans yet</p>`; return; }
+  const W = $("progress").clientWidth || 340, H = 190, m = { l: 6, r: 6, t: 18, b: 24 };
+  const max = Math.max(...v.map(r => r.n)), bw = (W - m.l - m.r) / v.length, cw = Math.min(24, bw * .5);
+  let s = `<line class="gridline" x1="${m.l}" x2="${W - m.r}" y1="${H - m.b}" y2="${H - m.b}"/>`;
+  v.forEach((r, i) => { const h = r.n / max * (H - m.t - m.b), cx = m.l + bw * i + bw / 2, y0 = H - m.b;
+    s += `<g class="pc" data-i="${i}" tabindex="0"><rect x="${cx - bw / 2}" y="${m.t}" width="${bw}" height="${H - m.t - m.b}" fill="transparent"/>
+      ${r.n ? `<path d="M${cx - cw / 2},${y0} V${y0 - Math.max(h, 4) + 4} q0,-4 4,-4 h${cw - 8} q4,0 4,4 V${y0} Z" fill="var(--accent)"/>` : ""}
+      <text class="axis" x="${cx}" y="${y0 - h - 6}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${pct(r.n, tot)}%</text>
+      <text class="axis" x="${cx}" y="${H - 6}" text-anchor="middle">${r.lab}</text></g>`; });
+  $("progress").innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Visitors by number of stops scanned">${s}</svg>`;
+  bindTip($("progress"), ".pc", el => { const r = v[+el.dataset.i]; return `<b>${r.lab}${r.lab.startsWith("1") || r.lab.startsWith("All") ? "" : " stops"}</b><br>${fmt(r.n)} visitors · ${pct(r.n, tot)}%`; });
+}
+
+function lists(d){
+  const routes = d.routes || [];
+  $("routes").innerHTML = routes.length ? routes.slice(0, 8).map(r => `<li><span class="k">${esc(byId[r.a]?.en || r.a)}<span class="arrow">→</span>${esc(byId[r.b]?.en || r.b)}</span><span class="x">${fmt(r.n)}</span></li>`).join("") : `<li class="empty">No routes yet. They appear once people scan a second stop.</li>`;
+  const cs = d.countries || [], tot = cs.reduce((a, r) => a + +r.n, 0);
+  $("countries").innerHTML = cs.length ? cs.slice(0, 8).map(r => `<li><span class="k">${esc(regionName(r.k))}</span><span class="x">${pct(r.n, tot)}%</span></li>`).join("") : `<li class="empty">No visitors yet</li>`;
+}
+
+function draw(){
+  const d = state.data; if (!d) return;
+  $("banner").hidden = !d.sample;
+  kpis(d); dayChart(d); stopBars(d); heatmap(d);
+  share($("langs"), d.langs || [], LANG); share($("devices"), d.devices || [], DEV);
+  progress(d); lists(d);
+  $("gen").textContent = d.sample ? "" : `Updated ${new Date(d.generated).toLocaleString("en-GB", { timeZone: "Asia/Beirut", dateStyle: "medium", timeStyle: "short" })} (Batroun time).`;
+}
+
+async function load(days){
+  state.days = days;
+  document.querySelectorAll("#range button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.days === days));
+  let d = null;
+  if (!/[?&]sample\b/.test(location.search) && location.protocol.startsWith("http")){
+    try { const r = await fetch(`${API}?days=${days}`, { credentials: "same-origin", headers: { accept: "application/json" } });
+      if (r.ok && (r.headers.get("content-type") || "").includes("json")) d = await r.json(); } catch(_){}
+  }
+  state.data = d || sample(days);
+  draw();
+}
+
+document.getElementById("range").addEventListener("click", e => { const b = e.target.closest("[data-days]"); if (b) load(+b.dataset.days); });
+document.getElementById("csv").addEventListener("click", () => {
+  const rows = (state.rows || []).slice().sort((a, b) => a.s.n - b.s.n);
+  const q = v => /[",\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v;
+  const csv = ["number,stop,scans,visitors,stories_played,directions", ...rows.map(r => [r.s.n, q(r.s.en), r.scans, r.visitors, r.listens, r.directions].join(","))].join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+  a.download = `batroun-stops-${state.data.range.from}-to-${state.data.range.to}${state.data.sample ? "-SAMPLE" : ""}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { hideTip(); if (state.data){ dayChart(state.data); progress(state.data); } }, 150); });
+addEventListener("scroll", hideTip, { passive: true });
+load(30);
+</script>
+</body>
+</html>

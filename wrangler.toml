@@ -1,0 +1,18 @@
+# Cloudflare Pages config for Visit Batroun (static site + /api functions + D1).
+# See cloudflare/SETUP.md. Nothing here is secret.
+name = "visit-batroun"
+pages_build_output_dir = "."
+compatibility_date = "2026-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "visit-batroun"
+database_id = "REPLACE-WITH-YOUR-D1-DATABASE-ID"
+
+[vars]
+# Who may open /admin. Cloudflare Access does the login; the functions check again.
+ADMIN_EMAILS = "admin@example.com"
+# Your Zero Trust team domain, e.g. "batroun.cloudflareaccess.com"
+ACCESS_TEAM_DOMAIN = "REPLACE.cloudflareaccess.com"
+# The "Application Audience (AUD) Tag" of the Access application for /admin
+ACCESS_AUD = "REPLACE-WITH-AUD-TAG"
