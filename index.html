@@ -426,82 +426,106 @@ section.block.story-first{padding-top:clamp(28px,4vw,56px)}
 /* ---------- home: 3D trail map ---------- */
 .tmap{padding-block:clamp(36px,6vw,80px) 0}
 .tm-stats{margin:10px 0 0;color:var(--muted);font-size:15px}
-.tm-stage{position:relative;margin-top:26px;height:min(78svh,820px);min-height:460px;overflow:hidden;perspective:1300px;perspective-origin:50% 22%;
-  background:radial-gradient(120% 80% at 50% 0%,#1b3358 0%,#132540 45%,#0d1320 100%);touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;isolation:isolate}
+.tm-stage{--ca:.8;position:relative;margin-top:26px;height:min(76svh,800px);min-height:440px;overflow:hidden;perspective:1100px;perspective-origin:50% 24%;
+  background:#101d33;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;isolation:isolate;contain:layout paint}
 .tm-stage:active{cursor:grabbing}
-.tm-plane{position:absolute;left:50%;top:52%;transform-origin:0 0;transform-style:preserve-3d;will-change:transform}
-.tm-base{position:absolute;inset:0;width:100%;height:100%;max-width:none;pointer-events:none;-webkit-user-drag:none}
-.tm-routes{position:absolute;inset:0;overflow:visible;pointer-events:none}
-.tm-glow{fill:none;stroke:rgba(224,127,182,.16);stroke-width:16;stroke-linecap:round}
-.tm-leg{fill:none;stroke:#f1c98f;stroke-width:4.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px rgba(241,201,143,.55))}
-.tm-stage.go .tm-leg{animation:tmdraw .9s cubic-bezier(.6,0,.2,1) forwards;animation-delay:calc(var(--i) * .16s + .9s)}
-@keyframes tmdraw{to{stroke-dashoffset:0}}
-.tm-comet{fill:#fff;opacity:0;filter:drop-shadow(0 0 10px #f1c98f) drop-shadow(0 0 22px #e07fb6)}
-.tm-stage.go .tm-comet{animation:tmfade 1s 4.6s forwards}
-@keyframes tmfade{to{opacity:1}}
-.tm-pin{position:absolute;width:0;height:0;padding:0;border:0;background:none;transform-style:preserve-3d;cursor:pointer;color:#fff}
-.tm-dot{position:absolute;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--c);transform:scale(var(--is,1));box-shadow:0 0 0 4px rgba(13,19,32,.6)}
-.tm-dot::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid var(--c);opacity:0;animation:tmping 2.6s ease-out infinite;animation-delay:calc(var(--i) * .2s)}
-@keyframes tmping{0%{transform:scale(.4);opacity:.8}100%{transform:scale(1.6);opacity:0}}
-.tm-up{position:absolute;left:0;top:0;transform-origin:0 0;transform:scale(var(--is,1)) rotateZ(var(--rz,0deg)) rotateX(var(--rx,0deg));transform-style:preserve-3d}
-.tm-bill{position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%) translateY(0) scale(0);transform-origin:50% 100%;opacity:0;
-  transition:transform .7s var(--ease-out),opacity .5s}
-.tm-stage.go .tm-bill{transform:translateX(-50%);opacity:1;transition-delay:calc(var(--i) * .16s + .9s)}
-.tm-head{position:relative;width:50px;height:50px;border-radius:50%;border:3px solid var(--c);background:var(--card);box-shadow:0 10px 24px -6px rgba(0,0,0,.6);transition:transform .35s var(--ease-out)}
-.tm-head img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.tm-plane{position:absolute;left:50%;top:56%;transform-origin:0 0;will-change:transform;backface-visibility:hidden}
+.tm-base{display:block;width:100%;height:100%;max-width:none;pointer-events:none;-webkit-user-drag:none}
+.tm-cv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.tm-pins{position:absolute;inset:0;z-index:2;pointer-events:none}
+.tm-pin{position:absolute;left:0;top:0;width:0;height:0;padding:0;border:0;background:none;cursor:pointer;color:#fff;pointer-events:auto;will-change:transform}
+.tm-pin[hidden]{display:none}
+.tm-dot{position:absolute;left:-10px;top:-10px;width:20px;height:20px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px rgba(13,19,32,.55);transform:scaleY(var(--ca));opacity:0;transition:opacity .4s}
+.tm-bill{position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%) scale(.2);transform-origin:50% 100%;opacity:0;transition:transform .6s var(--ease-out),opacity .35s}
+.tm-pin.on .tm-bill{transform:translateX(-50%);opacity:1}
+.tm-pin.on .tm-dot{opacity:1}
+.tm-head{position:relative;width:50px;height:50px;border-radius:50%;border:3px solid var(--c);background:#16213a;box-shadow:0 10px 22px -8px rgba(0,0,0,.7);transition:transform .35s var(--ease-out)}
+.tm-head img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
 .tm-head b{position:absolute;top:-7px;right:-9px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:var(--c);color:#0d1320;font-size:11.5px;font-weight:800;display:grid;place-items:center}
-.tm-stem{width:2px;height:30px;background:linear-gradient(var(--c),rgba(255,255,255,0))}
-.tm-name{position:absolute;bottom:calc(100% + 6px);white-space:nowrap;font-size:13px;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(13,19,32,.85);border:1px solid rgba(255,255,255,.14);opacity:0;transform:translateY(6px);transition:.3s var(--ease-out);pointer-events:none}
-.tm-pin:hover .tm-head,.tm-pin.sel .tm-head,.tm-pin:focus-visible .tm-head{transform:scale(1.18)}
-.tm-pin:hover .tm-name,.tm-pin.sel .tm-name,.tm-pin:focus-visible .tm-name{opacity:1;transform:none}
-.tm-pin.sel{z-index:5}
-.tm-fog{position:absolute;inset:0;pointer-events:none;z-index:2;
-  background:linear-gradient(180deg,#0d1320 0%,rgba(13,19,32,.75) 10%,rgba(13,19,32,0) 30%,rgba(13,19,32,0) 82%,#0d1320 100%),
-             linear-gradient(90deg,rgba(13,19,32,.7),rgba(13,19,32,0) 12%,rgba(13,19,32,0) 88%,rgba(13,19,32,.7))}
-.tm-ui{position:absolute;z-index:3;left:var(--gut);right:var(--gut-r);top:14px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start;pointer-events:none}
-.tm-ui>*{pointer-events:auto}
-.tm-views{display:flex;gap:6px}
-.tm-views .chip[aria-pressed="true"]{background:#fff;color:#0d1320;border-color:#fff}
-.tm-legend{list-style:none;margin:0;padding:8px 12px;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:rgba(255,255,255,.82);border-radius:16px;background:rgba(13,19,32,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.tm-legend li{display:flex;align-items:center;gap:6px}
-.tm-legend li::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
-.tm-card{z-index:4}
-.tm-hint{margin-top:12px;color:var(--muted);font-size:13px}
-@media (max-width:720px){
-  .tm-stage{height:70svh;min-height:420px}
-  .tm-legend{display:none}
-  .tm-head{width:42px;height:42px}
-  .tm-stem{height:24px}
-}
-@media (prefers-reduced-motion: reduce){ .tm-leg{stroke-dashoffset:0} .tm-bill{transform:translateX(-50%);opacity:1} .tm-comet{display:none} }
 .tm-head.np{background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--c) 55%,#fff) 0%,var(--c) 60%);display:grid;place-items:center}
 .tm-head.np i{font-style:normal;font-weight:800;font-size:16px;color:#0d1320}
+.tm-stem{width:2px;height:26px;background:linear-gradient(var(--c),rgba(255,255,255,0))}
+.tm-name{position:absolute;bottom:calc(100% + 6px);white-space:nowrap;font-size:13px;font-weight:700;padding:5px 11px;border-radius:999px;background:rgba(13,19,32,.88);border:1px solid rgba(255,255,255,.14);opacity:0;transform:translateY(6px);transition:.3s var(--ease-out);pointer-events:none}
+.tm-pin:hover .tm-head,.tm-pin.sel .tm-head,.tm-pin.cur .tm-head,.tm-pin:focus-visible .tm-head{transform:scale(1.18)}
+.tm-pin:hover .tm-name,.tm-pin.sel .tm-name,.tm-pin.cur .tm-name,.tm-pin:focus-visible .tm-name{opacity:1;transform:none}
+.tm-stage.has-sel .tm-pin:not(.sel) .tm-bill{opacity:.4}
+.tm-fog{position:absolute;inset:0;pointer-events:none;z-index:3;
+  background:linear-gradient(180deg,#0d1320 0%,rgba(13,19,32,.6) 9%,rgba(13,19,32,0) 24%,rgba(13,19,32,0) 84%,#0d1320 100%),
+             linear-gradient(90deg,rgba(13,19,32,.6),rgba(13,19,32,0) 10%,rgba(13,19,32,0) 90%,rgba(13,19,32,.6))}
+.tm-legend{position:absolute;z-index:4;top:14px;inset-inline-end:var(--gut-r);list-style:none;margin:0;padding:8px 12px;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:rgba(255,255,255,.85);border-radius:16px;background:rgba(13,19,32,.72)}
+.tm-legend li{display:flex;align-items:center;gap:6px}
+.tm-legend li::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.tm-ctl{position:absolute;z-index:4;inset-inline-end:14px;bottom:18px;display:grid;gap:6px;opacity:0;transform:translateY(8px);transition:.5s var(--ease-out);pointer-events:none}
+.tm-ctl button{width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(17,26,44,.86);color:#fff;display:grid;place-items:center;cursor:pointer}
+.tm-ctl button:hover{background:rgba(35,50,80,.95)}
+.tm-ctl svg{width:18px;height:18px}
+.tm-skip,.tm-replay{position:absolute;z-index:4;inset-inline-start:var(--gut);top:14px;background:rgba(17,26,44,.86);backdrop-filter:none;-webkit-backdrop-filter:none;opacity:0;pointer-events:none;transition:opacity .4s}
+.tm-replay{gap:7px}
+.tm-replay svg{width:15px;height:15px}
+.tm-stage.touring .tm-skip{opacity:1;pointer-events:auto}
+.tm-stage.free .tm-replay,.tm-stage.free .tm-ctl{opacity:1;pointer-events:auto;transform:none}
+.tm-stage.touring .tm-legend{opacity:0}
+.tm-legend{transition:opacity .4s}
+.tm-card{z-index:6}
+.tm-stage .rpop{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(18,26,43,.95)}
+.tm-hint{margin-top:12px;color:var(--muted);font-size:13px}
+@media (max-width:720px){
+  .tm-stage{height:72svh;min-height:420px}
+  .tm-legend{display:none}
+  .tm-head{width:42px;height:42px}
+  .tm-stem{height:20px}
+  .tm-ctl{bottom:14px;inset-inline-end:10px}
+  .tm-ctl button{width:40px;height:40px}
+}
 @media (min-width:721px){
   .tm-card{left:20px;right:auto;bottom:20px;width:min(440px,calc(100% - 40px))}
   [dir="rtl"] .tm-card{left:auto;right:20px}
 }
-.tm-stage.has-sel .tm-pin:not(.sel) .tm-bill{opacity:.38}
-.tm-stage.go .tm-pin.sel .tm-bill{transform:translateX(-50%) translateZ(80px);opacity:1;transition-delay:0s}
-.tm-stage.done .tm-bill{transition-delay:0s}
-.tm-base{-webkit-mask-image:radial-gradient(ellipse 60% 60% at 50% 50%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 60% 60% at 50% 50%,#000 62%,transparent 100%)}
-/* route as a snake */
-.snake{position:relative;margin-top:4px}
-.sn-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));column-gap:clamp(6px,2vw,28px);row-gap:clamp(16px,2.6vw,34px);position:relative;z-index:1}
+@media (prefers-reduced-motion: reduce){ .tm-bill{transition:none} }
+/* stops as a constellation */
+.snake{position:relative;margin-top:8px}
+.sn-grid{list-style:none;margin:0;padding:0;position:relative;z-index:1;min-height:300px}
 .sn-line{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .sn-line path{fill:none;stroke-linecap:round;stroke-linejoin:round}
-.sn-bg{stroke:rgba(255,255,255,.16);stroke-width:2;stroke-dasharray:2 7}
-.sn-fill{stroke:#f1c98f;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px rgba(241,201,143,.5));transition:stroke-dashoffset .3s linear}
-.sn a{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:inherit;text-align:center;-webkit-tap-highlight-color:transparent}
-.sn-ph{position:relative;--d:clamp(62px,17vw,104px);width:var(--d);height:var(--d);flex:none;border-radius:50%;padding:3px;background:var(--bg);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 40%,transparent);transition:box-shadow .5s,transform .4s var(--ease-out)}
-.sn-ph img{width:100%;height:100%;max-width:none;border-radius:50%;object-fit:cover;display:block;filter:saturate(.55) brightness(.75);transition:filter .6s}
-.sn-ph b{position:absolute;top:-3px;inset-inline-end:-5px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;display:grid;place-items:center;background:var(--c);color:#14182a;font-size:11px;font-weight:800;box-shadow:0 0 0 3px var(--bg)}
-.sn.lit .sn-ph{box-shadow:0 0 0 2px var(--c),0 0 24px color-mix(in srgb,var(--c) 38%,transparent)}
+.sn-bg{stroke:rgba(255,255,255,.14);stroke-width:2;stroke-dasharray:2 7}
+.sn-fill{stroke:#f1c98f;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .3s linear}
+.sn-flow{stroke:#fff6e6;stroke-width:3.4;stroke-dasharray:.25 2.75;opacity:.5;animation:snflow 2.4s linear infinite}
+@keyframes snflow{to{stroke-dashoffset:-3}}
+.sn{position:absolute;left:0;top:0;width:90px;margin-left:-45px;--d:54px;--s:1}
+.sn.ph{--s:1.2}
+.sn a{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:inherit;text-align:center;-webkit-tap-highlight-color:transparent;
+  transform:translateY(calc(var(--d) * var(--s) * -.5)) scale(.4);opacity:0;transition:transform .7s var(--ease-out),opacity .5s;transition-delay:calc(var(--i) * 55ms)}
+.snake.go .sn a{transform:translateY(calc(var(--d) * var(--s) * -.5));opacity:1}
+.sn-ph{position:relative;width:calc(var(--d) * var(--s));height:calc(var(--d) * var(--s));flex:none;border-radius:50%;padding:3px;background:var(--bg);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 45%,transparent);transition:box-shadow .5s,transform .4s var(--ease-out)}
+.sn-ph img{width:100%;height:100%;max-width:none;border-radius:50%;object-fit:cover;display:block;filter:saturate(.6) brightness(.78);transition:filter .6s}
+.sn-ph b{position:absolute;top:-4px;inset-inline-end:-6px;min-width:21px;height:21px;padding:0 5px;border-radius:11px;display:grid;place-items:center;background:var(--c);color:#14182a;font-size:10.5px;font-weight:800;box-shadow:0 0 0 3px var(--bg)}
+.sn.lit .sn-ph{box-shadow:0 0 0 2px var(--c),0 0 22px color-mix(in srgb,var(--c) 40%,transparent)}
 .sn.lit .sn-ph img{filter:none}
-.sn a:hover .sn-ph,.sn a:focus-visible .sn-ph{transform:translateY(-3px) scale(1.05)}
-.sn-name{font-size:12px;line-height:1.25;font-weight:600;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;transition:color .5s}
+.sn a:hover .sn-ph,.sn a:focus-visible .sn-ph{transform:scale(1.07)}
+.sn-name{font-size:11.5px;line-height:1.22;font-weight:600;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;transition:color .5s}
 .sn.lit .sn-name{color:var(--ink)}
-[dir="rtl"] .sn-name{line-height:1.45;font-size:12.5px}
-@media (min-width:700px){ .sn-name{font-size:14px} }
+[dir="rtl"] .sn-name{line-height:1.4;font-size:12px}
+@media (min-width:600px){ .sn{width:150px;margin-left:-75px;--d:80px} .sn-name{font-size:13.5px} }
+@media (prefers-reduced-motion: reduce){ .sn-flow{animation:none} .sn a{transition:none} }
+/* scroll progress line with section dots (landmark pages) */
+.sdots{--p:0;position:fixed;z-index:30;inset-inline-end:5px;top:72px;bottom:18px;width:18px;pointer-events:none;animation:sdin .9s .6s both}
+@keyframes sdin{from{opacity:0;transform:scaleY(.6)}}
+.sd-track{position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;border-radius:3px;background:rgba(160,170,190,.22);overflow:visible}
+.sd-fill{position:absolute;inset:0;border-radius:3px;overflow:hidden;background:linear-gradient(180deg,#e07fb6 0%,#f1a97a 35%,#f1c98f 60%,#5ec4be 100%);clip-path:inset(0 0 calc((1 - var(--p)) * 100%) 0 round 3px);box-shadow:0 0 10px rgba(241,169,122,.5)}
+.sd-fill u{position:absolute;left:0;right:0;top:0;height:22%;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.85),rgba(255,255,255,0));animation:sdshine 2.6s linear infinite}
+@keyframes sdshine{from{transform:translateY(-100%)}to{transform:translateY(460%)}}
+.sd-head{position:absolute;left:50%;top:calc(var(--p) * 100%);width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(241,201,143,.35),0 0 14px 2px rgba(241,201,143,.8)}
+.sdots button{position:absolute;left:0;width:18px;height:18px;margin-top:-9px;border:0;padding:0;background:none;cursor:pointer;display:grid;place-items:center;pointer-events:auto}
+.sdots button::before{content:"";width:9px;height:9px;border-radius:50%;background:#3a4560;box-shadow:0 0 0 2px #0d1320;transition:.35s var(--ease-out)}
+.sdots button.done::before{background:#f3eee5}
+.sdots button.on::before{width:13px;height:13px;background:#f1c98f;box-shadow:0 0 0 2px #0d1320,0 0 16px rgba(241,201,143,.85)}
+.sdots span{position:absolute;inset-inline-end:calc(100% + 6px);top:50%;transform:translate(6px,-50%);white-space:nowrap;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(13,19,32,.92);border:1px solid rgba(255,255,255,.14);color:#fff;opacity:0;pointer-events:none;transition:.3s var(--ease-out)}
+[dir="rtl"] .sdots span{transform:translate(-6px,-50%)}
+.sdots button.show span,.sdots button:hover span,.sdots button:focus-visible span{opacity:1;transform:translate(0,-50%)}
+@media (min-width:900px){ .sdots{inset-inline-end:16px;top:90px;bottom:40px} }
+@media (prefers-reduced-motion: reduce){ .sd-fill u{animation:none;display:none} }
+.hero.off .amb img{animation-play-state:paused}
+.sn-name{text-shadow:0 0 6px #0d1320,0 0 3px #0d1320,0 0 1px #0d1320}
 
 </style>
 </head>
@@ -2572,7 +2596,7 @@ const T = {
     noSpeech: "This browser can't read text aloud. The full story is below.",
     tapHint: "Tap any sentence to listen from there.",
     langName: "English",
-    allStops: "All landmarks", homeTitle: n => `${n} stops, three thousand years`, cats: { all: "All", sacred: "Churches & mosque", ancient: "Ancient", town: "Town & heritage", sea: "Sea & valley" }, mapNote: "Map view · photo coming soon", mapEyebrow: "The trail map", mapTitle: "Every stop, on one map", mapStats: (n, c) => `${n} stops · ${c} themes · 3 languages`, mapTown: "Old town", mapAll: "Whole trail", mapHint: "Tap a pin to preview a stop. Drag the map to look around.", homeEyebrow: "The Batroun trail",
+    allStops: "All landmarks", homeTitle: n => `${n} stops, three thousand years`, cats: { all: "All", sacred: "Churches & mosque", ancient: "Ancient", town: "Town & heritage", sea: "Sea & valley" }, mapNote: "Map view · photo coming soon", mapEyebrow: "The trail map", mapTitle: "Every stop, on one map", mapStats: (n, c) => `${n} stops · ${c} themes · 3 languages`, mapTown: "Old town", mapAll: "Whole trail", mapHint: "Drag to move around, pinch or use + and − to zoom, and tap a pin to preview a stop.", mapSkip: "Skip tour", mapReplay: "Replay tour", mapReset: "Show the whole trail", zoomIn: "Zoom in", zoomOut: "Zoom out", sdTop: "Top", sdNav: "Page sections", homeEyebrow: "The Batroun trail",
     howEyebrow: "How it works", how: [
       ["Scan the code", "Each landmark has a QR code at its entrance. Point your phone camera at it."],
       ["Listen to the story", "Choose English, Arabic or French. The story is read aloud while you look around."],
@@ -2596,7 +2620,7 @@ const T = {
     noSpeech: "هذا المتصفح لا يستطيع قراءة النص بصوت عالٍ. القصة كاملة أدناه.",
     tapHint: "اضغط على أي جملة للاستماع منها.",
     langName: "العربية",
-    allStops: "كل المعالم", homeTitle: n => `${n} محطة وثلاثة آلاف سنة`, cats: { all: "الكل", sacred: "كنائس ومسجد", ancient: "آثار قديمة", town: "البلدة والتراث", sea: "البحر والوادي" }, mapNote: "خريطة الموقع · الصورة قريباً", mapEyebrow: "خريطة الدرب", mapTitle: "كل المحطات على خريطة واحدة", mapStats: (n, c) => `${n} محطة · ${c} مواضيع · ٣ لغات`, mapTown: "البلدة القديمة", mapAll: "الدرب كاملاً", mapHint: "اضغط على دبوس لمعاينة المحطة، واسحب الخريطة لتستكشف.", homeEyebrow: "درب البترون",
+    allStops: "كل المعالم", homeTitle: n => `${n} محطة وثلاثة آلاف سنة`, cats: { all: "الكل", sacred: "كنائس ومسجد", ancient: "آثار قديمة", town: "البلدة والتراث", sea: "البحر والوادي" }, mapNote: "خريطة الموقع · الصورة قريباً", mapEyebrow: "خريطة الدرب", mapTitle: "كل المحطات على خريطة واحدة", mapStats: (n, c) => `${n} محطة · ${c} مواضيع · ٣ لغات`, mapTown: "البلدة القديمة", mapAll: "الدرب كاملاً", mapHint: "اسحب للتنقل، وقرّب أو بعّد بإصبعين أو بزرّي + و −، واضغط على دبوس لمعاينة المحطة.", mapSkip: "تخطَّ الجولة", mapReplay: "أعد الجولة", mapReset: "اعرض الدرب كاملاً", zoomIn: "تكبير", zoomOut: "تصغير", sdTop: "البداية", sdNav: "أقسام الصفحة", homeEyebrow: "درب البترون",
     howEyebrow: "كيف يعمل", how: [
       ["امسح الرمز", "لكل معلم رمز QR عند مدخله. وجّه كاميرا هاتفك نحوه."],
       ["استمع إلى الحكاية", "اختر العربية أو الإنجليزية أو الفرنسية، وتُروى لك الحكاية وأنت تتجوّل."],
@@ -2620,7 +2644,7 @@ const T = {
     noSpeech: "Ce navigateur ne peut pas lire le texte à voix haute. L'histoire complète est ci-dessous.",
     tapHint: "Touchez une phrase pour l'écouter à partir de là.",
     langName: "Français",
-    allStops: "Tous les sites", homeTitle: n => `${n} étapes, trois mille ans`, cats: { all: "Tout", sacred: "Églises et mosquée", ancient: "Antiquité", town: "Ville et patrimoine", sea: "Mer et vallée" }, mapNote: "Vue carte · photo bientôt", mapEyebrow: "La carte du parcours", mapTitle: "Toutes les étapes, sur une carte", mapStats: (n, c) => `${n} étapes · ${c} thèmes · 3 langues`, mapTown: "Vieille ville", mapAll: "Tout le parcours", mapHint: "Touchez une épingle pour un aperçu. Faites glisser la carte pour explorer.", homeEyebrow: "Le parcours de Batroun",
+    allStops: "Tous les sites", homeTitle: n => `${n} étapes, trois mille ans`, cats: { all: "Tout", sacred: "Églises et mosquée", ancient: "Antiquité", town: "Ville et patrimoine", sea: "Mer et vallée" }, mapNote: "Vue carte · photo bientôt", mapEyebrow: "La carte du parcours", mapTitle: "Toutes les étapes, sur une carte", mapStats: (n, c) => `${n} étapes · ${c} thèmes · 3 langues`, mapTown: "Vieille ville", mapAll: "Tout le parcours", mapHint: "Faites glisser pour vous déplacer, pincez ou utilisez + et − pour zoomer, et touchez une épingle pour un aperçu.", mapSkip: "Passer la visite", mapReplay: "Revoir la visite", mapReset: "Voir tout le parcours", zoomIn: "Zoom avant", zoomOut: "Zoom arrière", sdTop: "Début", sdNav: "Sections de la page", homeEyebrow: "Le parcours de Batroun",
     howEyebrow: "Comment ça marche", how: [
       ["Scannez le code", "Chaque site a un code QR à son entrée. Pointez l'appareil photo de votre téléphone."],
       ["Écoutez l'histoire", "Choisissez le français, l'arabe ou l'anglais. L'histoire est lue pendant que vous visitez."],
@@ -2878,7 +2902,7 @@ function landmarkPage(l){
       <div class="story" lang="${lang}">${paras.map(p => `<p>${p.map(({x,k}) => `<span class="s" data-i="${k}">${esc(x)}</span>`).join(" ")}</p>`).join("")}</div>
     </div></section>
 
-    ${l.noPhoto ? "" : `<section class="block" style="padding-top:0"><div class="wrap">
+    ${l.noPhoto ? "" : `<section class="block" id="photos" style="padding-top:0"><div class="wrap">
       <p class="eyebrow">${esc(L.gallery)}</p>
       <div class="strip n${l.images.length}" aria-label="${esc(L.gallery)}">
         ${l.images.map((src, i) => { const k = src.split("/").pop().replace(".jpg",""); const c = CREDITS[k] || {}; return `<figure class="${c.tall ? "tall" : ""}"><img src="${src}" alt="${esc(l.name[lang])}, ${esc(L.photo)} ${i+1}" decoding="async"><figcaption>${esc(L.photo)}: ${esc(c.author || "")} · <a href="${c.page || "#"}" target="_blank" rel="noopener">${esc(c.license || "")}</a></figcaption></figure>`; }).join("")}
@@ -2894,7 +2918,7 @@ function landmarkPage(l){
         ${featuredHTML(others[0])}
         <div class="radar-wrap"><div class="radar"><div class="sweep" aria-hidden="true"></div>${compassSVG(here, l, others.slice(0, 6))}<div class="rpop" id="rpop" role="dialog" aria-live="polite" hidden></div></div><p class="compass-cap">${esc(L.tapDot)} ${esc(origin ? L.fromYou : L.fromHere(l.name[lang]))}</p></div>
       </div>
-      <div class="more-head"><p class="eyebrow">${esc(L.moreNearby)}</p><span class="note">${esc(L.swipe)}</span></div>
+      <div class="more-head" id="more"><p class="eyebrow">${esc(L.moreNearby)}</p><span class="note">${esc(L.swipe)}</span></div>
       <ol class="rail">${others.slice(1, 9).map((x, i) => railHTML(x, i + 1)).join("")}</ol>
     </div></section>
   </main>
@@ -2903,7 +2927,31 @@ function landmarkPage(l){
     <button class="play" type="button" data-play></button>
     <div class="t"><b>${esc(l.name[lang])}</b><span></span></div>
     <button class="x" type="button" data-stop aria-label="Stop">${I.x}</button>
-  </div>`;
+  </div>
+  ${sdHTML([["top", L.sdTop], ["story", L.story], ...(l.noPhoto ? [] : [["photos", L.gallery]]), ["next", L.next], ["more", L.moreNearby]])}`;
+}
+/* slim section guide on the side: a line with one dot per section, the dot
+   for where you are lights up, so it's clear there's more further down */
+function sdHTML(secs){
+  return `<nav class="sdots" id="sdots" aria-label="${esc(t().sdNav)}"><i class="sd-track" aria-hidden="true"><b class="sd-fill"><u></u></b><em class="sd-head"></em></i>${secs.map(([id, label]) => `<button type="button" data-sd="${id}" aria-label="${esc(label)}"><span>${esc(label)}</span></button>`).join("")}</nav>`;
+}
+let sdActive = -1, sdShowT = 0, sdIdleT = 0;
+function sdUpdate(){
+  const nav = document.getElementById("sdots"); if (!nav) return;
+  const max = Math.max(1, document.documentElement.scrollHeight - innerHeight), p = clamp01(scrollY / max);
+  nav.style.setProperty("--p", p.toFixed(4));
+  const bs = [...nav.querySelectorAll("[data-sd]")]; let act = 0;
+  bs.forEach((b, i) => {
+    const id = b.dataset.sd; let at = 0;
+    if (id !== "top"){ const el = document.getElementById(id); at = el ? clamp01((el.getBoundingClientRect().top + scrollY - innerHeight * .45) / max) : 1; }
+    b.style.top = (at * 100).toFixed(2) + "%";
+    if (p >= at - .003) act = i;
+  });
+  bs.forEach((b, i) => { b.classList.toggle("on", i === act); b.classList.toggle("done", i < act); });
+  if (act !== sdActive){
+    if (sdActive !== -1){ bs.forEach((b, i) => b.classList.toggle("show", i === act)); clearTimeout(sdShowT); sdShowT = setTimeout(() => bs.forEach(b => b.classList.remove("show")), 1500); }
+    sdActive = act;
+  }
 }
 function tripInfo(o, km){
   const L = t(), tr = travel(km), mode = tr.preferDrive ? "driving" : "walking";
@@ -2989,74 +3037,129 @@ function routeOrder(list){
   while (left.length){ const cur = out[out.length - 1]; left.sort((a, b) => distKm(cur, a) - distKm(cur, b)); out.push(left.shift()); }
   return out;
 }
-function snakeColsFor(){ const w = Math.min(innerWidth, 1180); return w < 350 ? 3 : w < 700 ? 4 : w < 1000 ? 5 : 6; }
-let snakeCols = 0, snakeRO = null;
-/* The route as a compact "snake": stops sit in rows that alternate direction,
-   joined by one winding line that fills in as you scroll. */
+let snakeRO = null, heroIO = null, snakeIO = null;
+/* The stops as a "constellation": each stop sits roughly where it is in
+   Batroun (distances squeezed so the old town gets room), nudged apart so
+   nothing overlaps, and one curving line links them in walking order. */
 function routeHTML(){
   const L = t(), order = routeOrder(LANDMARKS.filter(l => routeCat === "all" || l.cat === routeCat));
-  const cols = snakeCols = snakeColsFor();
   let walk = 0, drive = 0, html = "";
   order.forEach((l, i) => {
     if (i > 0){ const x = tripInfo(l, distKm(order[i - 1], l)); x.tr.preferDrive ? drive += x.tr.drive : walk += x.tr.walk; }
-    const r = Math.floor(i / cols), c0 = i % cols, c = r % 2 ? cols - 1 - c0 : c0;
-    html += `<li class="sn" style="grid-row:${r + 1};grid-column:${c + 1};--c:${TM_CAT[l.cat] || "#e6c08e"}"><a href="#${l.id}">
-      <span class="sn-ph"><img src="${l.images[0]}" alt="" loading="lazy"><b>${num(i + 1)}</b></span>
+    html += `<li class="sn${l.noPhoto ? "" : " ph"}" data-id="${l.id}" style="--c:${TM_CAT[l.cat] || "#e6c08e"};--i:${i}"><a href="#${l.id}">
+      <span class="sn-ph"><img src="${l.images[0]}" alt="" loading="lazy" decoding="async"><b>${num(i + 1)}</b></span>
       <span class="sn-name">${esc(l.name[lang])}</span></a></li>`;
   });
   return `<p class="route-sum">${esc(L.routeTotal(num(order.length), num(walk), num(drive)))}</p>
-    <div class="snake" id="snake" style="--cols:${cols}"><svg class="sn-line" aria-hidden="true"><path class="sn-bg"/><path class="sn-fill" id="sn-fill" pathLength="1"/></svg><ol class="sn-grid">${html}</ol></div>`;
+    <div class="snake" id="snake"><svg class="sn-line" aria-hidden="true"><path class="sn-bg"/><path class="sn-fill" id="sn-fill" pathLength="1"/><path class="sn-flow" pathLength="100"/></svg><ol class="sn-grid">${html}</ol></div>`;
+}
+function cstLayout(){
+  const box = document.getElementById("snake"); if (!box) return;
+  const ol = box.querySelector(".sn-grid"), items = [...ol.children], n = items.length, W = box.clientWidth;
+  if (!n || !W) return; box._w = W;
+  const phone = W < 600, cw = phone ? Math.min(90, W / 3.9) : 156, ch = (phone ? 110 : 150) + (lang === "ar" ? 8 : 0);
+  const list = items.map(li => byId(li.dataset.id));
+  let P = list.map(tmXY);
+  const cx = P.reduce((a, p) => a + p[0], 0) / n, cy = P.reduce((a, p) => a + p[1], 0) / n;
+  P = P.map(([x, y]) => { const dx = x - cx, dy = y - cy, r = Math.hypot(dx, dy) || 1, k = Math.pow(r, .42) / r; return [dx * k, dy * k]; });
+  let H = Math.max(n < 6 ? 300 : phone ? 520 : 440, n * cw * ch * (phone ? 1.45 : 1.4) / W);
+  const asp = Q => { const xs = Q.map(p => p[0]), ys = Q.map(p => p[1]); return (Math.max(...xs) - Math.min(...xs) + 1) / (Math.max(...ys) - Math.min(...ys) + 1); };
+  const rot = P.map(([x, y]) => [-y, x]);
+  if (Math.abs(Math.log(asp(rot) / (W / H))) < Math.abs(Math.log(asp(P) / (W / H)))) P = rot;
+  // even out the density: blend each coordinate with its rank, so the busy old town spreads out
+  const spread = k => { const v = P.map(p => p[k]), lo = Math.min(...v), hi = Math.max(...v), ord = v.map((x, i) => i).sort((a, b) => v[a] - v[b]), rank = []; ord.forEach((i, r) => rank[i] = r / Math.max(1, n - 1)); return v.map((x, i) => .65 * rank[i] + .35 * (x - lo) / ((hi - lo) || 1)); };
+  const sx = spread(0), sy = spread(1); P = P.map((p, i) => [sx[i], sy[i]]);
+  const x0 = 0, x1 = 1, y0 = 0, y1 = 1;
+  let pos;
+  for (let tries = 0; tries < 14; tries++){
+    const bx0 = cw / 2, bx1 = W - cw / 2, by0 = ch * .38, by1 = H - ch * .62;
+    pos = P.map(([x, y]) => [bx0 + (x - x0) / ((x1 - x0) || 1) * (bx1 - bx0), by0 + (y - y0) / ((y1 - y0) || 1) * (by1 - by0)]);
+    let worst = 0;
+    for (let it = 0; it < 500; it++){
+      worst = 0;
+      for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++){
+        const a = pos[i], b = pos[j], dx = b[0] - a[0], dy = b[1] - a[1], ox = cw - Math.abs(dx), oy = ch - Math.abs(dy);
+        if (ox <= 0 || oy <= 0) continue;
+        worst = Math.max(worst, Math.min(ox / cw, oy / ch));
+        if (ox / cw < oy / ch){ const s = ox * .26 * (dx >= 0 ? 1 : -1); a[0] -= s; b[0] += s; }
+        else { const s = oy * .26 * (dy >= 0 ? 1 : -1) || oy * .26; a[1] -= s; b[1] += s; }
+      }
+      for (const p of pos){ p[0] = Math.min(bx1, Math.max(bx0, p[0])); p[1] = Math.min(by1, Math.max(by0, p[1])); }
+      if (worst < .01) break;
+    }
+    if (worst < .015) break;
+    H *= 1.07;
+  }
+  ol.style.height = Math.round(H) + "px";
+  items.forEach((li, i) => { li.style.left = pos[i][0].toFixed(1) + "px"; li.style.top = pos[i][1].toFixed(1) + "px"; });
 }
 function snakeDraw(){
   const box = document.getElementById("snake"); if (!box) return;
-  const b = box.getBoundingClientRect(), mid = b.width / 2, li = box.querySelector(".sn"), cw = li ? li.getBoundingClientRect().width : 80;
-  const P = [...box.querySelectorAll(".sn-ph")].map(e => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2 - b.left, r.top + r.height / 2 - b.top]; });
+  const b = box.getBoundingClientRect();
+  const P = [...box.querySelectorAll(".sn")].map(li => [parseFloat(li.style.left) || 0, (parseFloat(li.style.top) || 0)]);
   if (!P.length) return;
   let d = `M${P[0][0].toFixed(1)} ${P[0][1].toFixed(1)}`;
-  for (let i = 1; i < P.length; i++){
-    const [px, py] = P[i - 1], [x, y] = P[i];
-    if (Math.abs(y - py) < 4){ d += ` L${x.toFixed(1)} ${y.toFixed(1)}`; continue; }
-    const k = (x > mid ? 1 : -1) * (cw / 2 + 6) / .75;
-    d += ` C${(px + k).toFixed(1)} ${py.toFixed(1)} ${(x + k).toFixed(1)} ${y.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`;
+  for (let i = 0; i < P.length - 1; i++){
+    const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += ` C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
   }
   box.querySelectorAll(".sn-line path").forEach(p => p.setAttribute("d", d));
   routeFill();
 }
 function snakeInit(){
   const box = document.getElementById("snake"); if (!box) return;
-  snakeDraw();
+  cstLayout(); snakeDraw();
   if (snakeRO) snakeRO.disconnect();
-  if (window.ResizeObserver){ snakeRO = new ResizeObserver(() => snakeDraw()); snakeRO.observe(box); }
+  if (window.ResizeObserver){ snakeRO = new ResizeObserver(() => { if (box.clientWidth !== box._w){ cstLayout(); snakeDraw(); } }); snakeRO.observe(box); }
+  if (snakeIO) snakeIO.disconnect();
+  if (reduceMotion || !window.IntersectionObserver) box.classList.add("go");
+  else { snakeIO = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ box.classList.add("go"); snakeIO.disconnect(); } }), { threshold: .12 }); snakeIO.observe(box); }
 }
 
 /* ---------------- 3D trail map (home) ----------------
-   A navy street map laid on a tilted plane (CSS 3D). Pins are billboards that
-   stand up from the ground and always face you; the walking route draws itself
-   between the stops, and a light travels along it. Tap a pin for a preview. */
-const TM = { src: "images/trail-map.jpg", W: 2871, H: 2447, Z: 17, k: 0.7, x0: 20100036.835555557, y0: 13372688.34196933 };
+   One flat map image on a tilted CSS-3D plane (a single GPU layer, cheap to
+   move). Pins and the trail live in a flat layer on top and are projected each
+   frame. A short guided tour follows the trail stop by stop, then pulls back to
+   the whole map, which visitors can drag and zoom within the trail's area. */
+const TM = { src: "images/trail-map-v3.jpg", W: 2871, H: 2447, Z: 17, k: 0.7, x0: 20100036.835555557, y0: 13372688.34196933, D: 1100, OY: .56, PY: .24 };
 const TM_CAT = { sacred: "#e07fb6", ancient: "#e6c08e", town: "#8fb3e0", sea: "#5ec4be" };
+const RAD = Math.PI / 180;
 function tmXY(p){
-  const n = 2 ** TM.Z * 256, s = Math.sin(p.lat * Math.PI / 180);
+  const n = 2 ** TM.Z * 256, s = Math.sin(p.lat * RAD);
   return [((p.lng + 180) / 360 * n - TM.x0) * TM.k, ((0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n - TM.y0) * TM.k];
 }
-let tmOrder = [];
+let tmOrder = [], tmPath = null;
+function tmBuildPath(){
+  const P = tmOrder.map(tmXY), pts = [], stopAt = [0];
+  P.forEach(([x, y], i) => {
+    if (!i){ pts.push([x, y]); return; }
+    const [px, py] = P[i - 1], dx = x - px, dy = y - py, len = Math.hypot(dx, dy) || 1;
+    const bend = Math.min(60, len * .2) * (i % 2 ? 1 : -1);
+    const cx = (px + x) / 2 - dy / len * bend, cy = (py + y) / 2 + dx / len * bend;
+    const n = Math.max(6, Math.ceil(len / 14));
+    for (let j = 1; j <= n; j++){ const t = j / n, u = 1 - t; pts.push([u * u * px + 2 * u * t * cx + t * t * x, u * u * py + 2 * u * t * cy + t * t * y]); }
+    stopAt.push(pts.length - 1);
+  });
+  const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const xs = P.map(p => p[0]), ys = P.map(p => p[1]);
+  tmPath = { P, pts, cum, stopAt, total: cum[cum.length - 1], box: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] };
+}
+function tmAt(L){
+  const { pts, cum } = tmPath; L = Math.max(0, Math.min(tmPath.total, L));
+  let lo = 0, hi = cum.length - 1; while (hi - lo > 1){ const m = (lo + hi) >> 1; if (cum[m] <= L) lo = m; else hi = m; }
+  const t = (L - cum[lo]) / ((cum[hi] - cum[lo]) || 1);
+  return [pts[lo][0] + (pts[hi][0] - pts[lo][0]) * t, pts[lo][1] + (pts[hi][1] - pts[lo][1]) * t, lo];
+}
+const IC_PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+const IC_MINUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+const IC_FIT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const IC_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function mapHTML(){
   const L = t();
-  tmOrder = routeOrder(LANDMARKS);
-  const pts = tmOrder.map(tmXY);
-  let d = "", legs = "";
-  pts.forEach(([x, y], i) => {
-    if (!i){ d = `M${x.toFixed(1)} ${y.toFixed(1)}`; return; }
-    const [px, py] = pts[i - 1], dx = x - px, dy = y - py, len = Math.hypot(dx, dy);
-    const bend = Math.min(60, len * .22) * (i % 2 ? 1 : -1);
-    const cx = (px + x) / 2 - dy / (len || 1) * bend, cy = (py + y) / 2 + dx / (len || 1) * bend;
-    const seg = `Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`;
-    d += " " + seg;
-    legs += `<path class="tm-leg" d="M${px.toFixed(1)} ${py.toFixed(1)} ${seg}" pathLength="1" style="--i:${i}"/>`;
-  });
-  const pins = tmOrder.map((l, i) => { const [x, y] = pts[i];
-    return `<button type="button" class="tm-pin" data-tm="${i}" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;--c:${TM_CAT[l.cat] || "#e07fb6"};--i:${i}" aria-label="${esc(num(i + 1) + ". " + l.name[lang])}">
-      <span class="tm-dot"></span><span class="tm-up"><span class="tm-bill"><span class="tm-name">${esc(l.name[lang])}</span><span class="tm-head${l.noPhoto ? " np" : ""}">${l.noPhoto ? `<i>${num(i + 1)}</i>` : `<img src="${l.images[0]}" alt="" loading="lazy" decoding="async"><b>${num(i + 1)}</b>`}</span><span class="tm-stem"></span></span></span></button>`; }).join("");
+  tmOrder = routeOrder(LANDMARKS); tmBuildPath();
+  const pins = tmOrder.map((l, i) => `<button type="button" class="tm-pin" data-tm="${i}" style="--c:${TM_CAT[l.cat] || "#e07fb6"}" aria-label="${esc(num(i + 1) + ". " + l.name[lang])}">
+      <span class="tm-dot"></span><span class="tm-bill"><span class="tm-name">${esc(l.name[lang])}</span><span class="tm-head${l.noPhoto ? " np" : ""}">${l.noPhoto ? `<i>${num(i + 1)}</i>` : `<img src="${l.images[0]}" alt="" loading="lazy" decoding="async"><b>${num(i + 1)}</b>`}</span><span class="tm-stem"></span></span></button>`).join("");
   const cats = Object.keys(TM_CAT).filter(k => LANDMARKS.some(l => l.cat === k));
   return `<section class="tmap" id="tmap" aria-label="${esc(L.mapTitle)}">
     <div class="wrap tm-intro">
@@ -3065,96 +3168,251 @@ function mapHTML(){
       <p class="tm-stats">${esc(L.mapStats(num(LANDMARKS.length), num(cats.length)))}</p>
     </div>
     <div class="tm-stage" id="tm-stage">
-      <div class="tm-plane" id="tm-plane" style="width:${TM.W}px;height:${TM.H}px">
-        <img class="tm-base" src="${TM.src}" alt="" decoding="async">
-        <svg class="tm-routes" viewBox="0 0 ${TM.W} ${TM.H}" width="${TM.W}" height="${TM.H}" aria-hidden="true">
-          <path id="tm-all" class="tm-glow" d="${d}"/>${legs}
-          <circle class="tm-comet" r="9"><animateMotion dur="38s" repeatCount="indefinite" rotate="auto"><mpath href="#tm-all"/></animateMotion></circle>
-        </svg>
-        ${pins}
-      </div>
+      <div class="tm-plane" id="tm-plane" style="width:${TM.W}px;height:${TM.H}px"><img class="tm-base" src="${TM.src}" alt="" decoding="async" draggable="false"></div>
+      <canvas class="tm-cv" id="tm-cv" aria-hidden="true"></canvas>
+      <div class="tm-pins" id="tm-pins">${pins}</div>
       <div class="tm-fog" aria-hidden="true"></div>
-      <div class="tm-ui">
-        <div class="tm-views" role="group" aria-label="${esc(L.mapTitle)}">
-          <button type="button" class="chip glass" data-tmview="town" aria-pressed="true">${esc(L.mapTown)}</button>
-          <button type="button" class="chip glass" data-tmview="all" aria-pressed="false">${esc(L.mapAll)}</button>
-        </div>
-        <ul class="tm-legend">${cats.map(k => `<li style="--c:${TM_CAT[k]}">${esc(L.cats[k])}</li>`).join("")}</ul>
+      <ul class="tm-legend">${cats.map(k => `<li style="--c:${TM_CAT[k]}">${esc(L.cats[k])}</li>`).join("")}</ul>
+      <div class="tm-ctl" id="tm-ctl">
+        <button type="button" data-tmz="1" aria-label="${esc(L.zoomIn)}">${IC_PLUS}</button>
+        <button type="button" data-tmz="-1" aria-label="${esc(L.zoomOut)}">${IC_MINUS}</button>
+        <button type="button" data-tmfit aria-label="${esc(L.mapReset)}">${IC_FIT}</button>
       </div>
+      <button type="button" class="chip glass tm-skip" data-tmskip>${esc(L.mapSkip)}</button>
+      <button type="button" class="chip glass tm-replay" data-tmreplay>${IC_PLAY}${esc(L.mapReplay)}</button>
       <div class="rpop tm-card" id="tm-card" role="dialog" aria-live="polite" hidden></div>
     </div>
     <p class="wrap note tm-hint">${esc(L.mapHint)}</p>
   </section>`;
 }
 
-const tmCam = { fx: 0, fy: 0, s: .5, r: 0, a: 0 }, tmGoal = { fx: 0, fy: 0, s: .5, r: 0, a: 0 };
-let tmRaf = 0, tmVisible = false, tmIO = null, tmT0 = 0, tmView = "town", tmSel = -1, tmIntro = false;
-function tmFit(ids, a, r){
-  const st = document.getElementById("tm-stage"); if (!st) return null;
-  const P = (ids ? tmOrder.filter(l => ids.includes(l.id)) : tmOrder).map(tmXY);
-  const cr = Math.cos(r * Math.PI / 180), sr = Math.sin(r * Math.PI / 180);
+const tmCam = { fx: 0, fy: 0, s: .5, r: 0, a: 40 }, tmGoal = { fx: 0, fy: 0, s: .5, r: 0, a: 40 };
+const tmVel = { x: 0, y: 0 };
+let tmMode = "wait", tmSel = -1, tmRaf = 0, tmVisible = false, tmIO = null, tmLast = 0, tmW = 0, tmH = 0, tmDpr = 1;
+let tmTour = null, tmFitS = .3, tmDirty = true, tmCometT = 0, tmCtx = null, tmEls = null;
+let TM_R0 = -8;
+function tmSize(){
+  const st = document.getElementById("tm-stage"), cv = document.getElementById("tm-cv"); if (!st || !cv) return;
+  tmW = st.clientWidth; tmH = st.clientHeight; tmDpr = Math.min(1.5, window.devicePixelRatio || 1);
+  cv.width = Math.round(tmW * tmDpr); cv.height = Math.round(tmH * tmDpr); tmCtx = cv.getContext("2d");
+  // pick the map turn that shows the whole trail biggest (on a phone the trail runs up the screen)
+  let best = -8, bs = tmFitTrue(-8, 36).s * 1.08;
+  for (let r = -120; r <= 30; r += 15){ const f = tmFitTrue(r, 36).s; if (f > bs){ bs = f; best = r; } }
+  TM_R0 = best; tmFitS = tmFitTrue(TM_R0, 36).s; tmDirty = true;
+}
+/* scale + centre that frame every stop for a given turn/tilt */
+function tmFit(r, a){
+  const P = tmPath.P, cr = Math.cos(r * RAD), sr = Math.sin(r * RAD);
   const xs = P.map(([x, y]) => x * cr - y * sr), ys = P.map(([x, y]) => x * sr + y * cr);
-  const w = Math.max(...xs) - Math.min(...xs) + 220, h = (Math.max(...ys) - Math.min(...ys) + 260) * Math.cos(a * Math.PI / 180);
-  const s = Math.min(st.clientWidth * .8 / w, st.clientHeight * .66 / h, 3);
-  const mx = (Math.max(...xs) + Math.min(...xs)) / 2, my = (Math.max(...ys) + Math.min(...ys)) / 2 - 40 / s;
-  const fx = mx * cr + my * sr, fy = -mx * sr + my * cr;
-  return { fx, fy, s, r, a };
+  const w = Math.max(...xs) - Math.min(...xs) + 160, h = (Math.max(...ys) - Math.min(...ys) + 240) * Math.cos(a * RAD);
+  const s = Math.min(tmW * .84 / w, tmH * .62 / h, 1.4);
+  const mx = (Math.max(...xs) + Math.min(...xs)) / 2, my = (Math.max(...ys) + Math.min(...ys)) / 2 - 30 / s;
+  return { fx: mx * cr + my * sr, fy: -mx * sr + my * cr, s, r, a };
 }
-function tmTownIds(){ const c = byId("st-stephen") || LANDMARKS[0]; return LANDMARKS.filter(l => distKm(c, l) < (innerWidth > 720 ? .42 : .6)).map(l => l.id); }
-function tmSetView(v, snap){
-  tmView = v; const phone = innerWidth <= 720;
-  const g = v === "all" ? tmFit(null, 40, -8) : tmFit(tmTownIds(), phone ? 52 : 48, -18);
-  if (!g) return; Object.assign(tmGoal, g); if (snap) Object.assign(tmCam, g);
-  document.querySelectorAll("[data-tmview]").forEach(b => b.setAttribute("aria-pressed", b.dataset.tmview === v));
-  tmKick();
+const tmSMax = () => Math.max(tmFitS * 2, innerWidth > 720 ? 1.5 : 1.25);
+function tmZn(s){ const a = Math.log(tmFitS * .9), b = Math.log(tmSMax()); return Math.min(1, Math.max(0, (Math.log(s) - a) / (b - a))); }
+function tmClampGoal(){
+  const [x0, y0, x1, y1] = tmPath.box, m = 60;
+  tmGoal.s = Math.min(tmSMax(), Math.max(tmFitS * .9, tmGoal.s));
+  tmGoal.fx = Math.min(x1 + m, Math.max(x0 - m, tmGoal.fx)); tmGoal.fy = Math.min(y1 + m, Math.max(y0 - m, tmGoal.fy));
+  // keep the trail in view: the centre may not wander further from the route than ~40% of the view
+  const R = Math.min(tmW, tmH) * .4 / tmGoal.s; let best = Infinity, bx = 0, by = 0;
+  for (const [x, y] of tmPath.pts){ const d = (x - tmGoal.fx) ** 2 + (y - tmGoal.fy) ** 2; if (d < best){ best = d; bx = x; by = y; } }
+  best = Math.sqrt(best); if (best > R){ tmGoal.fx = bx + (tmGoal.fx - bx) * R / best; tmGoal.fy = by + (tmGoal.fy - by) * R / best; }
+  tmGoal.a = 34 + 22 * tmZn(tmGoal.s); tmGoal.r = tmUnwrap(TM_R0, tmCam.r);
 }
-function tmApply(time){
-  const pl = document.getElementById("tm-plane"); if (!pl) return false;
-  const dt = Math.min(.1, Math.max(0, (time - (tmApply.last || time)) / 1000)); tmApply.last = time;
-  const k = 1 - Math.exp(-dt / (tmIntro ? .55 : .3)); let moving = false;
-  for (const key of ["fx", "fy", "s", "r", "a"]){ const dv = tmGoal[key] - tmCam[key]; if (Math.abs(dv) > (key === "s" ? .0004 : .02)){ tmCam[key] += dv * k; moving = true; } else tmCam[key] = tmGoal[key]; }
-  if (!moving) tmIntro = false;
-  const sway = reduceMotion ? 0 : Math.sin((time - tmT0) / 5200) * 2.4;
-  const r = tmCam.r + sway, { fx, fy, s, a } = tmCam;
-  pl.style.transform = `rotateX(${a.toFixed(2)}deg) rotateZ(${r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate3d(${(-fx).toFixed(1)}px,${(-fy).toFixed(1)}px,0)`;
-  pl.style.setProperty("--rz", (-r).toFixed(2) + "deg"); pl.style.setProperty("--rx", (-a).toFixed(2) + "deg");
-  pl.style.setProperty("--is", (1 / s).toFixed(4));
-  return moving || !reduceMotion;
+function tmProj(X, Y, cam){
+  const c = cam || tmCam, u = (X - c.fx) * c.s, v = (Y - c.fy) * c.s, cr = Math.cos(c.r * RAD), sr = Math.sin(c.r * RAD);
+  const x1 = u * cr - v * sr, y1 = u * sr + v * cr, y2 = y1 * Math.cos(c.a * RAD), z = y1 * Math.sin(c.a * RAD);
+  const dz = TM.D - z; if (dz < 80) return null;
+  const f = TM.D / dz, px = tmW * .5, py = tmH * TM.PY;
+  return [px + (tmW * .5 + x1 - px) * f, py + (tmH * TM.OY + y2 - py) * f, f];
 }
-function tmLoop(time){ tmRaf = 0; if (!tmVisible) return; if (tmApply(time)) tmRaf = requestAnimationFrame(tmLoop); }
-function tmKick(){ if (!tmRaf && tmVisible){ tmApply.last = performance.now(); tmRaf = requestAnimationFrame(tmLoop); } if (!tmVisible) tmApply(performance.now()); }
+/* refine a fit with the real perspective projection, so the whole trail (pins included) sits inside the frame */
+function tmFitTrue(r, a){
+  const c = tmFit(r, a), top = 70, bot = tmH - 24, side = 48;
+  for (let k = 0; k < 8; k++){
+    const Q = tmPath.P.map(([x, y]) => tmProj(x, y, c)).filter(Boolean);
+    if (!Q.length) break;
+    const xs = Q.map(q => q[0]), ys = Q.map(q => q[1] - 62 * q[2]), ys2 = Q.map(q => q[1]);
+    const minX = Math.min(...xs) - side, maxX = Math.max(...xs) + side, minY = Math.min(...ys), maxY = Math.max(...ys2) + 10;
+    const f = Math.min((tmW) / (maxX - minX), (bot - top) / (maxY - minY));
+    c.s *= Math.pow(f, .85);
+    const dx = (minX + maxX) / 2 - tmW / 2, dy = (minY + maxY) / 2 - (top + bot) / 2;
+    const rr = c.r * RAD, ca = Math.max(.35, Math.cos(c.a * RAD)), dyw = dy / ca;
+    c.fx += (dx * Math.cos(rr) + dyw * Math.sin(rr)) / c.s; c.fy += (-dx * Math.sin(rr) + dyw * Math.cos(rr)) / c.s;
+  }
+  c.s = Math.min(c.s, 1.4); return c;
+}
+function tmOverview(){ return tmFitTrue(TM_R0, 36); }
+
+/* ---- the guided tour ---- */
+function tmTourBuild(){
+  const { cum, stopAt } = tmPath, legs = [];
+  let raw = 0;
+  for (let i = 1; i < stopAt.length; i++){ const L0 = cum[stopAt[i - 1]], L1 = cum[stopAt[i]], d = .35 + .42 * Math.sqrt((L1 - L0) / 100); legs.push({ L0, L1, d }); raw += d; }
+  const target = 13.5, k = target / raw; let t0 = 1.1;
+  legs.forEach(g => { g.d = Math.max(.45, g.d * k); g.t0 = t0; t0 += g.d + .22; });
+  return { legs, t: 0, end: t0 + .3, head: null };
+}
+function tmEase(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+function tmTourState(T){
+  const legs = tmTour.legs; let i = 0; while (i < legs.length - 1 && T >= legs[i + 1].t0) i++;
+  const g = legs[i], p = Math.min(1, Math.max(0, (T - g.t0) / g.d)), e = tmEase(p);
+  const reached = T < g.t0 ? i : (p >= 1 ? i + 1 : i);
+  return { leg: i, L: g.L0 + (g.L1 - g.L0) * e, reached, g };
+}
+function tmStartTour(){
+  if (!tmPath) return;
+  tmMode = "tour"; tmTour = tmTourBuild(); tmSel = -1; tmCloseCard();
+  const p0 = tmPath.P[0], g = tmTour.legs[0], h = Math.atan2(tmPath.P[1][1] - p0[1], tmPath.P[1][0] - p0[0]) / RAD;
+  Object.assign(tmCam, { fx: p0[0], fy: p0[1], s: Math.min(1.5, tmSMax()), a: 62, r: -90 - h });
+  Object.assign(tmGoal, tmCam);
+  tmStageClass(); tmKick();
+}
+function tmEndTour(){
+  tmMode = "outro"; tmTour = null; Object.assign(tmGoal, tmOverview()); tmClampGoal(); tmStageClass(); tmKick();
+  setTimeout(() => { if (tmMode === "outro") { tmMode = "free"; tmStageClass(); } }, 1600);
+}
+function tmStageClass(){
+  const st = document.getElementById("tm-stage"); if (!st) return;
+  st.classList.toggle("touring", tmMode === "tour"); st.classList.toggle("free", tmMode === "free" || tmMode === "outro");
+}
+function tmUnwrap(target, from){ while (target - from > 180) target -= 360; while (target - from < -180) target += 360; return target; }
+
+/* ---- one frame ---- */
+function tmFrame(now){
+  tmRaf = 0; if (!tmVisible || !tmCtx) return;
+  const dt = Math.min(.05, Math.max(0, (now - (tmLast || now)) / 1000)); tmLast = now;
+  let trailL = tmPath.total, traveller = null, reached = tmOrder.length;
+  if (tmMode === "tour"){
+    tmTour.t += dt; const T = tmTour.t;
+    if (T >= tmTour.end){ tmEndTour(); }
+    else {
+      const st = tmTour.t < tmTour.legs[0].t0 ? { leg: 0, L: 0, reached: 0, g: tmTour.legs[0] } : tmTourState(T);
+      trailL = st.L; reached = st.reached + 1; traveller = tmAt(st.L);
+      const [ax, ay] = tmPath.P[st.leg], [bx, by] = tmPath.P[st.leg + 1], len = Math.hypot(bx - ax, by - ay);
+      const h = Math.atan2(by - ay, bx - ax) / RAD;
+      tmGoal.fx = traveller[0]; tmGoal.fy = traveller[1];
+      tmGoal.r = tmUnwrap(-90 - h, tmCam.r);
+      tmGoal.s = Math.min(1.5, tmSMax(), Math.max(tmFitS, Math.min(tmW, tmH) * (tmW > 720 ? .75 : .5) / Math.max(240, len)));
+      tmGoal.a = 60;
+    }
+  }
+  if (tmMode === "free" && (tmVel.x || tmVel.y)){
+    tmGoal.fx += tmVel.x * dt; tmGoal.fy += tmVel.y * dt; const k = Math.exp(-dt / .32); tmVel.x *= k; tmVel.y *= k;
+    if (Math.abs(tmVel.x) + Math.abs(tmVel.y) < 4){ tmVel.x = tmVel.y = 0; }
+    tmClampGoal();
+  }
+  const tc = tmMode === "tour" ? { p: .32, r: .9, s: .7 } : tmMode === "outro" ? { p: .5, r: .5, s: .5 } : { p: .12, r: .3, s: .16 };
+  let moved = false;
+  for (const key of ["fx", "fy", "s", "r", "a"]){
+    const goal = tmGoal[key], cur = tmCam[key], diff = goal - cur;
+    const lim = key === "s" ? .0003 : .01;
+    if (Math.abs(diff) <= lim){ if (cur !== goal){ tmCam[key] = goal; moved = true; } continue; }
+    const tcs = key === "r" ? tc.r : key === "s" || key === "a" ? tc.s : tc.p;
+    let step = diff * (1 - Math.exp(-dt / tcs));
+    if (key === "r") step = Math.max(-50 * dt, Math.min(50 * dt, step));
+    tmCam[key] = cur + step; moved = true;
+  }
+  if (tmMode === "free" && tmCam.r === tmGoal.r && Math.abs(tmCam.r - TM_R0) > 179){ tmCam.r = tmGoal.r = TM_R0; }
+  if (moved || tmDirty || tmFrame.need || traveller){ tmPlace(reached); tmDraw(trailL, traveller, dt); tmDirty = false; tmFrame.need = false; }
+  // keep running only while something is moving; a still map costs nothing
+  if (tmMode === "tour" || moved || tmVel.x || tmVel.y) tmRaf = requestAnimationFrame(tmFrame);
+}
+function tmKick(){ tmFrame.need = true; if (!tmRaf && tmVisible){ tmLast = performance.now(); tmRaf = requestAnimationFrame(tmFrame); } }
+function tmPlace(reached){
+  const { pl, pins } = tmEls, c = tmCam;
+  pl.style.transform = `rotateX(${c.a.toFixed(2)}deg) rotateZ(${c.r.toFixed(2)}deg) scale(${c.s.toFixed(4)}) translate3d(${(-c.fx).toFixed(1)}px,${(-c.fy).toFixed(1)}px,0)`;
+  const ps = .66 + .34 * tmZn(c.s), ca = Math.cos(c.a * RAD).toFixed(3);
+  tmEls.st.style.setProperty("--ca", ca);
+  pins.forEach((el, i) => {
+    const q = tmProj(tmPath.P[i][0], tmPath.P[i][1]);
+    const vis = q && q[0] > -90 && q[0] < tmW + 90 && q[1] > -30 && q[1] < tmH + 160;
+    if (!vis){ if (!el.hidden) el.hidden = true; return; }
+    if (el.hidden) el.hidden = false;
+    el.style.transform = `translate3d(${q[0].toFixed(1)}px,${q[1].toFixed(1)}px,0) scale(${(Math.min(1.3, q[2]) * ps).toFixed(3)})`;
+    const zi = i === tmSel ? 9999 : Math.round(q[1] / 4); if (el._z !== zi){ el._z = zi; el.style.zIndex = zi; }
+    if (reached !== undefined) el.classList.toggle("on", i < reached);
+  });
+  if (tmMode === "tour" && reached !== undefined) pins.forEach((el, i) => el.classList.toggle("cur", i === reached - 1));
+  else pins.forEach(el => el.classList.remove("cur"));
+}
+function tmDraw(trailL, traveller, dt){
+  const ctx = tmCtx, { pts, cum } = tmPath;
+  ctx.setTransform(tmDpr, 0, 0, tmDpr, 0, 0); ctx.clearRect(0, 0, tmW, tmH);
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  const Q = tmDraw.Q || (tmDraw.Q = []); Q.length = pts.length;
+  for (let i = 0; i < pts.length; i++) Q[i] = tmProj(pts[i][0], pts[i][1]);
+  const stroke = (from, to) => { ctx.beginPath(); let pen = false;
+    for (let i = 0; i < pts.length; i++){ if (cum[i] < from) continue; if (cum[i] > to) break; const q = Q[i]; if (!q){ pen = false; continue; } if (pen) ctx.lineTo(q[0], q[1]); else { ctx.moveTo(q[0], q[1]); pen = true; } }
+    if (to < tmPath.total){ const e = tmAt(to), q = tmProj(e[0], e[1]); if (q && pen) ctx.lineTo(q[0], q[1]); }
+    ctx.stroke(); };
+  if (trailL < tmPath.total){ ctx.setLineDash([2, 9]); ctx.strokeStyle = "rgba(255,255,255,.32)"; ctx.lineWidth = 2; stroke(trailL, tmPath.total); ctx.setLineDash([]); }
+  ctx.strokeStyle = "rgba(241,201,143,.16)"; ctx.lineWidth = 12; stroke(0, trailL);
+  ctx.strokeStyle = "#f1c98f"; ctx.lineWidth = 3.2; stroke(0, trailL);
+  let head = traveller;
+  if (head){ const q = tmProj(head[0], head[1]); if (q){ const r = traveller ? 26 : 16, g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], r);
+      g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(.25, "rgba(255,236,200,.9)"); g.addColorStop(1, "rgba(241,201,143,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q[0], q[1], r, 0, 7); ctx.fill(); } }
+}
+
+/* ---- input: drag, pinch, ctrl/trackpad zoom, buttons ---- */
+function tmToPlane(dx, dy){
+  const r = tmCam.r * RAD, ca = Math.max(.35, Math.cos(tmCam.a * RAD)), dyw = dy / ca;
+  return [(dx * Math.cos(r) + dyw * Math.sin(r)) / tmCam.s, (-dx * Math.sin(r) + dyw * Math.cos(r)) / tmCam.s];
+}
+function tmGoFree(){ if (tmMode === "tour" || tmMode === "wait"){ tmMode = "free"; tmTour = null; Object.assign(tmGoal, tmCam); tmClampGoal(); tmStageClass(); tmDirty = true; } else if (tmMode === "outro"){ tmMode = "free"; tmStageClass(); } }
+function tmZoom(f){ tmGoFree(); tmGoal.s *= f; tmClampGoal(); tmKick(); }
 function tmInit(){
-  const st = document.getElementById("tm-stage"); if (!st){ if (tmIO) tmIO.disconnect(); return; }
-  tmSel = -1; tmT0 = performance.now();
-  const first = !reduceMotion;
-  tmSetView("town", true);
-  if (first){ const g = { ...tmGoal }; const all = tmFit(null, 0, 0); Object.assign(tmCam, all, { s: all.s * .9 }); Object.assign(tmGoal, g); tmIntro = true; }
-  tmApply(performance.now());
+  const st = document.getElementById("tm-stage"); if (!st){ if (tmIO) tmIO.disconnect(); tmEls = null; return; }
+  tmEls = { st, pl: document.getElementById("tm-plane"), pins: [...st.querySelectorAll(".tm-pin")] };
+  tmSel = -1; tmMode = "wait"; tmVel.x = tmVel.y = 0; tmSize();
+  Object.assign(tmCam, tmOverview()); Object.assign(tmGoal, tmCam); tmClampGoal(); Object.assign(tmCam, tmGoal);
+  if (reduceMotion){ tmMode = "free"; }
+  tmStageClass(); tmPlace(reduceMotion ? tmOrder.length : 0);
   if (tmIO) tmIO.disconnect();
   tmIO = new IntersectionObserver(es => es.forEach(en => {
     tmVisible = en.isIntersecting;
-    if (tmVisible){ if (!st.classList.contains("go")) setTimeout(() => st.classList.add("done"), 5600); st.classList.add("go"); tmKick(); }
-  }), { threshold: .2 });
+    if (tmVisible && tmMode === "wait" && en.intersectionRatio >= .45) tmStartTour();
+    if (tmVisible) tmKick();
+  }), { threshold: [0, .45, .7] });
   tmIO.observe(st);
-  // drag to look around (horizontal on touch, so the page still scrolls)
-  let drag = null;
-  st.addEventListener("pointerdown", e => { if (e.target.closest(".tm-pin, .tm-ui, .tm-card")) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId, moved: 0 }; });
-  st.addEventListener("pointermove", e => {
-    if (!drag || e.pointerId !== drag.id) return;
-    const dx = e.clientX - drag.x, dy = e.pointerType === "touch" ? 0 : e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy);
-    if (drag.moved > 6 && !drag.cap){ try { st.setPointerCapture(e.pointerId); } catch(_){} drag.cap = true; }
-    const r = tmCam.r * Math.PI / 180, ca = Math.max(.3, Math.cos(tmCam.a * Math.PI / 180)), dyw = dy / ca;
-    const wx = (dx * Math.cos(r) + dyw * Math.sin(r)) / tmCam.s, wy = (-dx * Math.sin(r) + dyw * Math.cos(r)) / tmCam.s;
-    tmGoal.fx = tmCam.fx = Math.min(TM.W, Math.max(0, tmCam.fx - wx)); tmGoal.fy = tmCam.fy = Math.min(TM.H, Math.max(0, tmCam.fy - wy)); tmKick();
+  const ptrs = new Map(); let pinch = null, moved = 0, lastMoveT = 0;
+  st.addEventListener("pointerdown", e => {
+    if (e.target.closest(".tm-ctl, .tm-card, .tm-skip, .tm-replay")) return;
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); moved = 0; tmVel.x = tmVel.y = 0;
+    if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 }; }
   });
-  const end = () => { drag = null; }; st.addEventListener("pointerup", end); st.addEventListener("pointercancel", end);
+  st.addEventListener("pointermove", e => {
+    const p = ptrs.get(e.pointerId); if (!p) return;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+    moved += Math.abs(dx) + Math.abs(dy);
+    if (moved > 6 && !p.cap){ try { st.setPointerCapture(e.pointerId); } catch(_){} p.cap = true; tmGoFree(); }
+    if (!p.cap) return;
+    if (ptrs.size >= 2 && pinch){
+      const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y), mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      if (pinch.d > 0){ tmGoal.s *= d / pinch.d; }
+      const [wx, wy] = tmToPlane(mx - pinch.mx, my - pinch.my); tmGoal.fx -= wx; tmGoal.fy -= wy;
+      pinch = { d, mx, my };
+    } else {
+      const [wx, wy] = tmToPlane(dx, dy); tmGoal.fx -= wx; tmGoal.fy -= wy;
+      const now = performance.now(), dts = Math.max(.008, (now - (lastMoveT || now)) / 1000); lastMoveT = now;
+      tmVel.x = tmVel.x * .6 + (-wx / dts) * .4; tmVel.y = tmVel.y * .6 + (-wy / dts) * .4;
+    }
+    tmClampGoal(); Object.assign(tmCam, { fx: tmGoal.fx, fy: tmGoal.fy }); tmDirty = true; tmKick();
+  });
+  const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (performance.now() - lastMoveT > 90){ tmVel.x = tmVel.y = 0; } tmKick(); };
+  st.addEventListener("pointerup", up); st.addEventListener("pointercancel", e => { ptrs.delete(e.pointerId); pinch = null; tmVel.x = tmVel.y = 0; });
+  st.addEventListener("wheel", e => { if (!e.ctrlKey) return; e.preventDefault(); tmZoom(Math.exp(-e.deltaY * .01)); }, { passive: false });
+  st.addEventListener("dblclick", () => tmZoom(1.7));
 }
 function tmOpen(i){
   const L = t(), l = tmOrder[i], card = document.getElementById("tm-card"); if (!l || !card) return;
-  tmSel = i;
-  document.querySelectorAll(".tm-pin").forEach(p => p.classList.toggle("sel", +p.dataset.tm === i));
-  document.getElementById("tm-stage")?.classList.add("has-sel");
-  const [x, y] = tmXY(l); tmGoal.fx = x; tmGoal.fy = y + 60; tmGoal.s = Math.max(tmGoal.s, tmView === "all" ? tmFit(tmTownIds(), 50, -20).s * .8 : tmGoal.s); tmKick();
+  tmGoFree(); tmSel = i;
+  tmEls.pins.forEach((p, j) => { p.classList.toggle("sel", j === i); p.classList.add("on"); });
+  tmEls.st.classList.add("has-sel");
+  const [x, y] = tmPath.P[i]; tmGoal.fx = x; tmGoal.fy = y + 40 / Math.max(.3, tmGoal.s); tmGoal.s = Math.max(tmGoal.s, Math.min(tmSMax(), tmFitS * 2.4)); tmClampGoal(); tmDirty = true; tmKick();
   const dir = `https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}`;
   card.innerHTML = `<button class="rpop-x" type="button" data-tmclose aria-label="${esc(L.close)}">${I.x}</button>
     <img src="${l.images[0]}" alt="">
@@ -3163,7 +3421,8 @@ function tmOpen(i){
       <div class="acts"><a class="chip go" href="#${l.id}">${esc(L.open)}</a><a class="chip" href="${dir}" target="_blank" rel="noopener">${I.pin}${esc(L.directions)}</a></div></div>`;
   card.hidden = false; card.classList.remove("on"); void card.offsetWidth; card.classList.add("on");
 }
-function tmClose(){ const c = document.getElementById("tm-card"); if (c){ c.hidden = true; } tmSel = -1; document.getElementById("tm-stage")?.classList.remove("has-sel"); document.querySelectorAll(".tm-pin.sel").forEach(p => p.classList.remove("sel")); }
+function tmCloseCard(){ const c = document.getElementById("tm-card"); if (c) c.hidden = true; tmSel = -1; if (tmEls){ tmEls.st.classList.remove("has-sel"); tmEls.pins.forEach(p => p.classList.remove("sel")); tmDirty = true; } }
+function tmClose(){ tmCloseCard(); }
 
 /* ---------------- home ---------------- */
 function homePage(){
@@ -3263,6 +3522,8 @@ function render(snap){
   targetP = readTarget();
   smoothP = snap ? targetP : smoothP + (targetP - smoothP) * 0.2;
   if (Math.abs(targetP - smoothP) < 0.0005) smoothP = targetP;
+  if (!snap && smoothP === targetP && render.lastP === smoothP) return;   // nothing changed (e.g. hero scrolled away)
+  render.lastP = smoothP;
   const p = smoothP, e = smoothstep(0, .6, p);
   const frame = document.getElementById("frame"); if (!frame) return;
   const grow = G.h * .1 * e;
@@ -3362,10 +3623,14 @@ function route(){
   armReveals();
   tmInit();
   snakeInit();
+  sdActive = -1; sdUpdate();
+  if (heroIO) heroIO.disconnect();
+  const heroEl = document.querySelector(".hero");
+  if (heroEl && window.IntersectionObserver){ heroIO = new IntersectionObserver(es => es.forEach(en => heroEl.classList.toggle("off", !en.isIntersecting))); heroIO.observe(heroEl); }
   const go = () => { fitHero(); playHero(); };
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go);
 }
-addEventListener("resize", () => { if (document.getElementById("tm-stage")) tmSetView(tmView, true); const box = document.getElementById("route-box"); if (box && snakeColsFor() !== snakeCols){ box.innerHTML = routeHTML(); snakeInit(); } });
+addEventListener("resize", () => { if (tmEls && document.getElementById("tm-stage")){ tmSize(); if (tmMode !== "tour"){ tmClampGoal(); } tmDirty = true; tmKick(); }  });
 function rerender(keepScroll){
   const y = scrollY; const wasPlaying = Voice.playing;
   route();
@@ -3377,8 +3642,11 @@ function rerender(keepScroll){
 document.addEventListener("click", e => {
   const cb = e.target.closest("[data-cat]");
   if (cb){ routeCat = cb.dataset.cat; document.querySelectorAll("[data-cat]").forEach(b => b.setAttribute("aria-pressed", b === cb)); const box = document.getElementById("route-box"); if (box){ box.innerHTML = routeHTML(); snakeInit(); } return; }
-  const tv = e.target.closest("[data-tmview]");
-  if (tv){ tmClose(); tmSetView(tv.dataset.tmview); return; }
+  const sd = e.target.closest("[data-sd]"); if (sd){ const id = sd.dataset.sd; if (id === "top") scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }); else document.getElementById(id)?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }); return; }
+  const tz = e.target.closest("[data-tmz]"); if (tz){ tmZoom(+tz.dataset.tmz > 0 ? 1.6 : 1 / 1.6); return; }
+  if (e.target.closest("[data-tmfit]")){ tmGoFree(); tmCloseCard(); Object.assign(tmGoal, tmOverview()); tmClampGoal(); tmKick(); return; }
+  if (e.target.closest("[data-tmskip]")){ tmCloseCard(); tmEndTour(); return; }
+  if (e.target.closest("[data-tmreplay]")){ tmStartTour(); return; }
   const tp = e.target.closest("[data-tm]");
   if (tp){ tmOpen(+tp.dataset.tm); return; }
   if (e.target.closest("[data-tmclose]")){ tmClose(); return; }
@@ -3411,7 +3679,7 @@ let rz; addEventListener("resize", () => {
 let ticking = false;
 addEventListener("scroll", () => {
   if (ticking) return; ticking = true;
-  requestAnimationFrame(() => { ticking = false; if (introRunning && scrollY > 24) finishIntro(); tick(); Voice.render(); routeFill(); });
+  requestAnimationFrame(() => { ticking = false; if (introRunning && scrollY > 24) finishIntro(); tick(); Voice.render(); routeFill(); sdUpdate(); });
 }, { passive: true });
 
 function locate(){
