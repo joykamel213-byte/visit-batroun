@@ -415,6 +415,76 @@ footer.foot ul{padding-inline-start:18px;margin:10px 0 0;display:grid;gap:4px}
 section.block.story-first{padding-top:clamp(28px,4vw,56px)}
 @media (max-width:720px){.stage{padding:72px 0 12px}.hero-foot{padding-bottom:18px;gap:12px}.hero .lede{font-size:15px}}
 
+/* ---------- home: category chips above the route ---------- */
+.cat-chips{display:flex;gap:8px;overflow-x:auto;margin:22px calc(-1 * var(--gut-r)) 0 calc(-1 * var(--gut));padding:2px var(--gut-r) 6px var(--gut);scrollbar-width:none}
+.cat-chips::-webkit-scrollbar{display:none}
+.cat-chips .chip{flex:none;white-space:nowrap;gap:8px}
+.cat-chips .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cat-chips .ct{font-size:11px;font-weight:700;opacity:.6;font-variant-numeric:tabular-nums}
+.rpop[hidden]{display:none}
+
+/* ---------- home: 3D trail map ---------- */
+.tmap{padding-block:clamp(36px,6vw,80px) 0}
+.tm-stats{margin:10px 0 0;color:var(--muted);font-size:15px}
+.tm-stage{position:relative;margin-top:26px;height:min(78svh,820px);min-height:460px;overflow:hidden;perspective:1300px;perspective-origin:50% 22%;
+  background:radial-gradient(120% 80% at 50% 0%,#1b3358 0%,#132540 45%,#0d1320 100%);touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;isolation:isolate}
+.tm-stage:active{cursor:grabbing}
+.tm-plane{position:absolute;left:50%;top:52%;transform-origin:0 0;transform-style:preserve-3d;will-change:transform}
+.tm-base{position:absolute;inset:0;width:100%;height:100%;max-width:none;pointer-events:none;-webkit-user-drag:none}
+.tm-routes{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.tm-glow{fill:none;stroke:rgba(224,127,182,.16);stroke-width:16;stroke-linecap:round}
+.tm-leg{fill:none;stroke:#f1c98f;stroke-width:4.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px rgba(241,201,143,.55))}
+.tm-stage.go .tm-leg{animation:tmdraw .9s cubic-bezier(.6,0,.2,1) forwards;animation-delay:calc(var(--i) * .16s + .9s)}
+@keyframes tmdraw{to{stroke-dashoffset:0}}
+.tm-comet{fill:#fff;opacity:0;filter:drop-shadow(0 0 10px #f1c98f) drop-shadow(0 0 22px #e07fb6)}
+.tm-stage.go .tm-comet{animation:tmfade 1s 4.6s forwards}
+@keyframes tmfade{to{opacity:1}}
+.tm-pin{position:absolute;width:0;height:0;padding:0;border:0;background:none;transform-style:preserve-3d;cursor:pointer;color:#fff}
+.tm-dot{position:absolute;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--c);transform:scale(var(--is,1));box-shadow:0 0 0 4px rgba(13,19,32,.6)}
+.tm-dot::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid var(--c);opacity:0;animation:tmping 2.6s ease-out infinite;animation-delay:calc(var(--i) * .2s)}
+@keyframes tmping{0%{transform:scale(.4);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.tm-up{position:absolute;left:0;top:0;transform-origin:0 0;transform:scale(var(--is,1)) rotateZ(var(--rz,0deg)) rotateX(var(--rx,0deg));transform-style:preserve-3d}
+.tm-bill{position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%) translateY(0) scale(0);transform-origin:50% 100%;opacity:0;
+  transition:transform .7s var(--ease-out),opacity .5s}
+.tm-stage.go .tm-bill{transform:translateX(-50%);opacity:1;transition-delay:calc(var(--i) * .16s + .9s)}
+.tm-head{position:relative;width:50px;height:50px;border-radius:50%;border:3px solid var(--c);background:var(--card);box-shadow:0 10px 24px -6px rgba(0,0,0,.6);transition:transform .35s var(--ease-out)}
+.tm-head img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.tm-head b{position:absolute;top:-7px;right:-9px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:var(--c);color:#0d1320;font-size:11.5px;font-weight:800;display:grid;place-items:center}
+.tm-stem{width:2px;height:30px;background:linear-gradient(var(--c),rgba(255,255,255,0))}
+.tm-name{position:absolute;bottom:calc(100% + 6px);white-space:nowrap;font-size:13px;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(13,19,32,.85);border:1px solid rgba(255,255,255,.14);opacity:0;transform:translateY(6px);transition:.3s var(--ease-out);pointer-events:none}
+.tm-pin:hover .tm-head,.tm-pin.sel .tm-head,.tm-pin:focus-visible .tm-head{transform:scale(1.18)}
+.tm-pin:hover .tm-name,.tm-pin.sel .tm-name,.tm-pin:focus-visible .tm-name{opacity:1;transform:none}
+.tm-pin.sel{z-index:5}
+.tm-fog{position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:linear-gradient(180deg,#0d1320 0%,rgba(13,19,32,.75) 10%,rgba(13,19,32,0) 30%,rgba(13,19,32,0) 82%,#0d1320 100%),
+             linear-gradient(90deg,rgba(13,19,32,.7),rgba(13,19,32,0) 12%,rgba(13,19,32,0) 88%,rgba(13,19,32,.7))}
+.tm-ui{position:absolute;z-index:3;left:var(--gut);right:var(--gut-r);top:14px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start;pointer-events:none}
+.tm-ui>*{pointer-events:auto}
+.tm-views{display:flex;gap:6px}
+.tm-views .chip[aria-pressed="true"]{background:#fff;color:#0d1320;border-color:#fff}
+.tm-legend{list-style:none;margin:0;padding:8px 12px;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:rgba(255,255,255,.82);border-radius:16px;background:rgba(13,19,32,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.tm-legend li{display:flex;align-items:center;gap:6px}
+.tm-legend li::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.tm-card{z-index:4}
+.tm-hint{margin-top:12px;color:var(--muted);font-size:13px}
+@media (max-width:720px){
+  .tm-stage{height:70svh;min-height:420px}
+  .tm-legend{display:none}
+  .tm-head{width:42px;height:42px}
+  .tm-stem{height:24px}
+}
+@media (prefers-reduced-motion: reduce){ .tm-leg{stroke-dashoffset:0} .tm-bill{transform:translateX(-50%);opacity:1} .tm-comet{display:none} }
+.tm-head.np{background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--c) 55%,#fff) 0%,var(--c) 60%);display:grid;place-items:center}
+.tm-head.np i{font-style:normal;font-weight:800;font-size:16px;color:#0d1320}
+@media (min-width:721px){
+  .tm-card{left:20px;right:auto;bottom:20px;width:min(440px,calc(100% - 40px))}
+  [dir="rtl"] .tm-card{left:auto;right:20px}
+}
+.tm-stage.has-sel .tm-pin:not(.sel) .tm-bill{opacity:.38}
+.tm-stage.go .tm-pin.sel .tm-bill{transform:translateX(-50%) translateZ(80px);opacity:1;transition-delay:0s}
+.tm-stage.done .tm-bill{transition-delay:0s}
+.tm-base{-webkit-mask-image:radial-gradient(ellipse 60% 60% at 50% 50%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 60% 60% at 50% 50%,#000 62%,transparent 100%)}
+
 </style>
 </head>
 <body>
@@ -424,300 +494,1830 @@ section.block.story-first{padding-top:clamp(28px,4vw,56px)}
 /* ==========================================================================
    LANDMARK DATA — edit this block to add or change landmarks.
    Each landmark gets its own page at  <site-address>/#<id>
-   Coordinates come from OpenStreetMap. Photos are from Wikimedia Commons
+   Names, short histories and coordinates follow the Batroun Municipality list (Nov 2020) and map file. Photos are from Wikimedia Commons
    (see "credits"); swap in your own photos any time.
    ========================================================================== */
 const CITY = {
-  name: { en: "Batroun", ar: "البترون", fr: "Batroun" },
-  hero: { en: ["Visit", "Batroun"], ar: ["زوروا", "البترون"], fr: ["Visitez", "Batroun"] },
-  image: "images/batroun-port.jpg",
-  intro: {
-    en: "One of the oldest continuously inhabited towns on earth, Batroun has been a harbour for more than three thousand years. Scan the code at each site to hear its story in English, Arabic or French, then follow the trail to the next stop.",
-    ar: "البترون من أقدم المدن المأهولة بلا انقطاع في العالم، ومرفأ عامر منذ أكثر من ثلاثة آلاف سنة. امسح الرمز عند كل معلم لتستمع إلى قصته بالعربية أو الإنجليزية أو الفرنسية، ثم تابع الطريق إلى المحطة التالية.",
-    fr: "L'une des plus anciennes villes habitées sans interruption au monde, Batroun est un port depuis plus de trois mille ans. Scannez le code sur chaque site pour écouter son histoire en français, en arabe ou en anglais, puis suivez le parcours jusqu'à l'étape suivante."
+  "name": {
+    "en": "Batroun",
+    "ar": "البترون",
+    "fr": "Batroun"
+  },
+  "hero": {
+    "en": [
+      "Visit",
+      "Batroun"
+    ],
+    "ar": [
+      "زوروا",
+      "البترون"
+    ],
+    "fr": [
+      "Visitez",
+      "Batroun"
+    ]
+  },
+  "image": "images/batroun-port.jpg",
+  "intro": {
+    "en": "One of the oldest continuously inhabited towns on earth, Batroun has been a harbour for more than three thousand years. Scan the code at any of its 22 sites to hear the story in English, Arabic or French, then follow the trail to the next stop.",
+    "ar": "البترون من أقدم المدن المأهولة بلا انقطاع في العالم، ومرفأ عامر منذ أكثر من ثلاثة آلاف سنة. امسح الرمز عند أيٍّ من معالمها الاثنين والعشرين لتستمع إلى قصته بالعربية أو الإنجليزية أو الفرنسية، ثم تابع الدرب إلى المحطة التالية.",
+    "fr": "L'une des plus anciennes villes habitées sans interruption au monde, Batroun est un port depuis plus de trois mille ans. Scannez le code sur l'un de ses 22 sites pour écouter son histoire en français, en arabe ou en anglais, puis suivez le parcours jusqu'à l'étape suivante."
   }
 };
 
+/* cat: sacred | ancient | town | sea.  noPhoto: true = the hero shows a location map until a photo is added. */
 const LANDMARKS = [
-  {
-    id: "phoenician-wall",
-    lat: 34.25480, lng: 35.65560,
-    name: { en: "Phoenician Wall", ar: "السور الفينيقي", fr: "Mur phénicien" },
-    hero: { en: ["Phoenician", "Wall"], ar: ["السور", "الفينيقي"], fr: ["Mur", "Phénicien"] },
-    tagline: {
-      en: "A sandstone shield between the town and the open sea.",
-      ar: "درع من الحجر الرملي بين المدينة والبحر المفتوح.",
-      fr: "Un bouclier de grès entre la ville et le large."
-    },
-    facts: [
-      { k: { en: "Era", ar: "الحقبة", fr: "Époque" }, v: { en: "Phoenician, by tradition", ar: "فينيقية بحسب الرواية", fr: "Phénicienne, selon la tradition" } },
-      { k: { en: "Made of", ar: "المادة", fr: "Matériau" }, v: { en: "A natural dune hardened into sandstone", ar: "كثيب طبيعي تحوّل إلى حجر رملي", fr: "Une dune naturelle devenue grès" } },
-      { k: { en: "Visit", ar: "الزيارة", fr: "Visite" }, v: { en: "Open air, best at sunset", ar: "في الهواء الطلق، والأجمل عند الغروب", fr: "En plein air, idéal au coucher du soleil" } }
-    ],
-    images: ["images/phoenician-wall-1.jpg", "images/phoenician-wall-2.jpg", "images/phoenician-wall-3.jpg"],
-    story: {
-      en: [
-        "Where Batroun meets the open sea, a long rampart of golden sandstone rises from the rocks.",
-        "It began as a natural ridge: an ancient sand dune that hardened into stone along the shore over thousands of years.",
-        "Tradition credits the Phoenicians, the town's first great builders, with turning it into a wall, cutting into the rock and filling its gaps with squared blocks.",
-        "For the people of ancient Botrys, it was a shield against winter storms and high waves, sheltering the homes and boats behind it.",
-        "Batroun is one of the oldest continuously inhabited towns in the world. It appears as Batruna in the Amarna letters of the fourteenth century BC, and ancient writers say that Ithobaal, king of Tyre, founded the city anew in the ninth century BC.",
-        "Look along the face of the wall and you can still see where stone was cut away, block by block, to build the town.",
-        "Today the wall still stands against the sea, and the rock pools at its feet are where Batroun comes to swim at sunset."
-      ],
-      ar: [
-        "حيث تلتقي البترون بالبحر المفتوح، يرتفع فوق الصخور سورٌ طويل من الحجر الرملي الذهبي.",
-        "في الأصل كان هذا السور حافةً طبيعية، كثيباً رملياً قديماً تحوّل إلى صخر على امتداد الشاطئ عبر آلاف السنين.",
-        "وتنسب الرواية إلى الفينيقيين، أوّل بناة المدينة الكبار، تحويله إلى سور، فنحتوا الصخر وسدّوا ثغراته بحجارة مربّعة.",
-        "وكان لأهل بوتريس القديمة درعاً في وجه عواصف الشتاء والأمواج العالية، يحمي البيوت والمراكب خلفه.",
-        "والبترون من أقدم المدن المأهولة بلا انقطاع في العالم، فهي تَرِد باسم بَترونا في رسائل تل العمارنة في القرن الرابع عشر قبل الميلاد، ويروي المؤرخون القدماء أن إيتوبعل ملك صور أعاد تأسيسها في القرن التاسع قبل الميلاد.",
-        "وإذا تأمّلت واجهة السور، ما زلت ترى المواضع التي اقتُطع منها الحجر، كتلةً بعد كتلة، لبناء المدينة.",
-        "واليوم ما زال السور صامداً في وجه البحر، وعند قدميه برك صخرية يقصدها أهل البترون للسباحة عند الغروب."
-      ],
-      fr: [
-        "Là où Batroun rencontre le large, un long rempart de grès doré s'élève au-dessus des rochers.",
-        "À l'origine, c'était une crête naturelle : une ancienne dune de sable, durcie en pierre le long du rivage au fil des millénaires.",
-        "La tradition attribue aux Phéniciens, premiers grands bâtisseurs de la ville, l'idée d'en faire un mur, en taillant la roche et en comblant ses brèches de blocs équarris.",
-        "Pour les habitants de l'antique Botrys, c'était un bouclier contre les tempêtes d'hiver et les hautes vagues, qui protégeait les maisons et les bateaux.",
-        "Batroun est l'une des plus anciennes villes habitées sans interruption au monde. Elle apparaît sous le nom de Batruna dans les lettres d'Amarna, au quatorzième siècle avant notre ère, et les auteurs anciens racontent qu'Ithobaal, roi de Tyr, la refonda au neuvième siècle avant notre ère.",
-        "Le long de la paroi, on distingue encore les endroits où la pierre a été taillée, bloc après bloc, pour bâtir la ville.",
-        "Aujourd'hui, le mur fait toujours face à la mer, et les bassins de roche à ses pieds sont l'endroit où Batroun vient se baigner au coucher du soleil."
-      ]
-    }
+ {
+  "id": "phoenician-wall",
+  "lat": 34.254443,
+  "lng": 35.655579,
+  "name": {
+   "en": "Phoenician Wall",
+   "ar": "السور الفينيقي",
+   "fr": "Mur phénicien"
   },
-  {
-    id: "our-lady-of-the-sea",
-    lat: 34.25451, lng: 35.65601,
-    name: { en: "Our Lady of the Sea", ar: "كنيسة سيدة البحر", fr: "Notre-Dame de la Mer" },
-    hero: { en: ["Our Lady", "of the Sea"], ar: ["سيدة", "البحر"], fr: ["Notre-Dame", "de la Mer"] },
-    tagline: {
-      en: "The fishermen's church, on the rocks of the old harbour.",
-      ar: "كنيسة الصيادين على صخور المرفأ القديم.",
-      fr: "L'église des pêcheurs, sur les rochers du vieux port."
-    },
-    facts: [
-      { k: { en: "Church", ar: "الكنيسة", fr: "Église" }, v: { en: "Greek Orthodox", ar: "للروم الأرثوذكس", fr: "Grecque orthodoxe" } },
-      { k: { en: "Setting", ar: "الموقع", fr: "Cadre" }, v: { en: "On the rocks of the old harbour", ar: "على صخور المرفأ القديم", fr: "Sur les rochers du vieux port" } },
-      { k: { en: "Visit", ar: "الزيارة", fr: "Visite" }, v: { en: "Best at sunset", ar: "الأجمل عند الغروب", fr: "Idéal au coucher du soleil" } }
-    ],
-    images: ["images/our-lady-of-the-sea-1.jpg", "images/our-lady-of-the-sea-2.jpg", "images/our-lady-of-the-sea-3.jpg"],
-    story: {
-      en: [
-        "On the rocks at the edge of the old harbour stands Saydet el Bahr, Our Lady of the Sea, a small Greek Orthodox church of pale sandstone.",
-        "It is said to rise on the remains of an older sanctuary, and its thick walls seem to grow out of the shore itself.",
-        "For generations, the fishermen and sailors of Batroun have stopped here to ask the Virgin Mary for protection before heading out to sea.",
-        "Inside, a carved wooden iconostasis glows with painted icons, in the tradition of the Eastern churches.",
-        "Beside the church, a row of stone arches frames the Mediterranean like a line of open windows.",
-        "Batroun's Greek Orthodox community is one of the oldest in the region: bishops from the town are recorded as early as the fifth century.",
-        "Come back at sunset, when the stone turns gold and the sound of the bells mixes with the waves."
-      ],
-      ar: [
-        "على الصخور عند طرف المرفأ القديم تقف كنيسة سيدة البحر، كنيسة صغيرة للروم الأرثوذكس مبنية من الحجر الرملي الفاتح.",
-        "ويُقال إنها شُيّدت فوق بقايا مزار أقدم، وتبدو جدرانها السميكة وكأنها تنبت من الشاطئ نفسه.",
-        "ومنذ أجيال، يتوقف صيادو البترون وبحّارتها هنا ليطلبوا حماية السيدة العذراء قبل أن يُبحروا.",
-        "وفي الداخل، يتلألأ حاجز الأيقونات الخشبي المحفور بأيقونات ملوّنة، على تقليد الكنائس الشرقية.",
-        "وإلى جانب الكنيسة، صفّ من القناطر الحجرية يؤطّر البحر المتوسط كأنه نوافذ مفتوحة.",
-        "وطائفة الروم الأرثوذكس في البترون من أقدم الطوائف في المنطقة، إذ يُذكر أساقفة من المدينة منذ القرن الخامس الميلادي.",
-        "عُد إليها عند الغروب، حين يتحوّل الحجر إلى ذهب ويختلط صوت الأجراس بصوت الموج."
-      ],
-      fr: [
-        "Sur les rochers, au bord du vieux port, se dresse Saydet el Bahr, Notre-Dame de la Mer, une petite église grecque orthodoxe en grès clair.",
-        "On dit qu'elle s'élève sur les vestiges d'un sanctuaire plus ancien, et ses murs épais semblent sortir du rivage lui-même.",
-        "Depuis des générations, les pêcheurs et les marins de Batroun s'y arrêtent pour demander la protection de la Vierge Marie avant de prendre la mer.",
-        "À l'intérieur, une iconostase en bois sculpté s'illumine d'icônes peintes, dans la tradition des Églises d'Orient.",
-        "À côté de l'église, une rangée d'arcs de pierre encadre la Méditerranée comme une suite de fenêtres ouvertes.",
-        "La communauté grecque orthodoxe de Batroun est l'une des plus anciennes de la région : des évêques de la ville sont mentionnés dès le cinquième siècle.",
-        "Revenez au coucher du soleil, quand la pierre devient dorée et que le son des cloches se mêle à celui des vagues."
-      ]
-    }
+  "hero": {
+   "en": [
+    "Phoenician",
+    "Wall"
+   ],
+   "ar": [
+    "السور",
+    "الفينيقي"
+   ],
+   "fr": [
+    "Mur",
+    "Phénicien"
+   ]
   },
-  {
-    id: "st-stephen",
-    lat: 34.25716, lng: 35.65880,
-    name: { en: "Saint Stephen's Cathedral", ar: "كاتدرائية مار اسطفان", fr: "Cathédrale Saint-Étienne" },
-    hero: { en: ["Saint", "Stephen"], ar: ["مار", "اسطفان"], fr: ["Saint", "Étienne"] },
-    tagline: {
-      en: "Twin bell towers above the old harbour.",
-      ar: "برجا أجراس فوق المرفأ القديم.",
-      fr: "Deux clochers au-dessus du vieux port."
-    },
-    facts: [
-      { k: { en: "Church", ar: "الكنيسة", fr: "Église" }, v: { en: "Maronite cathedral", ar: "كاتدرائية مارونية", fr: "Cathédrale maronite" } },
-      { k: { en: "Built", ar: "البناء", fr: "Construction" }, v: { en: "Late 19th century", ar: "أواخر القرن التاسع عشر", fr: "Fin du XIXe siècle" } },
-      { k: { en: "Today", ar: "اليوم", fr: "Aujourd'hui" }, v: { en: "Seat of the Maronite Eparchy of Batroun", ar: "مقرّ أبرشية البترون المارونية", fr: "Siège de l'éparchie maronite de Batroun" } }
-    ],
-    images: ["images/st-stephen-1.jpg", "images/st-stephen-2.jpg", "images/st-stephen-3.jpg"],
-    story: {
-      en: [
-        "Facing the old harbour, the twin bell towers of Saint Stephen's Cathedral rise above the boats and the sea wall.",
-        "Known locally as Mar Estephan, the church is dedicated to Saint Stephen, remembered as the first Christian martyr.",
-        "It was built in the last years of the nineteenth century, when Batroun was a busy port under Ottoman rule and the seat of a Maronite diocese.",
-        "Its builders blended styles: rounded Romanesque arches, a round window over the entrance, and the warm local sandstone used across the old town.",
-        "Inside, tall columns lead the eye to the altar, where an opening above lets daylight fall across the sanctuary.",
-        "Since 1999 it has been the cathedral of the Maronite Eparchy of Batroun.",
-        "Step out onto the square in front, where the town has gathered for weddings, feasts and processions for more than a century."
-      ],
-      ar: [
-        "قبالة المرفأ القديم، يرتفع برجا أجراس كاتدرائية مار اسطفان فوق المراكب والسور البحري.",
-        "والكنيسة مكرّسة على اسم القديس اسطفانوس، الذي يُذكر بوصفه أوّل شهداء المسيحية.",
-        "وقد بُنيت في السنوات الأخيرة من القرن التاسع عشر، يوم كانت البترون مرفأً ناشطاً في ظل الحكم العثماني ومقرّاً لأبرشية مارونية.",
-        "ومزج بُناتها بين الأساليب، فجمعوا القناطر المستديرة على الطراز الرومانسكي، ونافذة مستديرة فوق المدخل، والحجر الرملي المحلي الدافئ الذي بُنيت به البلدة القديمة.",
-        "وفي الداخل، تقود الأعمدة العالية النظر نحو المذبح، حيث تسمح فتحة في الأعلى بانسياب ضوء النهار على الهيكل.",
-        "ومنذ عام 1999 أصبحت كاتدرائية أبرشية البترون المارونية.",
-        "اخرج إلى الساحة أمامها، حيث اجتمع أهل البلدة في الأعراس والأعياد والتطوافات منذ أكثر من قرن."
-      ],
-      fr: [
-        "Face au vieux port, les deux clochers de la cathédrale Saint-Étienne s'élèvent au-dessus des bateaux et du mur de mer.",
-        "Appelée Mar Estephan par les habitants, l'église est dédiée à saint Étienne, considéré comme le premier martyr chrétien.",
-        "Elle a été construite dans les dernières années du dix-neuvième siècle, lorsque Batroun était un port actif sous l'Empire ottoman et le siège d'un diocèse maronite.",
-        "Ses bâtisseurs ont mêlé les styles : arcs romans en plein cintre, fenêtre ronde au-dessus de l'entrée, et le grès chaleureux de la vieille ville.",
-        "À l'intérieur, de hautes colonnes guident le regard vers l'autel, où une ouverture laisse tomber la lumière du jour sur le sanctuaire.",
-        "Depuis 1999, c'est la cathédrale de l'éparchie maronite de Batroun.",
-        "Sortez sur la place, où la ville se rassemble depuis plus d'un siècle pour les mariages, les fêtes et les processions."
-      ]
-    }
+  "tagline": {
+   "en": "A sandstone shield between the town and the open sea.",
+   "ar": "درع من الحجر الرملي بين المدينة والبحر المفتوح.",
+   "fr": "Un bouclier de grès entre la ville et le large."
   },
-  {
-    id: "st-george",
-    lat: 34.25679, lng: 35.65789,
-    name: { en: "Saint George's Church", ar: "كنيسة مار جرجس", fr: "Église Saint-Georges" },
-    hero: { en: ["Saint", "George"], ar: ["مار", "جرجس"], fr: ["Saint", "Georges"] },
-    tagline: {
-      en: "A white bell tower over the rooftops of the old town.",
-      ar: "برج أجراس أبيض فوق سطوح البلدة القديمة.",
-      fr: "Un clocher blanc au-dessus des toits de la vieille ville."
+  "facts": [
+   {
+    "k": {
+     "en": "Era",
+     "ar": "الحقبة",
+     "fr": "Époque"
     },
-    facts: [
-      { k: { en: "Church", ar: "الكنيسة", fr: "Église" }, v: { en: "Greek Orthodox", ar: "للروم الأرثوذكس", fr: "Grecque orthodoxe" } },
-      { k: { en: "Feast day", ar: "العيد", fr: "Fête" }, v: { en: "23 April", ar: "23 نيسان", fr: "23 avril" } },
-      { k: { en: "Setting", ar: "الموقع", fr: "Cadre" }, v: { en: "Old town, near the harbour", ar: "البلدة القديمة قرب المرفأ", fr: "Vieille ville, près du port" } }
-    ],
-    images: ["images/st-george-1.jpg", "images/st-george-2.jpg"],
-    story: {
-      en: [
-        "In the heart of the old town, Saint George's Church, Mar Gerges, is home to Batroun's Greek Orthodox community.",
-        "Saint George, the soldier saint who slays the dragon, is one of the most loved saints in Lebanon.",
-        "The church is built of the same golden sandstone as the houses around it, and its white bell tower rises above the rooftops.",
-        "Inside, the iconostasis, the wall of icons between the sanctuary and the nave, follows the Byzantine tradition.",
-        "The Orthodox presence in Batroun reaches back to the early centuries of Christianity: bishops of the town are recorded in the fifth and sixth centuries.",
-        "On the saint's feast day, the twenty-third of April, the church fills with families from the town and the villages around it.",
-        "Before you leave, look up at the bell tower, white against the sky above the narrow street."
-      ],
-      ar: [
-        "في قلب البلدة القديمة، تحتضن كنيسة مار جرجس طائفة الروم الأرثوذكس في البترون.",
-        "والقديس جاورجيوس، الفارس الذي يصرع التنّين، من أحبّ القديسين إلى قلوب اللبنانيين.",
-        "والكنيسة مبنية من الحجر الرملي الذهبي نفسه الذي بُنيت به البيوت المحيطة، ويرتفع برج أجراسها الأبيض فوق السطوح.",
-        "وفي الداخل، يتبع الإيقونسطاس، أي حاجز الأيقونات بين الهيكل وصحن الكنيسة، التقليد البيزنطي.",
-        "ويعود الحضور الأرثوذكسي في البترون إلى القرون الأولى للمسيحية، إذ يُذكر أساقفة من المدينة في القرنين الخامس والسادس.",
-        "وفي عيد القديس، في الثالث والعشرين من نيسان، تمتلئ الكنيسة بالعائلات من البلدة والقرى المجاورة.",
-        "وقبل أن تغادر، ارفع نظرك إلى برج الأجراس، أبيضَ في وجه السماء فوق الزقاق الضيّق."
-      ],
-      fr: [
-        "Au cœur de la vieille ville, l'église Saint-Georges, Mar Gerges, accueille la communauté grecque orthodoxe de Batroun.",
-        "Saint Georges, le saint soldat qui terrasse le dragon, est l'un des saints les plus aimés du Liban.",
-        "L'église est bâtie du même grès doré que les maisons voisines, et son clocher blanc s'élève au-dessus des toits.",
-        "À l'intérieur, l'iconostase, la cloison d'icônes qui sépare le sanctuaire de la nef, suit la tradition byzantine.",
-        "La présence orthodoxe à Batroun remonte aux premiers siècles du christianisme : des évêques de la ville sont mentionnés aux cinquième et sixième siècles.",
-        "Le jour de la fête du saint, le vingt-trois avril, l'église se remplit de familles venues de la ville et des villages voisins.",
-        "Avant de partir, levez les yeux vers le clocher, blanc sur le ciel au-dessus de la ruelle."
-      ]
+    "v": {
+     "en": "Phoenician, by tradition",
+     "ar": "فينيقية بحسب الرواية",
+     "fr": "Phénicienne, selon la tradition"
     }
+   },
+   {
+    "k": {
+     "en": "Made of",
+     "ar": "المادة",
+     "fr": "Matériau"
+    },
+    "v": {
+     "en": "A natural dune hardened into sandstone",
+     "ar": "كثيب طبيعي تحوّل إلى حجر رملي",
+     "fr": "Une dune naturelle devenue grès"
+    }
+   },
+   {
+    "k": {
+     "en": "Visit",
+     "ar": "الزيارة",
+     "fr": "Visite"
+    },
+    "v": {
+     "en": "Open air, best at sunset",
+     "ar": "في الهواء الطلق، والأجمل عند الغروب",
+     "fr": "En plein air, idéal au coucher du soleil"
+    }
+   }
+  ],
+  "images": [
+   "images/phoenician-wall-1.jpg",
+   "images/phoenician-wall-2.jpg",
+   "images/phoenician-wall-3.jpg"
+  ],
+  "story": {
+   "en": [
+    "Where Batroun meets the open sea, a long rampart of golden sandstone rises from the rocks.",
+    "It began as a natural ridge: sand dunes that hardened into stone at the start of the Quaternary period, about a million years ago.",
+    "Tradition credits the Phoenicians, the town's first great builders, with turning it into a wall, cutting into the rock and filling its gaps with squared blocks.",
+    "For the people of ancient Botrys, it was a shield against winter storms and high waves, sheltering the homes and boats behind it.",
+    "Batroun is one of the oldest continuously inhabited towns in the world. It appears as Batruna in the Amarna letters of the fourteenth century BC, and ancient writers say that Ithobaal, king of Tyre, founded the city anew in the ninth century BC.",
+    "Look along the face of the wall and you can still see where stone was cut away, block by block, to build the town.",
+    "Today the wall still stands against the sea, and the rock pools at its feet are where Batroun comes to swim at sunset."
+   ],
+   "ar": [
+    "حيث تلتقي البترون بالبحر المفتوح، يرتفع فوق الصخور سورٌ طويل من الحجر الرملي الذهبي.",
+    "في الأصل كان هذا السور كثباناً رملية تحجّرت في مطلع الطور الجيولوجي الرابع، منذ حوالي مليون سنة.",
+    "وتنسب الرواية إلى الفينيقيين، أوّل بناة المدينة الكبار، تحويله إلى سور، فنحتوا الصخر وسدّوا ثغراته بحجارة مربّعة.",
+    "وكان لأهل بوتريس القديمة درعاً في وجه عواصف الشتاء والأمواج العالية، يحمي البيوت والمراكب خلفه.",
+    "والبترون من أقدم المدن المأهولة بلا انقطاع في العالم، فهي تَرِد باسم بَترونا في رسائل تل العمارنة في القرن الرابع عشر قبل الميلاد، ويروي المؤرخون القدماء أن إيتوبعل ملك صور أعاد تأسيسها في القرن التاسع قبل الميلاد.",
+    "وإذا تأمّلت واجهة السور، ما زلت ترى المواضع التي اقتُطع منها الحجر، كتلةً بعد كتلة، لبناء المدينة.",
+    "واليوم ما زال السور صامداً في وجه البحر، وعند قدميه برك صخرية يقصدها أهل البترون للسباحة عند الغروب."
+   ],
+   "fr": [
+    "Là où Batroun rencontre le large, un long rempart de grès doré s'élève au-dessus des rochers.",
+    "À l'origine, c'était une crête naturelle : des dunes de sable pétrifiées au début du Quaternaire, il y a environ un million d'années.",
+    "La tradition attribue aux Phéniciens, premiers grands bâtisseurs de la ville, l'idée d'en faire un mur, en taillant la roche et en comblant ses brèches de blocs équarris.",
+    "Pour les habitants de l'antique Botrys, c'était un bouclier contre les tempêtes d'hiver et les hautes vagues, qui protégeait les maisons et les bateaux.",
+    "Batroun est l'une des plus anciennes villes habitées sans interruption au monde. Elle apparaît sous le nom de Batruna dans les lettres d'Amarna, au quatorzième siècle avant notre ère, et les auteurs anciens racontent qu'Ithobaal, roi de Tyr, la refonda au neuvième siècle avant notre ère.",
+    "Le long de la paroi, on distingue encore les endroits où la pierre a été taillée, bloc après bloc, pour bâtir la ville.",
+    "Aujourd'hui, le mur fait toujours face à la mer, et les bassins de roche à ses pieds sont l'endroit où Batroun vient se baigner au coucher du soleil."
+   ]
   },
-  {
-    id: "old-souk",
-    lat: 34.25647, lng: 35.65926,
-    name: { en: "The Old Souk", ar: "السوق القديم", fr: "Le Vieux Souk" },
-    hero: { en: ["Old", "Souk"], ar: ["السوق", "القديم"], fr: ["Vieux", "Souk"] },
-    tagline: {
-      en: "Sandstone lanes, arched doorways and the town's famous lemonade.",
-      ar: "أزقّة من الحجر الرملي وأبواب مقنطرة وليموناضة البترون الشهيرة.",
-      fr: "Ruelles de grès, portes en arc et la célèbre limonade de la ville."
-    },
-    facts: [
-      { k: { en: "What", ar: "ما هو", fr: "Quoi" }, v: { en: "Historic market streets", ar: "أسواق وأزقّة تاريخية", fr: "Rues marchandes historiques" } },
-      { k: { en: "Built from", ar: "البناء", fr: "Construit en" }, v: { en: "Local sandstone", ar: "الحجر الرملي المحلي", fr: "Grès local" } },
-      { k: { en: "Taste", ar: "تذوّق", fr: "À goûter" }, v: { en: "Batroun lemonade", ar: "ليموناضة البترون", fr: "La limonade de Batroun" } }
-    ],
-    images: ["images/old-souk-1.jpg", "images/old-souk-2.jpg"],
-    story: {
-      en: [
-        "Batroun grew up between two lines: the old coastal road linking Beirut to Tripoli, and the sea.",
-        "Between them, narrow lanes known as souks ran down toward the water, lined with workshops, shops and family houses.",
-        "The houses are built of local sandstone, with arched doorways, wooden shutters and small courtyards hidden behind heavy doors.",
-        "For generations, merchants, fishermen and craftsmen lived and worked here, and the life of the town moved at the pace of the market.",
-        "Since the early twentieth century, Batroun has been famous across Lebanon for its lemonade, made from the lemons of the citrus groves around the town.",
-        "Today many of the old houses have become guest houses, cafés and small shops, while their stones and arches remain.",
-        "Walk slowly, look up at the windows and balconies, and stop for a glass of lemonade, as visitors have done here for a hundred years."
-      ],
-      ar: [
-        "نشأت البترون بين خطّين: الطريق الساحلي القديم الذي يصل بيروت بطرابلس، والبحر.",
-        "وبينهما امتدت أزقّة ضيقة تُعرف بالأسواق نزولاً نحو الماء، تصطفّ على جانبيها المشاغل والدكاكين وبيوت العائلات.",
-        "والبيوت مبنية من الحجر الرملي المحلي، بأبواب مقنطرة ودرفات خشبية وباحات صغيرة تختبئ خلف الأبواب الثقيلة.",
-        "وعلى مدى أجيال، عاش هنا التجار والصيادون والحرفيون وعملوا، وكانت حياة البلدة تسير على إيقاع السوق.",
-        "ومنذ أوائل القرن العشرين اشتهرت البترون في كل لبنان بالليموناضة، المصنوعة من ليمون البساتين التي تحيط بالبلدة.",
-        "واليوم تحوّل كثير من البيوت القديمة إلى بيوت ضيافة ومقاهٍ ومتاجر صغيرة، فيما بقيت حجارتها وقناطرها على حالها.",
-        "امشِ على مهل، وارفع نظرك إلى النوافذ والشرفات، وتوقّف لتشرب كوباً من الليموناضة كما يفعل الزوار هنا منذ مئة عام."
-      ],
-      fr: [
-        "Batroun s'est développée entre deux lignes : l'ancienne route côtière qui reliait Beyrouth à Tripoli, et la mer.",
-        "Entre les deux, d'étroites ruelles appelées souks descendaient vers l'eau, bordées d'ateliers, de boutiques et de maisons de famille.",
-        "Les maisons sont bâties en grès local, avec des portes en arc, des volets de bois et de petites cours cachées derrière de lourdes portes.",
-        "Pendant des générations, marchands, pêcheurs et artisans ont vécu et travaillé ici, et la vie de la ville battait au rythme du marché.",
-        "Depuis le début du vingtième siècle, Batroun est célèbre dans tout le Liban pour sa limonade, faite avec les citrons des vergers qui entourent la ville.",
-        "Aujourd'hui, beaucoup de vieilles maisons sont devenues des maisons d'hôtes, des cafés et des boutiques, mais leurs pierres et leurs arcs sont restés.",
-        "Marchez lentement, levez les yeux vers les fenêtres et les balcons, et arrêtez-vous pour un verre de limonade, comme le font les visiteurs depuis cent ans."
-      ]
-    }
+  "cat": "ancient"
+ },
+ {
+  "id": "our-lady-of-the-sea",
+  "lat": 34.254723,
+  "lng": 35.655972,
+  "name": {
+   "en": "Our Lady of the Sea",
+   "ar": "كنيسة سيدة البحر العجائبية",
+   "fr": "Notre-Dame de la Mer"
   },
-  {
-    id: "mseilha-fort",
-    lat: 34.27380, lng: 35.68980,
-    name: { en: "Mseilha Fort", ar: "قلعة المسيلحة", fr: "Fort de Mseilha" },
-    hero: { en: ["Mseilha", "Fort"], ar: ["قلعة", "المسيلحة"], fr: ["Fort de", "Mseilha"] },
-    tagline: {
-      en: "A fortress grown from a rock, guarding the road north.",
-      ar: "قلعة نابتة من الصخر تحرس الطريق إلى الشمال.",
-      fr: "Une forteresse née du rocher, gardienne de la route du nord."
+  "hero": {
+   "en": [
+    "Our Lady",
+    "of the Sea"
+   ],
+   "ar": [
+    "سيدة",
+    "البحر"
+   ],
+   "fr": [
+    "Notre-Dame",
+    "de la Mer"
+   ]
+  },
+  "tagline": {
+   "en": "The fishermen's church, on the rocks of the old harbour.",
+   "ar": "كنيسة الصيادين على صخور المرفأ القديم.",
+   "fr": "L'église des pêcheurs, sur les rochers du vieux port."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Church",
+     "ar": "الكنيسة",
+     "fr": "Église"
     },
-    facts: [
-      { k: { en: "Built", ar: "البناء", fr: "Construction" }, v: { en: "17th century", ar: "القرن السابع عشر", fr: "XVIIe siècle" } },
-      { k: { en: "Likely by", ar: "على الأرجح", fr: "Sans doute par" }, v: { en: "Emir Fakhr al-Din II", ar: "الأمير فخر الدين المعني الثاني", fr: "L'émir Fakhr al-Din II" } },
-      { k: { en: "Walls", ar: "الجدران", fr: "Murs" }, v: { en: "Up to 2 m thick", ar: "حتى مترين سماكةً", fr: "Jusqu'à 2 m d'épaisseur" } }
-    ],
-    images: ["images/mseilha-fort-1.jpg", "images/mseilha-fort-2.jpg"],
-    story: {
-      en: [
-        "Two and a half kilometres north-east of Batroun, a small fortress sits on a sheer limestone rock above the Nahr al-Jaouz river.",
-        "Its name, Mseilha, comes from the Arabic for a fortified place.",
-        "In the year 551, a great earthquake brought down part of the Ras ash-Shaq'a headland and cut the coastal road to Tripoli, so travellers had to pass through this valley instead.",
-        "Whoever held the valley held the road, and during the Crusades this pass was defended as part of the County of Tripoli.",
-        "The fort you see today dates from the seventeenth century, and was most likely built for Emir Fakhr al-Din the Second, who ruled much of Mount Lebanon.",
-        "Its walls, up to two metres thick, follow the shape of the rock and wrap a narrow triangular courtyard pierced with arrow slits.",
-        "In 1964 the fort appeared on Lebanon's twenty-five lira banknote, and it still keeps watch over the valley beside the old stone bridge."
-      ],
-      ar: [
-        "على بعد كيلومترين ونصف شمال شرق البترون، تجثم قلعة صغيرة فوق صخرة كلسية شاهقة تطلّ على نهر الجوز.",
-        "واسمها، المسيلحة، تصغير لكلمة المَسلَحة، أي الموضع المحصّن.",
-        "في عام 551 ميلادية، أسقط زلزال عظيم جزءاً من رأس الشقعة وقطع الطريق الساحلي إلى طرابلس، فصار المسافرون يعبرون هذا الوادي بدلاً منه.",
-        "ومن سيطر على الوادي سيطر على الطريق، وفي زمن الحملات الصليبية كان هذا الممرّ محمياً ضمن كونتية طرابلس.",
-        "أما القلعة القائمة اليوم فتعود إلى القرن السابع عشر، وقد بُنيت على الأرجح بأمر الأمير فخر الدين المعني الثاني، الذي حكم معظم جبل لبنان.",
-        "وتتبع جدرانها، التي تبلغ سماكتها مترين، شكل الصخرة، وتحيط بباحة مثلّثة ضيقة تتخللها فتحات لرمي السهام.",
-        "وفي عام 1964 ظهرت القلعة على ورقة الخمس والعشرين ليرة اللبنانية، وما زالت تحرس الوادي إلى جانب الجسر الحجري القديم."
-      ],
-      fr: [
-        "À deux kilomètres et demi au nord-est de Batroun, une petite forteresse se dresse sur un rocher calcaire abrupt, au-dessus du Nahr al-Jaouz.",
-        "Son nom, Mseilha, vient de l'arabe et signifie « le lieu fortifié ».",
-        "En 551, un grand tremblement de terre fit s'effondrer une partie du cap de Ras ash-Shaq'a et coupa la route côtière vers Tripoli : les voyageurs durent alors passer par cette vallée.",
-        "Qui tenait la vallée tenait la route, et à l'époque des croisades, ce passage était défendu au sein du comté de Tripoli.",
-        "Le fort que vous voyez aujourd'hui date du dix-septième siècle et fut très probablement construit pour l'émir Fakhr al-Din II, qui gouvernait une grande partie du Mont-Liban.",
-        "Ses murs, épais de deux mètres par endroits, épousent la forme du rocher et entourent une étroite cour triangulaire percée de meurtrières.",
-        "En 1964, le fort figurait sur le billet de vingt-cinq livres libanaises, et il veille toujours sur la vallée, à côté du vieux pont de pierre."
-      ]
+    "v": {
+     "en": "Greek Orthodox",
+     "ar": "للروم الأرثوذكس",
+     "fr": "Grecque orthodoxe"
     }
+   },
+   {
+    "k": {
+     "en": "Setting",
+     "ar": "الموقع",
+     "fr": "Cadre"
+    },
+    "v": {
+     "en": "On the rocks of the old harbour",
+     "ar": "على صخور المرفأ القديم",
+     "fr": "Sur les rochers du vieux port"
+    }
+   },
+   {
+    "k": {
+     "en": "Visit",
+     "ar": "الزيارة",
+     "fr": "Visite"
+    },
+    "v": {
+     "en": "Best at sunset",
+     "ar": "الأجمل عند الغروب",
+     "fr": "Idéal au coucher du soleil"
+    }
+   }
+  ],
+  "images": [
+   "images/our-lady-of-the-sea-1.jpg",
+   "images/our-lady-of-the-sea-2.jpg",
+   "images/our-lady-of-the-sea-3.jpg"
+  ],
+  "story": {
+   "en": [
+    "On the rocks at the edge of the old harbour stands Saydet el Bahr, Our Lady of the Sea, a small Greek Orthodox church of pale sandstone.",
+    "It is said to rise on the remains of an older sanctuary, and its thick walls seem to grow out of the shore itself.",
+    "For generations, the fishermen and sailors of Batroun have stopped here to ask the Virgin Mary for protection before heading out to sea.",
+    "Inside, a carved wooden iconostasis glows with painted icons, in the tradition of the Eastern churches.",
+    "Beside the church, a row of stone arches frames the Mediterranean like a line of open windows.",
+    "Batroun's Greek Orthodox community is one of the oldest in the region: bishops from the town are recorded as early as the fifth century.",
+    "Come back at sunset, when the stone turns gold and the sound of the bells mixes with the waves."
+   ],
+   "ar": [
+    "على الصخور عند طرف المرفأ القديم تقف كنيسة سيدة البحر، كنيسة صغيرة للروم الأرثوذكس مبنية من الحجر الرملي الفاتح.",
+    "ويُقال إنها شُيّدت فوق بقايا مزار أقدم، وتبدو جدرانها السميكة وكأنها تنبت من الشاطئ نفسه.",
+    "ومنذ أجيال، يتوقف صيادو البترون وبحّارتها هنا ليطلبوا حماية السيدة العذراء قبل أن يُبحروا.",
+    "وفي الداخل، يتلألأ حاجز الأيقونات الخشبي المحفور بأيقونات ملوّنة، على تقليد الكنائس الشرقية.",
+    "وإلى جانب الكنيسة، صفّ من القناطر الحجرية يؤطّر البحر المتوسط كأنه نوافذ مفتوحة.",
+    "وطائفة الروم الأرثوذكس في البترون من أقدم الطوائف في المنطقة، إذ يُذكر أساقفة من المدينة منذ القرن الخامس الميلادي.",
+    "عُد إليها عند الغروب، حين يتحوّل الحجر إلى ذهب ويختلط صوت الأجراس بصوت الموج."
+   ],
+   "fr": [
+    "Sur les rochers, au bord du vieux port, se dresse Saydet el Bahr, Notre-Dame de la Mer, une petite église grecque orthodoxe en grès clair.",
+    "On dit qu'elle s'élève sur les vestiges d'un sanctuaire plus ancien, et ses murs épais semblent sortir du rivage lui-même.",
+    "Depuis des générations, les pêcheurs et les marins de Batroun s'y arrêtent pour demander la protection de la Vierge Marie avant de prendre la mer.",
+    "À l'intérieur, une iconostase en bois sculpté s'illumine d'icônes peintes, dans la tradition des Églises d'Orient.",
+    "À côté de l'église, une rangée d'arcs de pierre encadre la Méditerranée comme une suite de fenêtres ouvertes.",
+    "La communauté grecque orthodoxe de Batroun est l'une des plus anciennes de la région : des évêques de la ville sont mentionnés dès le cinquième siècle.",
+    "Revenez au coucher du soleil, quand la pierre devient dorée et que le son des cloches se mêle à celui des vagues."
+   ]
+  },
+  "cat": "sacred"
+ },
+ {
+  "id": "st-stephen",
+  "lat": 34.257202,
+  "lng": 35.658584,
+  "name": {
+   "en": "Saint Stephen's Cathedral",
+   "ar": "كاتدرائية مار اسطفان",
+   "fr": "Cathédrale Saint-Étienne"
+  },
+  "hero": {
+   "en": [
+    "Saint",
+    "Stephen"
+   ],
+   "ar": [
+    "مار",
+    "اسطفان"
+   ],
+   "fr": [
+    "Saint",
+    "Étienne"
+   ]
+  },
+  "tagline": {
+   "en": "Twin bell towers above the old harbour.",
+   "ar": "برجا أجراس فوق المرفأ القديم.",
+   "fr": "Deux clochers au-dessus du vieux port."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Church",
+     "ar": "الكنيسة",
+     "fr": "Église"
+    },
+    "v": {
+     "en": "Maronite cathedral",
+     "ar": "كاتدرائية مارونية",
+     "fr": "Cathédrale maronite"
+    }
+   },
+   {
+    "k": {
+     "en": "Built",
+     "ar": "البناء",
+     "fr": "Construction"
+    },
+    "v": {
+     "en": "Early 20th century",
+     "ar": "بداية القرن العشرين",
+     "fr": "Début du XXe siècle"
+    }
+   },
+   {
+    "k": {
+     "en": "Today",
+     "ar": "اليوم",
+     "fr": "Aujourd'hui"
+    },
+    "v": {
+     "en": "Seat of the Maronite Eparchy of Batroun",
+     "ar": "مقرّ أبرشية البترون المارونية",
+     "fr": "Siège de l'éparchie maronite de Batroun"
+    }
+   }
+  ],
+  "images": [
+   "images/st-stephen-1.jpg",
+   "images/st-stephen-2.jpg",
+   "images/st-stephen-3.jpg"
+  ],
+  "story": {
+   "en": [
+    "Facing the old harbour, the twin bell towers of Saint Stephen's Cathedral rise above the boats and the sea wall.",
+    "Known locally as Mar Estephan, the church is dedicated to Saint Stephen, remembered as the first Christian martyr.",
+    "It was built at the beginning of the twentieth century, and it is one of the largest and most beautiful churches in Lebanon.",
+    "Its builders blended styles: rounded Romanesque arches, a round window over the entrance, and the warm local sandstone used across the old town.",
+    "Inside, tall columns lead the eye to the altar, where an opening above lets daylight fall across the sanctuary.",
+    "Since 1999 it has been the cathedral of the Maronite Eparchy of Batroun.",
+    "Step out onto the square in front, where the town has gathered for weddings, feasts and processions for more than a century."
+   ],
+   "ar": [
+    "قبالة المرفأ القديم، يرتفع برجا أجراس كاتدرائية مار اسطفان فوق المراكب والسور البحري.",
+    "والكنيسة مكرّسة على اسم القديس اسطفانوس، الذي يُذكر بوصفه أوّل شهداء المسيحية.",
+    "وقد أُنشئت في بداية القرن العشرين، وهي من أكبر الكنائس وأجملها في لبنان.",
+    "ومزج بُناتها بين الأساليب، فجمعوا القناطر المستديرة على الطراز الرومانسكي، ونافذة مستديرة فوق المدخل، والحجر الرملي المحلي الدافئ الذي بُنيت به البلدة القديمة.",
+    "وفي الداخل، تقود الأعمدة العالية النظر نحو المذبح، حيث تسمح فتحة في الأعلى بانسياب ضوء النهار على الهيكل.",
+    "ومنذ عام 1999 أصبحت كاتدرائية أبرشية البترون المارونية.",
+    "اخرج إلى الساحة أمامها، حيث اجتمع أهل البلدة في الأعراس والأعياد والتطوافات منذ أكثر من قرن."
+   ],
+   "fr": [
+    "Face au vieux port, les deux clochers de la cathédrale Saint-Étienne s'élèvent au-dessus des bateaux et du mur de mer.",
+    "Appelée Mar Estephan par les habitants, l'église est dédiée à saint Étienne, considéré comme le premier martyr chrétien.",
+    "Elle a été construite au début du vingtième siècle, et c'est l'une des églises les plus grandes et les plus belles du Liban.",
+    "Ses bâtisseurs ont mêlé les styles : arcs romans en plein cintre, fenêtre ronde au-dessus de l'entrée, et le grès chaleureux de la vieille ville.",
+    "À l'intérieur, de hautes colonnes guident le regard vers l'autel, où une ouverture laisse tomber la lumière du jour sur le sanctuaire.",
+    "Depuis 1999, c'est la cathédrale de l'éparchie maronite de Batroun.",
+    "Sortez sur la place, où la ville se rassemble depuis plus d'un siècle pour les mariages, les fêtes et les processions."
+   ]
+  },
+  "cat": "sacred"
+ },
+ {
+  "id": "st-george",
+  "lat": 34.256702,
+  "lng": 35.657824,
+  "name": {
+   "en": "Saint George's Church",
+   "ar": "كنيسة مار جرجس",
+   "fr": "Église Saint-Georges"
+  },
+  "hero": {
+   "en": [
+    "Saint",
+    "George"
+   ],
+   "ar": [
+    "مار",
+    "جرجس"
+   ],
+   "fr": [
+    "Saint",
+    "Georges"
+   ]
+  },
+  "tagline": {
+   "en": "A white bell tower over the rooftops of the old town.",
+   "ar": "برج أجراس أبيض فوق سطوح البلدة القديمة.",
+   "fr": "Un clocher blanc au-dessus des toits de la vieille ville."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Church",
+     "ar": "الكنيسة",
+     "fr": "Église"
+    },
+    "v": {
+     "en": "Greek Orthodox",
+     "ar": "للروم الأرثوذكس",
+     "fr": "Grecque orthodoxe"
+    }
+   },
+   {
+    "k": {
+     "en": "Completed",
+     "ar": "اكتمل البناء",
+     "fr": "Achevée"
+    },
+    "v": {
+     "en": "1867, by the Dibo brothers",
+     "ar": "1867، على يد الأخوين ديبو",
+     "fr": "1867, par les frères Dibo"
+    }
+   },
+   {
+    "k": {
+     "en": "Feast day",
+     "ar": "العيد",
+     "fr": "Fête"
+    },
+    "v": {
+     "en": "23 April",
+     "ar": "23 نيسان",
+     "fr": "23 avril"
+    }
+   }
+  ],
+  "images": [
+   "images/st-george-1.jpg",
+   "images/st-george-2.jpg"
+  ],
+  "story": {
+   "en": [
+    "In the heart of the old town, Saint George's Church, Mar Gerges, is home to Batroun's Greek Orthodox community.",
+    "Saint George, the soldier saint who slays the dragon, is one of the most loved saints in Lebanon.",
+    "The church is built of the same golden sandstone as the houses around it, and its white bell tower rises above the rooftops.",
+    "It was completed in 1867 by the Dibo brothers of Batroun, mostly from local sandstone, with an entrance of limestone cut at Thoum.",
+    "Inside, the iconostasis, the wall of icons between the sanctuary and the nave, follows the Byzantine tradition.",
+    "The Orthodox presence in Batroun reaches back to the early centuries of Christianity: bishops of the town are recorded in the fifth and sixth centuries.",
+    "On the saint's feast day, the twenty-third of April, the church fills with families from the town and the villages around it.",
+    "Before you leave, look up at the bell tower, white against the sky above the narrow street."
+   ],
+   "ar": [
+    "في قلب البلدة القديمة، تحتضن كنيسة مار جرجس طائفة الروم الأرثوذكس في البترون.",
+    "والقديس جاورجيوس، الفارس الذي يصرع التنّين، من أحبّ القديسين إلى قلوب اللبنانيين.",
+    "والكنيسة مبنية من الحجر الرملي الذهبي نفسه الذي بُنيت به البيوت المحيطة، ويرتفع برج أجراسها الأبيض فوق السطوح.",
+    "انتهى بناؤها سنة 1867، وقد بناها الأخوان ديبو من البترون من الحجر الرملي البتروني، ومدخلها من الحجر الكلسي التحومي.",
+    "وفي الداخل، يتبع الإيقونسطاس، أي حاجز الأيقونات بين الهيكل وصحن الكنيسة، التقليد البيزنطي.",
+    "ويعود الحضور الأرثوذكسي في البترون إلى القرون الأولى للمسيحية، إذ يُذكر أساقفة من المدينة في القرنين الخامس والسادس.",
+    "وفي عيد القديس، في الثالث والعشرين من نيسان، تمتلئ الكنيسة بالعائلات من البلدة والقرى المجاورة.",
+    "وقبل أن تغادر، ارفع نظرك إلى برج الأجراس، أبيضَ في وجه السماء فوق الزقاق الضيّق."
+   ],
+   "fr": [
+    "Au cœur de la vieille ville, l'église Saint-Georges, Mar Gerges, accueille la communauté grecque orthodoxe de Batroun.",
+    "Saint Georges, le saint soldat qui terrasse le dragon, est l'un des saints les plus aimés du Liban.",
+    "L'église est bâtie du même grès doré que les maisons voisines, et son clocher blanc s'élève au-dessus des toits.",
+    "Elle a été achevée en 1867 par les frères Dibo, de Batroun, surtout en grès local, avec une entrée en calcaire taillé à Thoum.",
+    "À l'intérieur, l'iconostase, la cloison d'icônes qui sépare le sanctuaire de la nef, suit la tradition byzantine.",
+    "La présence orthodoxe à Batroun remonte aux premiers siècles du christianisme : des évêques de la ville sont mentionnés aux cinquième et sixième siècles.",
+    "Le jour de la fête du saint, le vingt-trois avril, l'église se remplit de familles venues de la ville et des villages voisins.",
+    "Avant de partir, levez les yeux vers le clocher, blanc sur le ciel au-dessus de la ruelle."
+   ]
+  },
+  "cat": "sacred"
+ },
+ {
+  "id": "old-souk",
+  "lat": 34.256042,
+  "lng": 35.659167,
+  "name": {
+   "en": "The Old Souk",
+   "ar": "السوق القديم",
+   "fr": "Le Vieux Souk"
+  },
+  "hero": {
+   "en": [
+    "Old",
+    "Souk"
+   ],
+   "ar": [
+    "السوق",
+    "القديم"
+   ],
+   "fr": [
+    "Vieux",
+    "Souk"
+   ]
+  },
+  "tagline": {
+   "en": "Sandstone lanes, arched doorways and the town's famous lemonade.",
+   "ar": "أزقّة من الحجر الرملي وأبواب مقنطرة وليموناضة البترون الشهيرة.",
+   "fr": "Ruelles de grès, portes en arc et la célèbre limonade de la ville."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "What",
+     "ar": "ما هو",
+     "fr": "Quoi"
+    },
+    "v": {
+     "en": "Historic market streets",
+     "ar": "أسواق وأزقّة تاريخية",
+     "fr": "Rues marchandes historiques"
+    }
+   },
+   {
+    "k": {
+     "en": "Built from",
+     "ar": "البناء",
+     "fr": "Construit en"
+    },
+    "v": {
+     "en": "Local sandstone",
+     "ar": "الحجر الرملي المحلي",
+     "fr": "Grès local"
+    }
+   },
+   {
+    "k": {
+     "en": "Taste",
+     "ar": "تذوّق",
+     "fr": "À goûter"
+    },
+    "v": {
+     "en": "Batroun lemonade",
+     "ar": "ليموناضة البترون",
+     "fr": "La limonade de Batroun"
+    }
+   }
+  ],
+  "images": [
+   "images/old-souk-1.jpg",
+   "images/old-souk-2.jpg"
+  ],
+  "story": {
+   "en": [
+    "Batroun grew up between two lines: the old coastal road linking Beirut to Tripoli, and the sea.",
+    "Between them, narrow lanes known as souks ran down toward the water, lined with workshops, shops and family houses.",
+    "The houses are built of local sandstone, with arched doorways, wooden shutters and small courtyards hidden behind heavy doors.",
+    "The old souks date back to the nineteenth century, and their lanes were paved with basalt stone in 2003 and 2004.",
+    "For generations, merchants, fishermen and craftsmen lived and worked here, and the life of the town moved at the pace of the market.",
+    "Since the early twentieth century, Batroun has been famous across Lebanon for its lemonade, made from the lemons of the citrus groves around the town.",
+    "Today many of the old houses have become guest houses, cafés and small shops, while their stones and arches remain.",
+    "Walk slowly, look up at the windows and balconies, and stop for a glass of lemonade, as visitors have done here for a hundred years."
+   ],
+   "ar": [
+    "نشأت البترون بين خطّين: الطريق الساحلي القديم الذي يصل بيروت بطرابلس، والبحر.",
+    "وبينهما امتدت أزقّة ضيقة تُعرف بالأسواق نزولاً نحو الماء، تصطفّ على جانبيها المشاغل والدكاكين وبيوت العائلات.",
+    "والبيوت مبنية من الحجر الرملي المحلي، بأبواب مقنطرة ودرفات خشبية وباحات صغيرة تختبئ خلف الأبواب الثقيلة.",
+    "وتعود الأسواق القديمة إلى القرن التاسع عشر، وقد رُصفت بحجر البازلت بين عامي 2003 و2004.",
+    "وعلى مدى أجيال، عاش هنا التجار والصيادون والحرفيون وعملوا، وكانت حياة البلدة تسير على إيقاع السوق.",
+    "ومنذ أوائل القرن العشرين اشتهرت البترون في كل لبنان بالليموناضة، المصنوعة من ليمون البساتين التي تحيط بالبلدة.",
+    "واليوم تحوّل كثير من البيوت القديمة إلى بيوت ضيافة ومقاهٍ ومتاجر صغيرة، فيما بقيت حجارتها وقناطرها على حالها.",
+    "امشِ على مهل، وارفع نظرك إلى النوافذ والشرفات، وتوقّف لتشرب كوباً من الليموناضة كما يفعل الزوار هنا منذ مئة عام."
+   ],
+   "fr": [
+    "Batroun s'est développée entre deux lignes : l'ancienne route côtière qui reliait Beyrouth à Tripoli, et la mer.",
+    "Entre les deux, d'étroites ruelles appelées souks descendaient vers l'eau, bordées d'ateliers, de boutiques et de maisons de famille.",
+    "Les maisons sont bâties en grès local, avec des portes en arc, des volets de bois et de petites cours cachées derrière de lourdes portes.",
+    "Les vieux souks datent du dix-neuvième siècle, et leurs ruelles ont été pavées de basalte en 2003 et 2004.",
+    "Pendant des générations, marchands, pêcheurs et artisans ont vécu et travaillé ici, et la vie de la ville battait au rythme du marché.",
+    "Depuis le début du vingtième siècle, Batroun est célèbre dans tout le Liban pour sa limonade, faite avec les citrons des vergers qui entourent la ville.",
+    "Aujourd'hui, beaucoup de vieilles maisons sont devenues des maisons d'hôtes, des cafés et des boutiques, mais leurs pierres et leurs arcs sont restés.",
+    "Marchez lentement, levez les yeux vers les fenêtres et les balcons, et arrêtez-vous pour un verre de limonade, comme le font les visiteurs depuis cent ans."
+   ]
+  },
+  "cat": "town"
+ },
+ {
+  "id": "mseilha-fort",
+  "lat": 34.273758,
+  "lng": 35.689706,
+  "name": {
+   "en": "Mseilha Fort",
+   "ar": "قلعة المسيلحة",
+   "fr": "Fort de Mseilha"
+  },
+  "hero": {
+   "en": [
+    "Mseilha",
+    "Fort"
+   ],
+   "ar": [
+    "قلعة",
+    "المسيلحة"
+   ],
+   "fr": [
+    "Fort de",
+    "Mseilha"
+   ]
+  },
+  "tagline": {
+   "en": "A fortress grown from a rock, guarding the road north.",
+   "ar": "قلعة نابتة من الصخر تحرس الطريق إلى الشمال.",
+   "fr": "Une forteresse née du rocher, gardienne de la route du nord."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Built",
+     "ar": "البناء",
+     "fr": "Construction"
+    },
+    "v": {
+     "en": "17th century",
+     "ar": "القرن السابع عشر",
+     "fr": "XVIIe siècle"
+    }
+   },
+   {
+    "k": {
+     "en": "Built by",
+     "ar": "بناه",
+     "fr": "Construit par"
+    },
+    "v": {
+     "en": "Emir Fakhr al-Din II",
+     "ar": "الأمير فخر الدين المعني الثاني",
+     "fr": "L'émir Fakhr al-Din II"
+    }
+   },
+   {
+    "k": {
+     "en": "Walls",
+     "ar": "الجدران",
+     "fr": "Murs"
+    },
+    "v": {
+     "en": "Up to 2 m thick",
+     "ar": "حتى مترين سماكةً",
+     "fr": "Jusqu'à 2 m d'épaisseur"
+    }
+   }
+  ],
+  "images": [
+   "images/mseilha-fort-1.jpg",
+   "images/mseilha-fort-2.jpg"
+  ],
+  "story": {
+   "en": [
+    "Two and a half kilometres north-east of Batroun, a small fortress sits on a sheer limestone rock above the Nahr al-Jaouz river.",
+    "Its name, Mseilha, comes from the Arabic for a fortified place.",
+    "In the year 551, a great earthquake brought down part of the Ras ash-Shaq'a headland and cut the coastal road to Tripoli, so travellers had to pass through this valley instead.",
+    "Whoever held the valley held the road, and during the Crusades this pass was defended as part of the County of Tripoli.",
+    "The fort you see today was built in the seventeenth century by Emir Fakhr al-Din the Second, to protect the road from Tripoli to Beirut.",
+    "Its walls, up to two metres thick, follow the shape of the rock and wrap a narrow triangular courtyard pierced with arrow slits.",
+    "In 1964 the fort appeared on Lebanon's twenty-five lira banknote, and it still keeps watch over the valley beside the old stone bridge."
+   ],
+   "ar": [
+    "على بعد كيلومترين ونصف شمال شرق البترون، تجثم قلعة صغيرة فوق صخرة كلسية شاهقة تطلّ على نهر الجوز.",
+    "واسمها، المسيلحة، تصغير لكلمة المَسلَحة، أي الموضع المحصّن.",
+    "في عام 551 ميلادية، أسقط زلزال عظيم جزءاً من رأس الشقعة وقطع الطريق الساحلي إلى طرابلس، فصار المسافرون يعبرون هذا الوادي بدلاً منه.",
+    "ومن سيطر على الوادي سيطر على الطريق، وفي زمن الحملات الصليبية كان هذا الممرّ محمياً ضمن كونتية طرابلس.",
+    "أما القلعة القائمة اليوم فقد شيّدها الأمير فخر الدين المعني الثاني في القرن السابع عشر، لحماية الطريق من طرابلس إلى بيروت.",
+    "وتتبع جدرانها، التي تبلغ سماكتها مترين، شكل الصخرة، وتحيط بباحة مثلّثة ضيقة تتخللها فتحات لرمي السهام.",
+    "وفي عام 1964 ظهرت القلعة على ورقة الخمس والعشرين ليرة اللبنانية، وما زالت تحرس الوادي إلى جانب الجسر الحجري القديم."
+   ],
+   "fr": [
+    "À deux kilomètres et demi au nord-est de Batroun, une petite forteresse se dresse sur un rocher calcaire abrupt, au-dessus du Nahr al-Jaouz.",
+    "Son nom, Mseilha, vient de l'arabe et signifie « le lieu fortifié ».",
+    "En 551, un grand tremblement de terre fit s'effondrer une partie du cap de Ras ash-Shaq'a et coupa la route côtière vers Tripoli : les voyageurs durent alors passer par cette vallée.",
+    "Qui tenait la vallée tenait la route, et à l'époque des croisades, ce passage était défendu au sein du comté de Tripoli.",
+    "Le fort que vous voyez aujourd'hui a été construit au dix-septième siècle par l'émir Fakhr al-Din II, pour protéger la route de Tripoli à Beyrouth.",
+    "Ses murs, épais de deux mètres par endroits, épousent la forme du rocher et entourent une étroite cour triangulaire percée de meurtrières.",
+    "En 1964, le fort figurait sur le billet de vingt-cinq livres libanaises, et il veille toujours sur la vallée, à côté du vieux pont de pierre."
+   ]
+  },
+  "cat": "sea"
+ },
+ {
+  "id": "phoenician-fortress",
+  "lat": 34.255511,
+  "lng": 35.657186,
+  "cat": "ancient",
+  "name": {
+   "en": "Phoenician Fortress",
+   "ar": "القلعة الفينيقية",
+   "fr": "Forteresse phénicienne"
+  },
+  "hero": {
+   "en": [
+    "Phoenician",
+    "Fortress"
+   ],
+   "ar": [
+    "القلعة",
+    "الفينيقية"
+   ],
+   "fr": [
+    "Forteresse",
+    "phénicienne"
+   ]
+  },
+  "tagline": {
+   "en": "Built by a king of Tyre in the ninth century BC.",
+   "ar": "بناها ملك صور في القرن التاسع قبل الميلاد.",
+   "fr": "Bâtie par un roi de Tyr au IXe siècle av. J.-C."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Era",
+     "ar": "الحقبة",
+     "fr": "Époque"
+    },
+    "v": {
+     "en": "9th century BC",
+     "ar": "القرن التاسع ق.م.",
+     "fr": "IXe siècle av. J.-C."
+    }
+   },
+   {
+    "k": {
+     "en": "Built by",
+     "ar": "بناها",
+     "fr": "Construite par"
+    },
+    "v": {
+     "en": "Ithobaal, king of Tyre",
+     "ar": "إيتوبعل ملك صور",
+     "fr": "Ithobaal, roi de Tyr"
+    }
+   }
+  ],
+  "images": [
+   "images/map-phoenician-fortress.jpg"
+  ],
+  "story": {
+   "en": [
+    "In the old city, Ithobaal, king of Tyre, built the Phoenician Fortress in the ninth century BC.",
+    "He built it to protect his kingdom from the Assyrian conquest."
+   ],
+   "ar": [
+    "في المدينة القديمة بنى إيتوبعل ملك صور القلعة الفينيقية في القرن التاسع قبل الميلاد.",
+    "وقد بناها لحماية مملكته من الغزو الأشوري."
+   ],
+   "fr": [
+    "Dans la vieille ville, Ithobaal, roi de Tyr, a bâti la forteresse phénicienne au neuvième siècle avant notre ère.",
+    "Il l'a construite pour protéger son royaume de la conquête assyrienne."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "makaad-el-mir",
+  "lat": 34.253211,
+  "lng": 35.656425,
+  "cat": "ancient",
+  "name": {
+   "en": "The Prince's Seat",
+   "ar": "مقعد المير",
+   "fr": "Le Siège du Prince"
+  },
+  "hero": {
+   "en": [
+    "Prince's",
+    "Seat"
+   ],
+   "ar": [
+    "مقعد",
+    "المير"
+   ],
+   "fr": [
+    "Siège du",
+    "Prince"
+   ]
+  },
+  "tagline": {
+   "en": "A rock carved with a door and stairs, from the first century BC.",
+   "ar": "صخرة حُفر فيها باب ودرج، من القرن الأول قبل الميلاد.",
+   "fr": "Un rocher taillé d'une porte et d'un escalier, du Ier siècle av. J.-C."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Era",
+     "ar": "الحقبة",
+     "fr": "Époque"
+    },
+    "v": {
+     "en": "1st century BC",
+     "ar": "القرن الأول ق.م.",
+     "fr": "Ier siècle av. J.-C."
+    }
+   },
+   {
+    "k": {
+     "en": "Where",
+     "ar": "الموقع",
+     "fr": "Où"
+    },
+    "v": {
+     "en": "South-east of the Phoenician Wall",
+     "ar": "جنوب شرق السور الفينيقي",
+     "fr": "Au sud-est du mur phénicien"
+    }
+   }
+  ],
+  "images": [
+   "images/makaad-el-mir-1.jpg"
+  ],
+  "story": {
+   "en": [
+    "The Prince's Seat, Makaad el Mir, dates back to the first century BC.",
+    "It is a rock just south-east of the Phoenician Wall.",
+    "On its western side, a doorway and a staircase were carved into the stone, so that visitors can climb to the top."
+   ],
+   "ar": [
+    "يعود مقعد المير إلى القرن الأول قبل الميلاد.",
+    "وهو صخرة تقع جنوب شرق السور الفينيقي.",
+    "حُفر فيها من جهة الغرب باب ودرج يرقى بواسطته الزائر إلى سطحها."
+   ],
+   "fr": [
+    "Le Siège du Prince, Makaad el Mir, remonte au premier siècle avant notre ère.",
+    "C'est un rocher situé juste au sud-est du mur phénicien.",
+    "Sur sa face ouest, une porte et un escalier ont été taillés dans la pierre, pour que les visiteurs puissent monter à son sommet."
+   ]
   }
+ },
+ {
+  "id": "roman-amphitheater",
+  "lat": 34.256028,
+  "lng": 35.661674,
+  "cat": "ancient",
+  "name": {
+   "en": "The Roman Amphitheatre",
+   "ar": "المدرّج الروماني",
+   "fr": "L'Amphithéâtre romain"
+  },
+  "hero": {
+   "en": [
+    "Roman",
+    "Amphitheatre"
+   ],
+   "ar": [
+    "المدرّج",
+    "الروماني"
+   ],
+   "fr": [
+    "Amphithéâtre",
+    "romain"
+   ]
+  },
+  "tagline": {
+   "en": "Carved into the rock in the third century, and never finished.",
+   "ar": "حُفر في الصخر في القرن الثالث ولم يُستكمل.",
+   "fr": "Taillé dans la roche au IIIe siècle, et jamais achevé."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Begun",
+     "ar": "بدء العمل",
+     "fr": "Commencé"
+    },
+    "v": {
+     "en": "Between 222 and 235 AD",
+     "ar": "بين 222 و235 م",
+     "fr": "Entre 222 et 235 apr. J.-C."
+    }
+   },
+   {
+    "k": {
+     "en": "Quarter",
+     "ar": "الحي",
+     "fr": "Quartier"
+    },
+    "v": {
+     "en": "Mrah el Sheikh",
+     "ar": "مراح الشيخ",
+     "fr": "Mrah el Cheikh"
+    }
+   }
+  ],
+  "images": [
+   "images/map-roman-amphitheater.jpg"
+  ],
+  "story": {
+   "en": [
+    "The Roman Amphitheatre, in the Mrah el Sheikh quarter, was carved into the rock.",
+    "Work began between the years 222 and 235, but it was never finished."
+   ],
+   "ar": [
+    "المدرّج الروماني الذي يقع في حي مراح الشيخ قد حُفر في الصخر.",
+    "بدأ العمل فيه بين عامي 222 و235 ولم يتم استكماله."
+   ],
+   "fr": [
+    "L'amphithéâtre romain, dans le quartier de Mrah el Cheikh, a été taillé dans la roche.",
+    "Les travaux ont commencé entre les années 222 et 235, mais il n'a jamais été achevé."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "port",
+  "lat": 34.258291,
+  "lng": 35.658179,
+  "cat": "sea",
+  "name": {
+   "en": "The Port",
+   "ar": "الميناء",
+   "fr": "Le Port"
+  },
+  "hero": {
+   "en": [
+    "Batroun",
+    "Port"
+   ],
+   "ar": [
+    "ميناء",
+    "البترون"
+   ],
+   "fr": [
+    "Port de",
+    "Batroun"
+   ]
+  },
+  "tagline": {
+   "en": "Two harbours wrapped around the old city.",
+   "ar": "مرفآن يحيطان بالمدينة القديمة.",
+   "fr": "Deux ports qui enserrent la vieille ville."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Harbours",
+     "ar": "الأحواض",
+     "fr": "Bassins"
+    },
+    "v": {
+     "en": "North and south",
+     "ar": "شمالي وجنوبي",
+     "fr": "Nord et sud"
+    }
+   },
+   {
+    "k": {
+     "en": "Golden age",
+     "ar": "عصره الذهبي",
+     "fr": "Âge d'or"
+    },
+    "v": {
+     "en": "Crusader-era trade with Pisa",
+     "ar": "التجارة مع بيزا في العصر الصليبي",
+     "fr": "Le commerce avec Pise, à l'époque des croisades"
+    }
+   }
+  ],
+  "images": [
+   "images/port-1.jpg",
+   "images/port-2.jpg"
+  ],
+  "story": {
+   "en": [
+    "Batroun's port has two parts, a northern and a southern harbour, which surround the old city.",
+    "In the time of the Crusaders the port boomed, as trade grew between Batroun and the Italian city of Pisa."
+   ],
+   "ar": [
+    "تتكون ميناء البترون من قسمين، شمالي وجنوبي، يحيطان بالمدينة القديمة.",
+    "وقد ازدهرت في العصر الصليبي مع تطور التبادل التجاري بين مدينة البترون ومدينة بيزا الإيطالية."
+   ],
+   "fr": [
+    "Le port de Batroun compte deux bassins, au nord et au sud, qui entourent la vieille ville.",
+    "À l'époque des croisades, le port a prospéré grâce au commerce entre Batroun et la ville italienne de Pise."
+   ]
+  }
+ },
+ {
+  "id": "our-lady-of-the-square",
+  "lat": 34.255022,
+  "lng": 35.65716,
+  "cat": "sacred",
+  "name": {
+   "en": "Our Lady of the Square",
+   "ar": "كنيسة سيدة الساحة",
+   "fr": "Notre-Dame de la Place"
+  },
+  "hero": {
+   "en": [
+    "Our Lady",
+    "of the Square"
+   ],
+   "ar": [
+    "سيدة",
+    "الساحة"
+   ],
+   "fr": [
+    "Notre-Dame",
+    "de la Place"
+   ]
+  },
+  "tagline": {
+   "en": "A simple Maronite church of local sandstone, completed in 1902.",
+   "ar": "كنيسة مارونية بسيطة من الحجر الرملي المحلي، اكتمل بناؤها سنة 1902.",
+   "fr": "Une église maronite toute simple, en grès local, achevée en 1902."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Church",
+     "ar": "الكنيسة",
+     "fr": "Église"
+    },
+    "v": {
+     "en": "Maronite",
+     "ar": "مارونية",
+     "fr": "Maronite"
+    }
+   },
+   {
+    "k": {
+     "en": "Completed",
+     "ar": "اكتمل البناء",
+     "fr": "Achevée"
+    },
+    "v": {
+     "en": "1902",
+     "ar": "1902",
+     "fr": "1902"
+    }
+   },
+   {
+    "k": {
+     "en": "Built from",
+     "ar": "البناء",
+     "fr": "Construite en"
+    },
+    "v": {
+     "en": "Local sandstone",
+     "ar": "الحجر الرملي البتروني",
+     "fr": "Grès local"
+    }
+   }
+  ],
+  "images": [
+   "images/map-our-lady-of-the-square.jpg"
+  ],
+  "story": {
+   "en": [
+    "Our Lady of the Square, Saydet al-Saha, is a Maronite church completed in 1902.",
+    "It is built in a simple style, without vaults, from Batroun's own sandstone."
+   ],
+   "ar": [
+    "كنيسة سيدة الساحة كنيسة مارونية انتهى بناؤها سنة 1902.",
+    "وهي ذات طراز بسيط غير معقود، مبنية بالحجر الرملي البتروني المنشأ."
+   ],
+   "fr": [
+    "Notre-Dame de la Place, Saydet al-Saha, est une église maronite achevée en 1902.",
+    "Elle est bâtie dans un style simple, sans voûtes, avec le grès de Batroun."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "beit-el-kahana",
+  "lat": 34.256922,
+  "lng": 35.658485,
+  "cat": "sacred",
+  "name": {
+   "en": "Old Beit el Kahana",
+   "ar": "بيت الكهنة القديم",
+   "fr": "L'ancienne Beit el Kahana"
+  },
+  "hero": {
+   "en": [
+    "Beit el",
+    "Kahana"
+   ],
+   "ar": [
+    "بيت",
+    "الكهنة"
+   ],
+   "fr": [
+    "Beit el",
+    "Kahana"
+   ]
+  },
+  "tagline": {
+   "en": "A nineteenth-century house where Maronite priests were trained.",
+   "ar": "بيت من القرن التاسع عشر تأسس مدرسةً لتنشئة الكهنة الموارنة.",
+   "fr": "Une maison du XIXe siècle où l'on formait les prêtres maronites."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Built",
+     "ar": "البناء",
+     "fr": "Construction"
+    },
+    "v": {
+     "en": "19th century",
+     "ar": "القرن التاسع عشر",
+     "fr": "XIXe siècle"
+    }
+   },
+   {
+    "k": {
+     "en": "First use",
+     "ar": "أول استعمال",
+     "fr": "Premier usage"
+    },
+    "v": {
+     "en": "School for Maronite priests",
+     "ar": "مدرسة لتنشئة الكهنة الموارنة",
+     "fr": "École de prêtres maronites"
+    }
+   }
+  ],
+  "images": [
+   "images/map-beit-el-kahana.jpg"
+  ],
+  "story": {
+   "en": [
+    "The old Beit el Kahana, the House of the Priests, was built in the nineteenth century near Saint Stephen's Cathedral.",
+    "It was first set up as a school to train Maronite priests."
+   ],
+   "ar": [
+    "تم بناء بيت الكهنة القديم في القرن التاسع عشر، وهو يقع بالقرب من كاتدرائية مار اسطفان.",
+    "وقد أُنشئ أولاً مدرسةً لتنشئة الكهنة الموارنة."
+   ],
+   "fr": [
+    "L'ancienne Beit el Kahana, la maison des prêtres, a été construite au dix-neuvième siècle près de la cathédrale Saint-Étienne.",
+    "Elle a d'abord servi d'école pour former les prêtres maronites."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "municipality",
+  "lat": 34.254416,
+  "lng": 35.659772,
+  "cat": "town",
+  "name": {
+   "en": "Batroun Municipal Palace",
+   "ar": "بلدية البترون",
+   "fr": "Hôtel de ville de Batroun"
+  },
+  "hero": {
+   "en": [
+    "Municipal",
+    "Palace"
+   ],
+   "ar": [
+    "بلدية",
+    "البترون"
+   ],
+   "fr": [
+    "Hôtel",
+    "de ville"
+   ]
+  },
+  "tagline": {
+   "en": "The town's new Municipal Palace, inaugurated in 2016.",
+   "ar": "المبنى الجديد لبلدية البترون، دُشّن عام 2016.",
+   "fr": "Le nouvel hôtel de ville, inauguré en 2016."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Inaugurated",
+     "ar": "التدشين",
+     "fr": "Inauguré"
+    },
+    "v": {
+     "en": "2016",
+     "ar": "2016",
+     "fr": "2016"
+    }
+   }
+  ],
+  "images": [
+   "images/map-municipality.jpg"
+  ],
+  "story": {
+   "en": [
+    "The new Batroun Municipal Palace was built and inaugurated in 2016, under Mayor Marcellino al-Hark."
+   ],
+   "ar": [
+    "شُيّد المبنى الجديد لبلدية البترون خلال ولاية رئيس البلدية مارسيلينو الحرك، وتم تدشينه في العام 2016."
+   ],
+   "fr": [
+    "Le nouvel hôtel de ville de Batroun a été construit et inauguré en 2016, sous le mandat du maire Marcellino al-Hark."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "dar-al-mouna",
+  "lat": 34.254378,
+  "lng": 35.659087,
+  "cat": "town",
+  "name": {
+   "en": "Dar Al-Mouna",
+   "ar": "دار المنى",
+   "fr": "Dar Al-Mouna"
+  },
+  "hero": {
+   "en": [
+    "Dar",
+    "Al-Mouna"
+   ],
+   "ar": [
+    "دار",
+    "المنى"
+   ],
+   "fr": [
+    "Dar",
+    "Al-Mouna"
+   ]
+  },
+  "tagline": {
+   "en": "A house for art and exhibitions near Bahsa beach.",
+   "ar": "دار للفنون والمعارض قرب شاطئ البحصة.",
+   "fr": "Une maison d'art et d'expositions près de la plage de Bahsa."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "What",
+     "ar": "ما هي",
+     "fr": "Quoi"
+    },
+    "v": {
+     "en": "Art and exhibition house",
+     "ar": "دار للفنون والمعارض",
+     "fr": "Maison d'art et d'expositions"
+    }
+   },
+   {
+    "k": {
+     "en": "Near",
+     "ar": "بالقرب من",
+     "fr": "Près de"
+    },
+    "v": {
+     "en": "Bahsa beach",
+     "ar": "شاطئ البحصة",
+     "fr": "La plage de Bahsa"
+    }
+   }
+  ],
+  "images": [
+   "images/map-dar-al-mouna.jpg"
+  ],
+  "story": {
+   "en": [
+    "Dar al-Mouna is a house for art and exhibitions.",
+    "It stands between Bahsa beach and Batroun's main road."
+   ],
+   "ar": [
+    "دار المنى دار للفنون والمعارض.",
+    "وهي تقع بين شاطئ البحصة والطريق الرئيسي في البترون."
+   ],
+   "fr": [
+    "Dar al-Mouna est une maison consacrée à l'art et aux expositions.",
+    "Elle se trouve entre la plage de Bahsa et la route principale de Batroun."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "railway-station",
+  "lat": 34.254007,
+  "lng": 35.661099,
+  "cat": "town",
+  "name": {
+   "en": "The Old Railway Station",
+   "ar": "محطة قطار مدينة البترون",
+   "fr": "L'ancienne gare"
+  },
+  "hero": {
+   "en": [
+    "Railway",
+    "Station"
+   ],
+   "ar": [
+    "محطة",
+    "القطار"
+   ],
+   "fr": [
+    "L'ancienne",
+    "gare"
+   ]
+  },
+  "tagline": {
+   "en": "A stop on the Tripoli to Haifa line, in service from 1942.",
+   "ar": "محطة على خط طرابلس حيفا، دخل الخدمة عام 1942.",
+   "fr": "Une halte de la ligne Tripoli–Haïfa, en service dès 1942."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Line",
+     "ar": "الخط",
+     "fr": "Ligne"
+    },
+    "v": {
+     "en": "Tripoli–Beirut–Haifa",
+     "ar": "طرابلس - بيروت - حيفا",
+     "fr": "Tripoli–Beyrouth–Haïfa"
+    }
+   },
+   {
+    "k": {
+     "en": "In service",
+     "ar": "دخول الخدمة",
+     "fr": "Mise en service"
+    },
+    "v": {
+     "en": "1942",
+     "ar": "1942",
+     "fr": "1942"
+    }
+   }
+  ],
+  "images": [
+   "images/map-railway-station.jpg"
+  ],
+  "story": {
+   "en": [
+    "The Tripoli–Beirut–Haifa railway was built under the French Mandate, and first came into service in 1942.",
+    "It extended two older lines built by the Ottoman Empire at the end of the nineteenth and the start of the twentieth century: Beirut to Damascus, and Tripoli to Homs."
+   ],
+   "ar": [
+    "تم بناء سكة حديد طرابلس - بيروت - حيفا في ظل الانتداب الفرنسي، ودخلت الخدمة لأول مرة عام 1942.",
+    "وجاءت امتداداً لخط سكة حديد بيروت دمشق وخط سكة حديد طرابلس حمص، وكلاهما بنتهما السلطنة العثمانية في نهاية القرن التاسع عشر وبداية القرن العشرين."
+   ],
+   "fr": [
+    "La ligne Tripoli–Beyrouth–Haïfa a été construite sous le mandat français et mise en service pour la première fois en 1942.",
+    "Elle prolongeait deux lignes plus anciennes construites par l'Empire ottoman à la fin du dix-neuvième et au début du vingtième siècle : Beyrouth–Damas et Tripoli–Homs."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "locanda-mnessa",
+  "lat": 34.251225,
+  "lng": 35.662654,
+  "cat": "town",
+  "name": {
+   "en": "Locanda Mnessa",
+   "ar": "لوكندة مناسا",
+   "fr": "Locanda Mnessa"
+  },
+  "hero": {
+   "en": [
+    "Locanda",
+    "Mnessa"
+   ],
+   "ar": [
+    "لوكندة",
+    "مناسا"
+   ],
+   "fr": [
+    "Locanda",
+    "Mnessa"
+   ]
+  },
+  "tagline": {
+   "en": "The first inn on the road from Byblos, built around 1892.",
+   "ar": "أول لوكندة يصادفها القادم من جبيل، بُنيت نحو عام 1892.",
+   "fr": "La première auberge sur la route de Byblos, bâtie vers 1892."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Built",
+     "ar": "البناء",
+     "fr": "Construction"
+    },
+    "v": {
+     "en": "Around 1892",
+     "ar": "نحو 1892",
+     "fr": "Vers 1892"
+    }
+   },
+   {
+    "k": {
+     "en": "Street",
+     "ar": "الشارع",
+     "fr": "Rue"
+    },
+    "v": {
+     "en": "Hadadi Street",
+     "ar": "شارع الحددي",
+     "fr": "Rue Hadadi"
+    }
+   }
+  ],
+  "images": [
+   "images/map-locanda.jpg"
+  ],
+  "story": {
+   "en": [
+    "The Locanda Mnessa was built around 1892.",
+    "It was the first inn that travellers coming from Jbeil met on their way into Batroun.",
+    "The carriage road that passed in front of it was built under Naoum Pasha, governor of Mount Lebanon from 1892 to 1902, to link the Madfoun Bridge to the port of Batroun.",
+    "The inn stands about a hundred metres from the Hadadi bend."
+   ],
+   "ar": [
+    "تم بناء لوكندة مناسا في مطلع العقد الأخير من القرن التاسع عشر.",
+    "وكانت اللوكندة الأولى التي تصادف المسافر القادم من ناحية جبيل.",
+    "وكانت طريق العربات التي أُنشئت في عهد المتصرف نعوم باشا (1892-1902) لتربط جسر المدفون بأسكلة البترون تمرّ أمامها.",
+    "وهي تبعد مسافة مئة متر تقريباً عن كوع الحددي."
+   ],
+   "fr": [
+    "La Locanda Mnessa a été construite vers 1892.",
+    "C'était la première auberge que rencontraient les voyageurs venant de Jbeil.",
+    "La route carrossable qui passait devant elle avait été construite sous Naoum Pacha, gouverneur du Mont-Liban de 1892 à 1902, pour relier le pont de Madfoun au port de Batroun.",
+    "L'auberge se trouve à une centaine de mètres du virage de Hadadi."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "michel-souleiman-statue",
+  "lat": 34.249938,
+  "lng": 35.6638,
+  "cat": "town",
+  "name": {
+   "en": "Statue of Michel Souleiman",
+   "ar": "تمثال ميشال سليمان",
+   "fr": "Statue de Michel Souleiman"
+  },
+  "hero": {
+   "en": [
+    "Michel",
+    "Souleiman"
+   ],
+   "ar": [
+    "ميشال",
+    "سليمان"
+   ],
+   "fr": [
+    "Michel",
+    "Souleiman"
+   ]
+  },
+  "tagline": {
+   "en": "Honouring a poet, journalist and philosopher born in Batroun.",
+   "ar": "تكريماً لشاعر وصحافي وفيلسوف وُلد في البترون.",
+   "fr": "En hommage à un poète, journaliste et philosophe né à Batroun."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Honours",
+     "ar": "تكريم",
+     "fr": "En hommage à"
+    },
+    "v": {
+     "en": "Poet, journalist, philosopher",
+     "ar": "شاعر وصحافي وفيلسوف",
+     "fr": "Poète, journaliste, philosophe"
+    }
+   },
+   {
+    "k": {
+     "en": "Born",
+     "ar": "الولادة",
+     "fr": "Né"
+    },
+    "v": {
+     "en": "Batroun, 1930s",
+     "ar": "البترون، الثلاثينيات",
+     "fr": "Batroun, années 1930"
+    }
+   }
+  ],
+  "images": [
+   "images/map-michel-souleiman-statue.jpg"
+  ],
+  "story": {
+   "en": [
+    "This statue honours Dr. Michel Souleiman, a poet, journalist and philosopher born in Batroun in the 1930s.",
+    "After finishing school in Batroun, he moved to Beirut, where he began working as a journalist at the age of fifteen."
+   ],
+   "ar": [
+    "ميشال سليمان شاعر وصحافي وفيلسوف وُلد في البترون في الثلاثينيات.",
+    "بعد أن أنهى دراسته المدرسية في البترون، انتقل إلى بيروت حيث بدأ حياته المهنية صحفياً في سن الخامسة عشرة."
+   ],
+   "fr": [
+    "Cette statue rend hommage au Dr Michel Souleiman, poète, journaliste et philosophe né à Batroun dans les années 1930.",
+    "Après ses études à Batroun, il s'est installé à Beyrouth, où il a commencé à travailler comme journaliste à l'âge de quinze ans."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "batroun-mosque",
+  "lat": 34.251118,
+  "lng": 35.659123,
+  "cat": "sacred",
+  "name": {
+   "en": "Batroun Mosque",
+   "ar": "مسجد البترون",
+   "fr": "Mosquée de Batroun"
+  },
+  "hero": {
+   "en": [
+    "Batroun",
+    "Mosque"
+   ],
+   "ar": [
+    "مسجد",
+    "البترون"
+   ],
+   "fr": [
+    "Mosquée",
+    "de Batroun"
+   ]
+  },
+  "tagline": {
+   "en": "Built in the 1950s for the town's Sunni community.",
+   "ar": "بُني في الخمسينيات للطائفة السنية في المدينة.",
+   "fr": "Construite dans les années 1950 pour la communauté sunnite de la ville."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Built",
+     "ar": "البناء",
+     "fr": "Construction"
+    },
+    "v": {
+     "en": "1950s",
+     "ar": "الخمسينيات",
+     "fr": "Années 1950"
+    }
+   }
+  ],
+  "images": [
+   "images/map-batroun-mosque.jpg"
+  ],
+  "story": {
+   "en": [
+    "The Batroun Mosque was built in the 1950s for the town's Sunni Muslim community."
+   ],
+   "ar": [
+    "بُني مسجد البترون في الخمسينيات من القرن الماضي للأقلية السنية في المدينة."
+   ],
+   "fr": [
+    "La mosquée de Batroun a été construite dans les années 1950 pour la communauté musulmane sunnite de la ville."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "aquarium",
+  "lat": 34.250083,
+  "lng": 35.657703,
+  "cat": "sea",
+  "name": {
+   "en": "The Aquarium",
+   "ar": "الأكواريوم",
+   "fr": "L'Aquarium"
+  },
+  "hero": {
+   "en": [
+    "Batroun",
+    "Aquarium"
+   ],
+   "ar": [
+    "أكواريوم",
+    "البترون"
+   ],
+   "fr": [
+    "L'Aquarium",
+    "de Batroun"
+   ]
+  },
+  "tagline": {
+   "en": "A concrete landmark on the shore, begun in the 1960s.",
+   "ar": "هيكل خرساني كبير على الشاطئ، بُني في الستينيات.",
+   "fr": "Un grand édifice de béton sur le rivage, commencé dans les années 1960."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Begun",
+     "ar": "البناء",
+     "fr": "Commencé"
+    },
+    "v": {
+     "en": "1960s",
+     "ar": "الستينيات",
+     "fr": "Années 1960"
+    }
+   },
+   {
+    "k": {
+     "en": "Planned as",
+     "ar": "الغاية",
+     "fr": "Prévu comme"
+    },
+    "v": {
+     "en": "Aquarium and marine science school",
+     "ar": "حوض أسماك ومدرسة لعلوم البحار",
+     "fr": "Aquarium et école de sciences marines"
+    }
+   }
+  ],
+  "images": [
+   "images/map-aquarium.jpg"
+  ],
+  "story": {
+   "en": [
+    "The Aquarium is an imposing concrete structure on the shore of the town.",
+    "Its construction began in the 1960s, and it was meant to be an aquarium and a school of marine sciences."
+   ],
+   "ar": [
+    "الأكواريوم هيكل خرساني كبير على شاطئ المدينة.",
+    "تم بناؤه في الستينيات من القرن الماضي ليكون حوض أسماك ومدرسة للعلوم البحرية."
+   ],
+   "fr": [
+    "L'Aquarium est un imposant édifice de béton sur le rivage de la ville.",
+    "Sa construction a commencé dans les années 1960 ; il devait accueillir un aquarium et une école de sciences marines."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "st-rita",
+  "lat": 34.262923,
+  "lng": 35.663754,
+  "cat": "sacred",
+  "name": {
+   "en": "Saint Rita Chapel",
+   "ar": "كنيسة القديسة ريتا",
+   "fr": "Chapelle Sainte-Rita"
+  },
+  "hero": {
+   "en": [
+    "Saint",
+    "Rita"
+   ],
+   "ar": [
+    "القديسة",
+    "ريتا"
+   ],
+   "fr": [
+    "Sainte",
+    "Rita"
+   ]
+  },
+  "tagline": {
+   "en": "A chapel built in 1961 to fulfil a resident's vow.",
+   "ar": "كنيسة بُنيت عام 1961 وفاءً لنذر.",
+   "fr": "Une chapelle bâtie en 1961 pour accomplir un vœu."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Built",
+     "ar": "البناء",
+     "fr": "Construction"
+    },
+    "v": {
+     "en": "1961",
+     "ar": "1961",
+     "fr": "1961"
+    }
+   },
+   {
+    "k": {
+     "en": "Funded by",
+     "ar": "بتمويل من",
+     "fr": "Financée par"
+    },
+    "v": {
+     "en": "Hala Khabbaz",
+     "ar": "هلا خباز",
+     "fr": "Hala Khabbaz"
+    }
+   }
+  ],
+  "images": [
+   "images/map-st-rita.jpg"
+  ],
+  "story": {
+   "en": [
+    "Saint Rita Chapel was built in 1961.",
+    "It was funded by Hala Khabbaz, a resident of Batroun, to fulfil a vow she had made."
+   ],
+   "ar": [
+    "تم بناء كنيسة القديسة ريتا عام 1961.",
+    "وذلك التزاماً بالنذر الذي قطعته هلا خباز، من سكان البترون."
+   ],
+   "fr": [
+    "La chapelle Sainte-Rita a été construite en 1961.",
+    "Elle a été financée par Hala Khabbaz, une habitante de Batroun, pour accomplir un vœu."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "st-sassine",
+  "lat": 34.263144,
+  "lng": 35.678083,
+  "cat": "sacred",
+  "name": {
+   "en": "Saint Sassine Church",
+   "ar": "كنيسة مار ساسين",
+   "fr": "Église Saint-Sassine"
+  },
+  "hero": {
+   "en": [
+    "Mar",
+    "Sassine"
+   ],
+   "ar": [
+    "مار",
+    "ساسين"
+   ],
+   "fr": [
+    "Saint",
+    "Sassine"
+   ]
+  },
+  "tagline": {
+   "en": "A listed historic church in the Kfar Khullus quarter.",
+   "ar": "كنيسة تاريخية محميّة في محلّة كفرخلّص.",
+   "fr": "Une église historique classée, dans le quartier de Kfar Khullus."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "Quarter",
+     "ar": "المحلة",
+     "fr": "Quartier"
+    },
+    "v": {
+     "en": "Kfar Khullus",
+     "ar": "كفرخلّص",
+     "fr": "Kfar Khullus"
+    }
+   },
+   {
+    "k": {
+     "en": "Status",
+     "ar": "التصنيف",
+     "fr": "Statut"
+    },
+    "v": {
+     "en": "Listed historic building",
+     "ar": "مدرجة في لائحة الأبنية التاريخية",
+     "fr": "Monument historique classé"
+    }
+   }
+  ],
+  "images": [
+   "images/map-st-sassine.jpg"
+  ],
+  "story": {
+   "en": [
+    "Saint Sassine Church stands in the Kfar Khullus quarter of Batroun.",
+    "It is included in Lebanon's general list of protected historic buildings."
+   ],
+   "ar": [
+    "تقع كنيسة مار ساسين في محلّة كفرخلّص في البترون.",
+    "وهي مدرجة ضمن لائحة الحرم العام للأبنية التاريخية."
+   ],
+   "fr": [
+    "L'église Saint-Sassine se trouve dans le quartier de Kfar Khullus, à Batroun.",
+    "Elle figure sur la liste générale des monuments historiques protégés."
+   ]
+  },
+  "noPhoto": true
+ },
+ {
+  "id": "darb-mseilha",
+  "lat": 34.26165,
+  "lng": 35.674011,
+  "cat": "sea",
+  "name": {
+   "en": "Darb el Mseilha",
+   "ar": "درب المسيلحة",
+   "fr": "Darb el Mseilha"
+  },
+  "hero": {
+   "en": [
+    "Darb el",
+    "Mseilha"
+   ],
+   "ar": [
+    "درب",
+    "المسيلحة"
+   ],
+   "fr": [
+    "Darb el",
+    "Mseilha"
+   ]
+  },
+  "tagline": {
+   "en": "A walking trail named after the Mseilha Fort.",
+   "ar": "مسار للتنزه يحمل اسم قلعة المسيلحة.",
+   "fr": "Un sentier de promenade qui porte le nom du fort de Mseilha."
+  },
+  "facts": [
+   {
+    "k": {
+     "en": "What",
+     "ar": "ما هو",
+     "fr": "Quoi"
+    },
+    "v": {
+     "en": "Paved walking trail",
+     "ar": "مسار خرساني للتنزه",
+     "fr": "Sentier de promenade bétonné"
+    }
+   },
+   {
+    "k": {
+     "en": "Named after",
+     "ar": "سُمّي باسم",
+     "fr": "Doit son nom à"
+    },
+    "v": {
+     "en": "Mseilha Fort",
+     "ar": "قلعة المسيلحة",
+     "fr": "Fort de Mseilha"
+    }
+   }
+  ],
+  "images": [
+   "images/map-darb-mseilha.jpg"
+  ],
+  "story": {
+   "en": [
+    "Darb el Mseilha is a paved walking trail.",
+    "It takes its name from the Mseilha Fort, a fortification built in the seventeenth century north of Batroun."
+   ],
+   "ar": [
+    "درب المسيلحة هو مسار خرساني للتنزه.",
+    "أخذ اسمه من قلعة المسيلحة، وهي حصن بُني في القرن السابع عشر شمال مدينة البترون."
+   ],
+   "fr": [
+    "Darb el Mseilha est un sentier de promenade bétonné.",
+    "Il doit son nom au fort de Mseilha, une fortification construite au dix-septième siècle au nord de Batroun."
+   ]
+  },
+  "noPhoto": true
+ }
 ];
 
-/* Photo credits (Wikimedia Commons). Required by the photos' licences. */
 const CREDITS = {
  "phoenician-wall-1": {
   "file": "Lebanon - 20150614 - Batroun - The phoenician wall 7.jpg",
@@ -830,6 +2430,108 @@ const CREDITS = {
   "license": "CC BY-SA 3.0",
   "author": "Amalmc",
   "tall": false
+ },
+ "map-phoenician-fortress": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-roman-amphitheater": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-our-lady-of-the-square": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-beit-el-kahana": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-municipality": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-dar-al-mouna": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-railway-station": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-locanda": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-michel-souleiman-statue": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-batroun-mosque": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-aquarium": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-st-rita": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-st-sassine": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "map-darb-mseilha": {
+  "author": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "page": "https://www.openstreetmap.org/copyright",
+  "tall": false
+ },
+ "makaad-el-mir-1": {
+  "author": "TheGrg",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Batroun_Makaad_El_Mir.jpg",
+  "tall": true
+ },
+ "port-1": {
+  "author": "Heinz Hövel",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Batroun_Harbour.jpg",
+  "tall": true
+ },
+ "port-2": {
+  "author": "Georges Aoun",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Marine_rescue_unit_boat_-_Batroun_Old_Port.jpg",
+  "tall": false
  }
 };
 
@@ -844,7 +2546,7 @@ const T = {
     trail: "Heritage trail", listen: "Listen to the story", pause: "Pause", resume: "Resume", replay: "Listen again",
     story: "The story", minListen: n => `${n} min listen`, sentence: (i, n) => `${i} of ${n}`,
     facts: "At a glance", gallery: "Photos", next: "Next stop", nextTitle: "Where to go from here",
-    walk: n => `${n} min walk`, drive: n => `${n} min drive`, closest: "Closest", moreNearby: "More nearby", swipe: "Swipe to see all", away: "away", tapDot: "Tap a photo on the radar to preview it.", routeTotal: (n, w, d) => `${n} stops · about ${w} min on foot and ${d} min by car`, stopN: n => `Stop ${n}`, close: "Close", directions: "Directions", open: "Open story",
+    walk: n => `${n} min walk`, drive: n => `${n} min drive`, closest: "Closest", moreNearby: "More nearby", swipe: "Swipe to see all", away: "away", tapDot: "Tap a photo on the radar to preview it.", routeTotal: (n, w, d) => `${n} stops · about ${w} min on foot` + (d && d !== "0" && d !== "٠" ? ` and ${d} min by car` : ""), stopN: n => `Stop ${n}`, close: "Close", directions: "Directions", open: "Open story",
     fromHere: n => `Bearings and distances from ${n}. Travel times are estimates.`,
     fromYou: "Bearings and distances from where you are. Travel times are estimates.",
     useLoc: "Measure from my location", locating: "Finding you…", locFail: "Location isn't available here, so distances are measured from this landmark.",
@@ -852,7 +2554,7 @@ const T = {
     noSpeech: "This browser can't read text aloud. The full story is below.",
     tapHint: "Tap any sentence to listen from there.",
     langName: "English",
-    allStops: "All landmarks", homeTitle: "Six stops, three thousand years", homeEyebrow: "The Batroun trail",
+    allStops: "All landmarks", homeTitle: n => `${n} stops, three thousand years`, cats: { all: "All", sacred: "Churches & mosque", ancient: "Ancient", town: "Town & heritage", sea: "Sea & valley" }, mapNote: "Map view · photo coming soon", mapEyebrow: "The trail map", mapTitle: "Every stop, on one map", mapStats: (n, c) => `${n} stops · ${c} themes · 3 languages`, mapTown: "Old town", mapAll: "Whole trail", mapHint: "Tap a pin to preview a stop. Drag the map to look around.", homeEyebrow: "The Batroun trail",
     howEyebrow: "How it works", how: [
       ["Scan the code", "Each landmark has a QR code at its entrance. Point your phone camera at it."],
       ["Listen to the story", "Choose English, Arabic or French. The story is read aloud while you look around."],
@@ -868,7 +2570,7 @@ const T = {
     trail: "درب التراث", listen: "استمع إلى القصة", pause: "إيقاف مؤقت", resume: "متابعة", replay: "استمع مجدداً",
     story: "الحكاية", minListen: n => `${n} دقائق استماع`, sentence: (i, n) => `${i} من ${n}`,
     facts: "لمحة سريعة", gallery: "صور", next: "المحطة التالية", nextTitle: "إلى أين بعد هنا",
-    walk: n => `${n} دقيقة سيراً`, drive: n => `${n} دقيقة بالسيارة`, closest: "الأقرب", moreNearby: "معالم قريبة أخرى", swipe: "اسحب لرؤية الكل", away: "", tapDot: "اضغط على صورة في الرادار لمعاينتها.", routeTotal: (n, w, d) => `${n} محطات · نحو ${w} دقيقة سيراً و${d} دقيقة بالسيارة`, stopN: n => `المحطة ${n}`, close: "إغلاق", directions: "الاتجاهات", open: "افتح القصة",
+    walk: n => `${n} دقيقة سيراً`, drive: n => `${n} دقيقة بالسيارة`, closest: "الأقرب", moreNearby: "معالم قريبة أخرى", swipe: "اسحب لرؤية الكل", away: "", tapDot: "اضغط على صورة في الرادار لمعاينتها.", routeTotal: (n, w, d) => `${n} محطات · نحو ${w} دقيقة سيراً` + (d && d !== "0" && d !== "٠" ? ` و${d} دقيقة بالسيارة` : ""), stopN: n => `المحطة ${n}`, close: "إغلاق", directions: "الاتجاهات", open: "افتح القصة",
     fromHere: n => `الاتجاهات والمسافات انطلاقاً من ${n}. أوقات التنقل تقديرية.`,
     fromYou: "الاتجاهات والمسافات انطلاقاً من موقعك. أوقات التنقل تقديرية.",
     useLoc: "احسب المسافة من موقعي", locating: "جارٍ تحديد موقعك…", locFail: "تحديد الموقع غير متاح هنا، لذا تُحسب المسافات من هذا المعلم.",
@@ -876,7 +2578,7 @@ const T = {
     noSpeech: "هذا المتصفح لا يستطيع قراءة النص بصوت عالٍ. القصة كاملة أدناه.",
     tapHint: "اضغط على أي جملة للاستماع منها.",
     langName: "العربية",
-    allStops: "كل المعالم", homeTitle: "ست محطات وثلاثة آلاف سنة", homeEyebrow: "درب البترون",
+    allStops: "كل المعالم", homeTitle: n => `${n} محطة وثلاثة آلاف سنة`, cats: { all: "الكل", sacred: "كنائس ومسجد", ancient: "آثار قديمة", town: "البلدة والتراث", sea: "البحر والوادي" }, mapNote: "خريطة الموقع · الصورة قريباً", mapEyebrow: "خريطة الدرب", mapTitle: "كل المحطات على خريطة واحدة", mapStats: (n, c) => `${n} محطة · ${c} مواضيع · ٣ لغات`, mapTown: "البلدة القديمة", mapAll: "الدرب كاملاً", mapHint: "اضغط على دبوس لمعاينة المحطة، واسحب الخريطة لتستكشف.", homeEyebrow: "درب البترون",
     howEyebrow: "كيف يعمل", how: [
       ["امسح الرمز", "لكل معلم رمز QR عند مدخله. وجّه كاميرا هاتفك نحوه."],
       ["استمع إلى الحكاية", "اختر العربية أو الإنجليزية أو الفرنسية، وتُروى لك الحكاية وأنت تتجوّل."],
@@ -892,7 +2594,7 @@ const T = {
     trail: "Parcours patrimoine", listen: "Écouter l'histoire", pause: "Pause", resume: "Reprendre", replay: "Réécouter",
     story: "L'histoire", minListen: n => `${n} min d'écoute`, sentence: (i, n) => `${i} sur ${n}`,
     facts: "En bref", gallery: "Photos", next: "Prochaine étape", nextTitle: "Où aller ensuite",
-    walk: n => `${n} min à pied`, drive: n => `${n} min en voiture`, closest: "Le plus proche", moreNearby: "À proximité", swipe: "Faites glisser pour tout voir", away: "", tapDot: "Touchez une photo sur le radar pour l'aperçu.", routeTotal: (n, w, d) => `${n} étapes · environ ${w} min à pied et ${d} min en voiture`, stopN: n => `Étape ${n}`, close: "Fermer", directions: "Itinéraire", open: "Voir l'histoire",
+    walk: n => `${n} min à pied`, drive: n => `${n} min en voiture`, closest: "Le plus proche", moreNearby: "À proximité", swipe: "Faites glisser pour tout voir", away: "", tapDot: "Touchez une photo sur le radar pour l'aperçu.", routeTotal: (n, w, d) => `${n} étapes · environ ${w} min à pied` + (d && d !== "0" && d !== "٠" ? ` et ${d} min en voiture` : ""), stopN: n => `Étape ${n}`, close: "Fermer", directions: "Itinéraire", open: "Voir l'histoire",
     fromHere: n => `Directions et distances depuis ${n}. Temps de trajet estimés.`,
     fromYou: "Directions et distances depuis votre position. Temps de trajet estimés.",
     useLoc: "Mesurer depuis ma position", locating: "Localisation…", locFail: "La localisation n'est pas disponible ici : les distances sont mesurées depuis ce site.",
@@ -900,7 +2602,7 @@ const T = {
     noSpeech: "Ce navigateur ne peut pas lire le texte à voix haute. L'histoire complète est ci-dessous.",
     tapHint: "Touchez une phrase pour l'écouter à partir de là.",
     langName: "Français",
-    allStops: "Tous les sites", homeTitle: "Six étapes, trois mille ans", homeEyebrow: "Le parcours de Batroun",
+    allStops: "Tous les sites", homeTitle: n => `${n} étapes, trois mille ans`, cats: { all: "Tout", sacred: "Églises et mosquée", ancient: "Antiquité", town: "Ville et patrimoine", sea: "Mer et vallée" }, mapNote: "Vue carte · photo bientôt", mapEyebrow: "La carte du parcours", mapTitle: "Toutes les étapes, sur une carte", mapStats: (n, c) => `${n} étapes · ${c} thèmes · 3 langues`, mapTown: "Vieille ville", mapAll: "Tout le parcours", mapHint: "Touchez une épingle pour un aperçu. Faites glisser la carte pour explorer.", homeEyebrow: "Le parcours de Batroun",
     howEyebrow: "Comment ça marche", how: [
       ["Scannez le code", "Chaque site a un code QR à son entrée. Pointez l'appareil photo de votre téléphone."],
       ["Écoutez l'histoire", "Choisissez le français, l'arabe ou l'anglais. L'histoire est lue pendant que vous visitez."],
@@ -1142,7 +2844,7 @@ function landmarkPage(l){
   // group sentences into paragraphs of 2-3 for rhythm
   for (let i = 0, p = 0; i < s.length; p++){ const n = p === 0 ? 2 : 3; paras.push(s.slice(i, i+n).map((x, k) => ({ x, k: i+k }))); i += n; }
   const cta = `<button class="btn" type="button" data-play data-start-story>${""}</button>`;
-  return `${heroHTML({ words: l.hero[lang], img: l.images[0], alt: l.name[lang], meta: `${L.trail} · ${CITY.name[lang]}`, lede: l.tagline[lang], cta, title: l.name[lang], coord: fmtCoord(l) })}
+  return `${heroHTML({ words: l.hero[lang], img: l.images[0], alt: l.name[lang], meta: `${L.trail} · ${l.noPhoto ? L.mapNote : CITY.name[lang]}`, lede: l.tagline[lang], cta, title: l.name[lang], coord: fmtCoord(l) })}
   <main>
     <section class="block story-first" id="story"><div class="wrap story-grid">
       <aside class="story-side">
@@ -1158,12 +2860,12 @@ function landmarkPage(l){
       <div class="story" lang="${lang}">${paras.map(p => `<p>${p.map(({x,k}) => `<span class="s" data-i="${k}">${esc(x)}</span>`).join(" ")}</p>`).join("")}</div>
     </div></section>
 
-    <section class="block" style="padding-top:0"><div class="wrap">
+    ${l.noPhoto ? "" : `<section class="block" style="padding-top:0"><div class="wrap">
       <p class="eyebrow">${esc(L.gallery)}</p>
       <div class="strip n${l.images.length}" aria-label="${esc(L.gallery)}">
         ${l.images.map((src, i) => { const k = src.split("/").pop().replace(".jpg",""); const c = CREDITS[k] || {}; return `<figure class="${c.tall ? "tall" : ""}"><img src="${src}" alt="${esc(l.name[lang])}, ${esc(L.photo)} ${i+1}" decoding="async"><figcaption>${esc(L.photo)}: ${esc(c.author || "")} · <a href="${c.page || "#"}" target="_blank" rel="noopener">${esc(c.license || "")}</a></figcaption></figure>`; }).join("")}
       </div>
-    </div></section>
+    </div></section>`}
 
     <section class="block nextstop" id="next"><div class="wrap">
       <div class="next-head">
@@ -1172,10 +2874,10 @@ function landmarkPage(l){
       </div>
       <div class="next-grid">
         ${featuredHTML(others[0])}
-        <div class="radar-wrap"><div class="radar"><div class="sweep" aria-hidden="true"></div>${compassSVG(here, l, others)}<div class="rpop" id="rpop" role="dialog" aria-live="polite" hidden></div></div><p class="compass-cap">${esc(L.tapDot)} ${esc(origin ? L.fromYou : L.fromHere(l.name[lang]))}</p></div>
+        <div class="radar-wrap"><div class="radar"><div class="sweep" aria-hidden="true"></div>${compassSVG(here, l, others.slice(0, 6))}<div class="rpop" id="rpop" role="dialog" aria-live="polite" hidden></div></div><p class="compass-cap">${esc(L.tapDot)} ${esc(origin ? L.fromYou : L.fromHere(l.name[lang]))}</p></div>
       </div>
       <div class="more-head"><p class="eyebrow">${esc(L.moreNearby)}</p><span class="note">${esc(L.swipe)}</span></div>
-      <ol class="rail">${others.slice(1).map((x, i) => railHTML(x, i + 1)).join("")}</ol>
+      <ol class="rail">${others.slice(1, 9).map((x, i) => railHTML(x, i + 1)).join("")}</ol>
     </div></section>
   </main>
   ${footerHTML(l.images)}
@@ -1263,13 +2965,14 @@ function openPop(i){
 function closePop(){ const pop = document.getElementById("rpop"); if (pop){ pop.hidden = true; pop.classList.remove("on"); } document.querySelectorAll(".rdot").forEach(a => a.classList.remove("sel")); }
 
 /* walking route through all stops: nearest-neighbour order from the first landmark */
-function routeOrder(){
-  const left = LANDMARKS.slice(1), out = [LANDMARKS[0]];
+let routeCat = "all";
+function routeOrder(list){
+  const left = list.slice(1), out = [list[0]];
   while (left.length){ const cur = out[out.length - 1]; left.sort((a, b) => distKm(cur, a) - distKm(cur, b)); out.push(left.shift()); }
   return out;
 }
 function routeHTML(){
-  const L = t(), order = routeOrder();
+  const L = t(), order = routeOrder(LANDMARKS.filter(l => routeCat === "all" || l.cat === routeCat));
   let walk = 0, drive = 0, html = "";
   order.forEach((l, i) => {
     if (i > 0){
@@ -1284,15 +2987,154 @@ function routeHTML(){
     <div class="route-wrap"><div class="rail-line" aria-hidden="true"><i id="route-fill"></i></div><ol class="route">${html}</ol></div>`;
 }
 
+
+/* ---------------- 3D trail map (home) ----------------
+   A navy street map laid on a tilted plane (CSS 3D). Pins are billboards that
+   stand up from the ground and always face you; the walking route draws itself
+   between the stops, and a light travels along it. Tap a pin for a preview. */
+const TM = { src: "images/trail-map.jpg", W: 2871, H: 2447, Z: 17, k: 0.7, x0: 20100036.835555557, y0: 13372688.34196933 };
+const TM_CAT = { sacred: "#e07fb6", ancient: "#e6c08e", town: "#8fb3e0", sea: "#5ec4be" };
+function tmXY(p){
+  const n = 2 ** TM.Z * 256, s = Math.sin(p.lat * Math.PI / 180);
+  return [((p.lng + 180) / 360 * n - TM.x0) * TM.k, ((0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n - TM.y0) * TM.k];
+}
+let tmOrder = [];
+function mapHTML(){
+  const L = t();
+  tmOrder = routeOrder(LANDMARKS);
+  const pts = tmOrder.map(tmXY);
+  let d = "", legs = "";
+  pts.forEach(([x, y], i) => {
+    if (!i){ d = `M${x.toFixed(1)} ${y.toFixed(1)}`; return; }
+    const [px, py] = pts[i - 1], dx = x - px, dy = y - py, len = Math.hypot(dx, dy);
+    const bend = Math.min(60, len * .22) * (i % 2 ? 1 : -1);
+    const cx = (px + x) / 2 - dy / (len || 1) * bend, cy = (py + y) / 2 + dx / (len || 1) * bend;
+    const seg = `Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`;
+    d += " " + seg;
+    legs += `<path class="tm-leg" d="M${px.toFixed(1)} ${py.toFixed(1)} ${seg}" pathLength="1" style="--i:${i}"/>`;
+  });
+  const pins = tmOrder.map((l, i) => { const [x, y] = pts[i];
+    return `<button type="button" class="tm-pin" data-tm="${i}" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;--c:${TM_CAT[l.cat] || "#e07fb6"};--i:${i}" aria-label="${esc(num(i + 1) + ". " + l.name[lang])}">
+      <span class="tm-dot"></span><span class="tm-up"><span class="tm-bill"><span class="tm-name">${esc(l.name[lang])}</span><span class="tm-head${l.noPhoto ? " np" : ""}">${l.noPhoto ? `<i>${num(i + 1)}</i>` : `<img src="${l.images[0]}" alt="" loading="lazy" decoding="async"><b>${num(i + 1)}</b>`}</span><span class="tm-stem"></span></span></span></button>`; }).join("");
+  const cats = Object.keys(TM_CAT).filter(k => LANDMARKS.some(l => l.cat === k));
+  return `<section class="tmap" id="tmap" aria-label="${esc(L.mapTitle)}">
+    <div class="wrap tm-intro">
+      <p class="eyebrow">${esc(L.mapEyebrow)}</p>
+      <h2 class="title">${esc(L.mapTitle)}</h2>
+      <p class="tm-stats">${esc(L.mapStats(num(LANDMARKS.length), num(cats.length)))}</p>
+    </div>
+    <div class="tm-stage" id="tm-stage">
+      <div class="tm-plane" id="tm-plane" style="width:${TM.W}px;height:${TM.H}px">
+        <img class="tm-base" src="${TM.src}" alt="" decoding="async">
+        <svg class="tm-routes" viewBox="0 0 ${TM.W} ${TM.H}" width="${TM.W}" height="${TM.H}" aria-hidden="true">
+          <path id="tm-all" class="tm-glow" d="${d}"/>${legs}
+          <circle class="tm-comet" r="9"><animateMotion dur="38s" repeatCount="indefinite" rotate="auto"><mpath href="#tm-all"/></animateMotion></circle>
+        </svg>
+        ${pins}
+      </div>
+      <div class="tm-fog" aria-hidden="true"></div>
+      <div class="tm-ui">
+        <div class="tm-views" role="group" aria-label="${esc(L.mapTitle)}">
+          <button type="button" class="chip glass" data-tmview="town" aria-pressed="true">${esc(L.mapTown)}</button>
+          <button type="button" class="chip glass" data-tmview="all" aria-pressed="false">${esc(L.mapAll)}</button>
+        </div>
+        <ul class="tm-legend">${cats.map(k => `<li style="--c:${TM_CAT[k]}">${esc(L.cats[k])}</li>`).join("")}</ul>
+      </div>
+      <div class="rpop tm-card" id="tm-card" role="dialog" aria-live="polite" hidden></div>
+    </div>
+    <p class="wrap note tm-hint">${esc(L.mapHint)}</p>
+  </section>`;
+}
+
+const tmCam = { fx: 0, fy: 0, s: .5, r: 0, a: 0 }, tmGoal = { fx: 0, fy: 0, s: .5, r: 0, a: 0 };
+let tmRaf = 0, tmVisible = false, tmIO = null, tmT0 = 0, tmView = "town", tmSel = -1, tmIntro = false;
+function tmFit(ids, a, r){
+  const st = document.getElementById("tm-stage"); if (!st) return null;
+  const P = (ids ? tmOrder.filter(l => ids.includes(l.id)) : tmOrder).map(tmXY);
+  const cr = Math.cos(r * Math.PI / 180), sr = Math.sin(r * Math.PI / 180);
+  const xs = P.map(([x, y]) => x * cr - y * sr), ys = P.map(([x, y]) => x * sr + y * cr);
+  const w = Math.max(...xs) - Math.min(...xs) + 220, h = (Math.max(...ys) - Math.min(...ys) + 260) * Math.cos(a * Math.PI / 180);
+  const s = Math.min(st.clientWidth * .8 / w, st.clientHeight * .66 / h, 3);
+  const mx = (Math.max(...xs) + Math.min(...xs)) / 2, my = (Math.max(...ys) + Math.min(...ys)) / 2 - 40 / s;
+  const fx = mx * cr + my * sr, fy = -mx * sr + my * cr;
+  return { fx, fy, s, r, a };
+}
+function tmTownIds(){ const c = byId("st-stephen") || LANDMARKS[0]; return LANDMARKS.filter(l => distKm(c, l) < (innerWidth > 720 ? .42 : .6)).map(l => l.id); }
+function tmSetView(v, snap){
+  tmView = v; const phone = innerWidth <= 720;
+  const g = v === "all" ? tmFit(null, 40, -8) : tmFit(tmTownIds(), phone ? 52 : 48, -18);
+  if (!g) return; Object.assign(tmGoal, g); if (snap) Object.assign(tmCam, g);
+  document.querySelectorAll("[data-tmview]").forEach(b => b.setAttribute("aria-pressed", b.dataset.tmview === v));
+  tmKick();
+}
+function tmApply(time){
+  const pl = document.getElementById("tm-plane"); if (!pl) return false;
+  const dt = Math.min(.1, Math.max(0, (time - (tmApply.last || time)) / 1000)); tmApply.last = time;
+  const k = 1 - Math.exp(-dt / (tmIntro ? .55 : .3)); let moving = false;
+  for (const key of ["fx", "fy", "s", "r", "a"]){ const dv = tmGoal[key] - tmCam[key]; if (Math.abs(dv) > (key === "s" ? .0004 : .02)){ tmCam[key] += dv * k; moving = true; } else tmCam[key] = tmGoal[key]; }
+  if (!moving) tmIntro = false;
+  const sway = reduceMotion ? 0 : Math.sin((time - tmT0) / 5200) * 2.4;
+  const r = tmCam.r + sway, { fx, fy, s, a } = tmCam;
+  pl.style.transform = `rotateX(${a.toFixed(2)}deg) rotateZ(${r.toFixed(2)}deg) scale(${s.toFixed(4)}) translate3d(${(-fx).toFixed(1)}px,${(-fy).toFixed(1)}px,0)`;
+  pl.style.setProperty("--rz", (-r).toFixed(2) + "deg"); pl.style.setProperty("--rx", (-a).toFixed(2) + "deg");
+  pl.style.setProperty("--is", (1 / s).toFixed(4));
+  return moving || !reduceMotion;
+}
+function tmLoop(time){ tmRaf = 0; if (!tmVisible) return; if (tmApply(time)) tmRaf = requestAnimationFrame(tmLoop); }
+function tmKick(){ if (!tmRaf && tmVisible){ tmApply.last = performance.now(); tmRaf = requestAnimationFrame(tmLoop); } if (!tmVisible) tmApply(performance.now()); }
+function tmInit(){
+  const st = document.getElementById("tm-stage"); if (!st){ if (tmIO) tmIO.disconnect(); return; }
+  tmSel = -1; tmT0 = performance.now();
+  const first = !reduceMotion;
+  tmSetView("town", true);
+  if (first){ const g = { ...tmGoal }; const all = tmFit(null, 0, 0); Object.assign(tmCam, all, { s: all.s * .9 }); Object.assign(tmGoal, g); tmIntro = true; }
+  tmApply(performance.now());
+  if (tmIO) tmIO.disconnect();
+  tmIO = new IntersectionObserver(es => es.forEach(en => {
+    tmVisible = en.isIntersecting;
+    if (tmVisible){ if (!st.classList.contains("go")) setTimeout(() => st.classList.add("done"), 5600); st.classList.add("go"); tmKick(); }
+  }), { threshold: .2 });
+  tmIO.observe(st);
+  // drag to look around (horizontal on touch, so the page still scrolls)
+  let drag = null;
+  st.addEventListener("pointerdown", e => { if (e.target.closest(".tm-pin, .tm-ui, .tm-card")) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId, moved: 0 }; });
+  st.addEventListener("pointermove", e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x, dy = e.pointerType === "touch" ? 0 : e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy);
+    if (drag.moved > 6 && !drag.cap){ try { st.setPointerCapture(e.pointerId); } catch(_){} drag.cap = true; }
+    const r = tmCam.r * Math.PI / 180, ca = Math.max(.3, Math.cos(tmCam.a * Math.PI / 180)), dyw = dy / ca;
+    const wx = (dx * Math.cos(r) + dyw * Math.sin(r)) / tmCam.s, wy = (-dx * Math.sin(r) + dyw * Math.cos(r)) / tmCam.s;
+    tmGoal.fx = tmCam.fx = Math.min(TM.W, Math.max(0, tmCam.fx - wx)); tmGoal.fy = tmCam.fy = Math.min(TM.H, Math.max(0, tmCam.fy - wy)); tmKick();
+  });
+  const end = () => { drag = null; }; st.addEventListener("pointerup", end); st.addEventListener("pointercancel", end);
+}
+function tmOpen(i){
+  const L = t(), l = tmOrder[i], card = document.getElementById("tm-card"); if (!l || !card) return;
+  tmSel = i;
+  document.querySelectorAll(".tm-pin").forEach(p => p.classList.toggle("sel", +p.dataset.tm === i));
+  document.getElementById("tm-stage")?.classList.add("has-sel");
+  const [x, y] = tmXY(l); tmGoal.fx = x; tmGoal.fy = y + 60; tmGoal.s = Math.max(tmGoal.s, tmView === "all" ? tmFit(tmTownIds(), 50, -20).s * .8 : tmGoal.s); tmKick();
+  const dir = `https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}`;
+  card.innerHTML = `<button class="rpop-x" type="button" data-tmclose aria-label="${esc(L.close)}">${I.x}</button>
+    <img src="${l.images[0]}" alt="">
+    <div class="rpop-b"><span class="rpop-n" style="background:${TM_CAT[l.cat]}">${num(i + 1)}</span><h3>${esc(l.name[lang])}</h3>
+      <div class="rpop-m"><span>${esc(L.cats[l.cat] || "")}</span></div>
+      <div class="acts"><a class="chip go" href="#${l.id}">${esc(L.open)}</a><a class="chip" href="${dir}" target="_blank" rel="noopener">${I.pin}${esc(L.directions)}</a></div></div>`;
+  card.hidden = false; card.classList.remove("on"); void card.offsetWidth; card.classList.add("on");
+}
+function tmClose(){ const c = document.getElementById("tm-card"); if (c){ c.hidden = true; } tmSel = -1; document.getElementById("tm-stage")?.classList.remove("has-sel"); document.querySelectorAll(".tm-pin.sel").forEach(p => p.classList.remove("sel")); }
+
 /* ---------------- home ---------------- */
 function homePage(){
   const L = t();
   const cta = `<a class="btn" href="#${LANDMARKS[0].id}"><span class="disc">${I.arrow}</span>${esc(L.start)}</a>`;
   return `${heroHTML({ words: CITY.hero[lang], img: CITY.image, alt: CITY.name[lang], meta: `${L.trail} · ${num(LANDMARKS.length)} ${lang === "ar" ? "معالم" : lang === "fr" ? "sites" : "landmarks"}`, lede: CITY.intro[lang], cta, title: CITY.name[lang], coord: fmtCoord({ lat: 34.2553, lng: 35.6581 }) })}
   <main>
-    <section class="block story-first"><div class="wrap">
-      <p class="eyebrow">${esc(L.homeEyebrow)}</p><h2 class="title">${esc(L.homeTitle)}</h2>
-      ${routeHTML()}
+    ${mapHTML()}
+    <section class="block"><div class="wrap">
+      <p class="eyebrow">${esc(L.homeEyebrow)}</p><h2 class="title">${esc(L.homeTitle(num(LANDMARKS.length)))}</h2>
+      <div class="cat-chips" role="group" aria-label="${esc(L.homeEyebrow)}">${Object.entries(L.cats).filter(([k]) => k === "all" || LANDMARKS.some(l => l.cat === k)).map(([k, v]) => `<button type="button" class="chip" data-cat="${k}" aria-pressed="${k === routeCat}">${esc(v)}<span class="ct">${num(k === "all" ? LANDMARKS.length : LANDMARKS.filter(l => l.cat === k).length)}</span></button>`).join("")}</div>
+      <div id="route-box">${routeHTML()}</div>
     </div></section>
     <section class="block" style="padding-top:0"><div class="wrap">
       <p class="eyebrow">${esc(L.howEyebrow)}</p>
@@ -1477,9 +3319,11 @@ function route(){
   Voice.render();
   fitHero();
   armReveals();
+  tmInit();
   const go = () => { fitHero(); playHero(); };
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go);
 }
+addEventListener("resize", () => { if (document.getElementById("tm-stage")) tmSetView(tmView, true); });
 function rerender(keepScroll){
   const y = scrollY; const wasPlaying = Voice.playing;
   route();
@@ -1489,6 +3333,13 @@ function rerender(keepScroll){
 
 /* ---------------- events ---------------- */
 document.addEventListener("click", e => {
+  const cb = e.target.closest("[data-cat]");
+  if (cb){ routeCat = cb.dataset.cat; document.querySelectorAll("[data-cat]").forEach(b => b.setAttribute("aria-pressed", b === cb)); const box = document.getElementById("route-box"); if (box){ box.innerHTML = routeHTML(); routeFill(); } return; }
+  const tv = e.target.closest("[data-tmview]");
+  if (tv){ tmClose(); tmSetView(tv.dataset.tmview); return; }
+  const tp = e.target.closest("[data-tm]");
+  if (tp){ tmOpen(+tp.dataset.tm); return; }
+  if (e.target.closest("[data-tmclose]")){ tmClose(); return; }
   const dot = e.target.closest("[data-pop]");
   if (dot){ e.preventDefault(); openPop(+dot.dataset.pop); return; }
   if (e.target.closest("[data-popclose]")){ closePop(); return; }
